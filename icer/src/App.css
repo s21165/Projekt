@@ -1,0 +1,55 @@
+
+.App-header{
+
+}
+
+.body {
+  margin:auto;
+  width: 90vw;
+  height: 94vh;
+
+  display: grid;
+  grid:
+    "fridge topNav" 1fr
+    / auto 30%;
+  gap: 8px;
+  border:3px solid red;
+
+}
+.wholeContainer{
+
+  grid-area: fridge;
+
+}
+.meni{
+
+  height:100px;
+  width:200px;
+  border:3px solid blue;
+
+}
+.appNav{
+  height:100%;
+
+  margin: auto;
+  justify-content: center;
+
+  background: #F8F8F8;
+  grid-area: topNav;
+}
+.navDiv{
+  padding:5px;
+  margin-right:20px;
+}
+.navDiv a{
+  text-decoration: none;
+
+}
+.navDiv a:visited{
+  color:black;
+
+}
+.navDiv a:link{
+  color:black;
+
+}
