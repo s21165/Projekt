@@ -4,7 +4,7 @@ import {
     BrowserRouter as Router,
     Routes,
     Route,
-    Link
+    Link, useLocation
 } from "react-router-dom";
 import {Fridge} from "./mainPages/Fridge";
 import {History} from "./mainPages/History";
@@ -12,29 +12,46 @@ import {Shops} from "./mainPages/Shops";
 import {Account} from "./mainPages/Account";
 import {Notifications} from "./mainPages/Notifications";
 
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
+
+import Logout from "./mainPages/Logout";
 
 
-function App() {
+function App(props) {
 
     const [isNavExpanded, setIsNavExpanded] = useState(false);
 
+
+
     return (
-
+        <Router>
         <div className="body">
-            <div className="wholeContainer">
 
-                <h1>tu bedzie wszystko</h1>
-            </div>
+            <nav className="wholeContainer">
+
+                <Routes>
+
+                    <Route path="/" element={<Fridge/> }  />
+                    <Route path="/HistoriaZakupow" element={<History/>}/>
+                    <Route path="/Sklepy" element={<Shops/>}/>
+                    <Route path="/Konto" element={<Account/>}/>
+                    <Route path="/Powiadomienia" element={<Notifications/>}/>
+                    <Route path="/Sklepy" element={<Fridge/>}/>
+                    <Route path="/Ustawienia" element={<History/>}/>
+                    <Route path="/Pomoc" element={<Shops/>} />
+                    <Route path="/Wyloguj" element={<Logout/>} />
+
+                </Routes>
+            </nav>
             <div>
-            <Router>
+
                 <nav className ="menu">
 
                     {isNavExpanded && (
                         <div  className={isNavExpanded ? "visible" : "invisible"}>
 
                             <div className="menuNav">
-                                <div className="navDiv">
+                                <div className="navDiv" >
                                     <Link to="/Sklepy"><h3>sklepy</h3></Link>
                                 </div>
                                 <div className="navDiv">
@@ -65,7 +82,7 @@ function App() {
                     <div className={isNavExpanded ? "invisible" : "visible"}>
                         <div className="menuNav">
                             <div>
-                                <div className="navDiv">
+                                <div className="navDiv" >
                                     <Link to="/"><h3>lodówka</h3></Link>
                                 </div>
                                 <div className="navDiv">
@@ -93,22 +110,12 @@ function App() {
                     </div>
 
                 </nav>
-                <Routes>
 
-                    <Route path="/" element={<Fridge/>}/>
-                    <Route path="/HistoriaZakupow" element={<History/>}/>
-                    <Route path="/Sklepy" element={<Shops/>}/>
-                    <Route path="/Konto" element={<Account/>}/>
-                    <Route path="/Powiadomienia" element={<Notifications/>}/>
-                    <Route path="/Sklepy" element={<Fridge/>}/>
-                    <Route path="/Ustawienia" element={<History/>}/>
-                    <Route path="/Pomoc" element={<Shops/>}/>
-                    <Route path="/Wyloguj" element={<Account/>}/>
 
-                </Routes>
-            </Router>
             </div>
+
         </div>
+        </Router>
     )
 }
 

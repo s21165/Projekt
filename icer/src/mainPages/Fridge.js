@@ -4,7 +4,7 @@ export function Fridge(){
         <div className="fridgeContainer">
             <div className="fridge">
 
-
+                SIEMA
 
             </div>
             <div className="notificationFridge">
