@@ -1,4 +1,5 @@
 import './App.css';
+import { animateScroll as scroll } from "react-scroll";
 import {
     BrowserRouter as Router,
     Routes,
@@ -10,157 +11,105 @@ import {History} from "./mainPages/History";
 import {Shops} from "./mainPages/Shops";
 import {Account} from "./mainPages/Account";
 import {Notifications} from "./mainPages/Notifications";
-import {Menu} from "./mainPages/Menu";
+
 import React, {useState} from "react";
 
-import MainNav from "./mainPages/MainNav";
 
 function App() {
 
     const [isNavExpanded, setIsNavExpanded] = useState(false);
 
-    const mainNav = () => {
+    return (
 
-            return (
-                <div className="body">
-                    <nav>
-                        <div className="navDiv">
-                            <Link to="/">Lodówka</Link>
-                        </div>
-                        <div className="navDiv">
-                            <Link to="/HistoriaZakupow">Historia zakupów</Link>
-                        </div>
-                        <div className="navDiv">
-                            <Link to="/Sklepy">Sklepy</Link>
-                        </div>
-                        <div className="navDiv">
-                            <Link to="/Konto"> Konto</Link>
-                        </div>
-                        <div className="navDiv">
-                            <Link to="/Powiadomienia"> Powiadomienia</Link>
-                        </div>
-                        <button className="menuNavExpand"
-                                onClick={() => {
-                                    setIsNavExpanded(!isNavExpanded)
-                                }}
-                        >xxx
-                        </button>
+        <div className="body">
+            <div className="wholeContainer">
 
-                    </nav>
+                <h1>tu bedzie wszystko</h1>
+            </div>
+            <div>
+            <Router>
+                <nav className ="menu">
 
-                </div>
-            )
-        }
-        const menuNav = () =>{
+                    {isNavExpanded && (
+                        <div  className={isNavExpanded ? "visible" : "invisible"}>
 
-               return(
-                <div>
-                    <div className="menuNav">
-                        <div className="menuNavDiv">
-                            <Link to="/Sklepy">Sklepy</Link>
-                        </div>
-                        <div className="menuNavDiv">
-                            <Link to="/Ustawienia">Ustawienia</Link>
-                        </div>
-                        <div className="menuNavDiv">
-                            <Link to="/Pomoc">Pomoc</Link>
-                        </div>
+                            <div className="menuNav">
+                                <div className="navDiv">
+                                    <Link to="/Sklepy"><h3>sklepy</h3></Link>
+                                </div>
+                                <div className="navDiv">
+                                    <Link to="/Ustawienia"><h3>ustawienia</h3></Link>
+                                </div>
+                                <div className="navDiv">
+                                    <Link to="/Pomoc"><h3>pomoc</h3></Link>
+                                </div>
 
-                        <div className="menuNavDiv">
-                            <Link to="/Wyloguj">Wyloguj</Link>
-                        </div>
+                                <div className="navDiv">
 
-                        <div className="menuNavDiv">
-                            <Link to="/Menu"> Menu </Link>
-                            <button className="menuNavExpand"
-                                    onClick={() => {
-                                        setIsNavExpanded(!isNavExpanded)
-                                    }}
-                            ></button>
+                                        <button className="menuNavExpandButton"
+                                                onClick={() => {
+                                                    setIsNavExpanded(!isNavExpanded)
+                                                }}
+                                        ><h3>menu</h3>
+                                        </button>
 
-                        </div>
-                    </div>
-                </div>
-               )
 
-        }
-        return (
+                                </div>
 
-            <div className="body">
-
-                <Router>
-                    {{isNavExpanded} ?
-                        <nav>
-                            <div className="navDiv">
-                                <Link to="/">Lodówka</Link>
+                                <div className="navDiv">
+                                    <Link to="/Wyloguj"><h3>wyloguj</h3></Link>
+                                </div>
                             </div>
-                            <div className="navDiv">
-                                <Link to="/HistoriaZakupow">Historia zakupów</Link>
-                            </div>
-                            <div className="navDiv">
-                                <Link to="/Sklepy">Sklepy</Link>
-                            </div>
-                            <div className="navDiv">
-                                <Link to="/Konto"> Konto</Link>
-                            </div>
-                            <div className="navDiv">
-                                <Link to="/Powiadomienia"> Powiadomienia</Link>
-                            </div>
-                            <button className="menuNavExpand"
-                                    onClick={() => {
-                                        setIsNavExpanded(!isNavExpanded)
-                                    }}
-                            >xxx
-                            </button>
-                        </nav>
-                        : <div className="menuNav">
-                            <div className="menuNavDiv">
-                                <Link to="/Sklepy">Sklepy</Link>
-                            </div>
-                            <div className="menuNavDiv">
-                                <Link to="/Ustawienia">Ustawienia</Link>
-                            </div>
-                            <div className="menuNavDiv">
-                                <Link to="/Pomoc">Pomoc</Link>
-                            </div>
-
-                            <div className="menuNavDiv">
-                                <Link to="/Wyloguj">Wyloguj</Link>
-                            </div>
-
-
-                            <div className="menuNavDiv">
-                                <Link to="/Menu"> Menu </Link>
-                                <button className="menuNavExpand"
+                        </div>
+                    )}
+                    <div className={isNavExpanded ? "invisible" : "visible"}>
+                        <div className="menuNav">
+                            <div>
+                                <div className="navDiv">
+                                    <Link to="/"><h3>lodówka</h3></Link>
+                                </div>
+                                <div className="navDiv">
+                                    <Link to="/HistoriaZakupow"><h3>historia zakupów</h3></Link>
+                                </div>
+                                <div className="navDiv">
+                                    <Link to="/Sklepy"><h3>sklepy</h3></Link>
+                                </div>
+                                <div className="navDiv">
+                                    <Link to="/Konto"> <h3>konto</h3></Link>
+                                </div>
+                                <div className="navDiv">
+                                    <Link to="/Powiadomienia"> <h3>powiadomienia</h3></Link>
+                                </div>
+                                <button className="menuNavExpandButton"
                                         onClick={() => {
                                             setIsNavExpanded(!isNavExpanded)
                                         }}
-                                ></button>
-
+                                ><h3>menu</h3>
+                                </button>
 
                             </div>
+
                         </div>
-                    }
-                    <Routes>
+                    </div>
 
-                        <Route path="/" element={<Fridge/>}/>
-                        <Route path="/HistoriaZakupow" element={<History/>}/>
-                        <Route path="/Sklepy" element={<Shops/>}/>
-                        <Route path="/Konto" element={<Account/>}/>
-                        <Route path="/Powiadomienia" element={<Notifications/>}/>
-                        <Route path="/Menu" element={<Menu/>}/>
-                        <Route path="/Sklepy" element={<Fridge/>}/>
-                        <Route path="/Ustawienia" element={<History/>}/>
-                        <Route path="/Pomoc" element={<Shops/>}/>
-                        <Route path="/Wyloguj" element={<Account/>}/>
+                </nav>
+                <Routes>
 
+                    <Route path="/" element={<Fridge/>}/>
+                    <Route path="/HistoriaZakupow" element={<History/>}/>
+                    <Route path="/Sklepy" element={<Shops/>}/>
+                    <Route path="/Konto" element={<Account/>}/>
+                    <Route path="/Powiadomienia" element={<Notifications/>}/>
+                    <Route path="/Sklepy" element={<Fridge/>}/>
+                    <Route path="/Ustawienia" element={<History/>}/>
+                    <Route path="/Pomoc" element={<Shops/>}/>
+                    <Route path="/Wyloguj" element={<Account/>}/>
 
-                    </Routes>
-                </Router>
+                </Routes>
+            </Router>
             </div>
+        </div>
+    )
+}
 
-
-        )
-    }
-
-    export default App;
+export default App;
