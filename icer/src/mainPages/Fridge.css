@@ -1,5 +1,46 @@
 .fridgeContainer{
     height:100%;
+    position: relative;
 
 
+}
+.light-bulb{
+    position: absolute;
+    top:0;
+    right:0;
+
+    padding-right: 0.5vw;
+    padding-top: 0.5vh;
+    height:3vh;
+    width:3vw;
+
+}
+
+.light {
+    position: absolute;
+    top:35%;
+    left: 25%;
+    width: 35%;
+    height: 42%;
+    background-color: #fff;
+    border-radius: 66%;
+    opacity: 0;
+    transition: opacity 1.5s;
+    box-shadow: 0 0 1em #f1c40f;
+}
+
+.bulb{
+    height: 100%;
+    width: 100%;
+
+
+}
+.light-bulb.on .light {
+    opacity: 0.8;
+    background-color: #fac87b;
+    box-shadow: 0 0 1em #f1c40f;
+}
+.light-bulb.on .bulb {
+    box-shadow: 0 0 3em #f1c40f;
+    background-color: #fdf2d7;
 }

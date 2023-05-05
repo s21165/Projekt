@@ -1,3 +1,6 @@
+.full{
+  font-size: 1em;
+}
 button {  /* resetting button styles */
   background: none;
   border: none;
@@ -22,6 +25,7 @@ button {  /* resetting button styles */
   background: #F8F8F8;
 
 }
+
 .logo{
 
   width:40%;
@@ -50,7 +54,7 @@ button {  /* resetting button styles */
   transition: grid 0.5s ease-out 0.1s;
   grid:
     "all menu" 1fr
-    / auto 25%;
+    / auto 20%;
 }
 .body-slimMenu {
   margin:auto;
@@ -61,7 +65,7 @@ button {  /* resetting button styles */
 
   grid:
     "all slimMenu" 1fr
-    / auto 10%;
+    / auto 8%;
   transition: grid 0.5s ease-out 0.10s;
 }
 .wholeContainer{
@@ -71,7 +75,7 @@ button {  /* resetting button styles */
 
 }
 .slimMenu{
-  position:relative;
+  position:absolute;
   height: 100%;
 
   grid-area: menu;
@@ -79,7 +83,7 @@ button {  /* resetting button styles */
 
 }
 .menu{
-  position:relative;
+  position:absolute;
   height: 100%;
 
   grid-area: menu;
@@ -97,10 +101,13 @@ button {  /* resetting button styles */
 
 }
 .navDiv{
+  position:relative;
   padding:1vh;
+  height: 10vh;
 
   text-align: center;
   align-items: center;
+
 }
 .navDivMain{
   padding:1vh;
@@ -111,11 +118,12 @@ button {  /* resetting button styles */
 
 .menuIcons{
 
-  width:3.5em;
-  height: 3.5em;
+  width:4vw;
+  height: 4vh;
   transition-property: width, height;
   transition-duration: 0.1s;
   transition-timing-function: ease-in-out;
+
 }
 
 a{
@@ -142,5 +150,5 @@ a:link{
   display:none;
 }
 .navDiv h3{
-  font-size: 1.3rem;
+  font-size: 120%;
 }
