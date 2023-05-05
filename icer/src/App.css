@@ -1,3 +1,8 @@
+.navExpandButton{
+  position:absolute;
+
+}
+
 .logoContainer{
   display: flex;
   justify-content: center;
@@ -8,8 +13,21 @@
 }
 .logo{
 
-  width:35%;
-  height: 35%;
+  width:40%;
+  height: 40%;
+
+  transition-property: width, height;
+  transition-duration: 0.5s ;
+  transition-timing-function: ease-in;
+
+
+}
+.smallLogo{
+  width:60%;
+  height: 60%;
+  transition-property: width;
+  transition-duration: 0.5s;
+  transition-timing-function: ease-out;
 }
 .body {
   margin:auto;
@@ -17,10 +35,23 @@
   height: 94vh;
   position: relative;
   display: grid;
+
+  transition: grid 0.5s ease-out 0.1s;
   grid:
     "all menu" 1fr
     / auto 25%;
+}
+.body-slimMenu {
+  margin:auto;
+  width: 90vw;
+  height: 94vh;
+  position: relative;
+  display: grid;
 
+  grid:
+    "all slimMenu" 1fr
+    / auto 10%;
+  transition: grid 0.5s ease-out 0.10s;
 }
 .wholeContainer{
 
@@ -28,12 +59,21 @@
   text-align: center;
 
 }
-.menu{
-
+.slimMenu{
+  position:relative;
   height: 100%;
 
   grid-area: menu;
   background: #F8F8F8;
+
+}
+.menu{
+  position:relative;
+  height: 100%;
+
+  grid-area: menu;
+  background: #F8F8F8;
+
 
 }
 .menuNav{
@@ -51,6 +91,15 @@
   text-align: center;
   align-items: center;
 }
+.menuIcons{
+
+  width:40%;
+  height: 40%;
+  transition-property: width, height;
+  transition-duration: 0.5s;
+  transition-timing-function: ease-in-out;
+}
+
 .navDiv a{
   text-decoration: none;
 
@@ -63,7 +112,7 @@
   color:black;
 
 }
-.menuNavExpandButton{
+.menuNavButton{
 
   margin:auto;
   display:grid;
@@ -75,5 +124,5 @@
   display:none;
 }
 .navDiv h3{
-  font-size: 2.5vh;
+  font-size: 1.3vw;
 }
