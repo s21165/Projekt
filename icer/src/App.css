@@ -1,3 +1,14 @@
+button {  /* resetting button styles */
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  outline: inherit;
+}
+
 .navExpandButton{
   position:absolute;
 
@@ -18,21 +29,21 @@
 
   transition-property: width, height;
   transition-duration: 0.5s ;
-  transition-timing-function: ease-in;
+  transition-timing-function: ease-out;
 
 
 }
 .smallLogo{
-  width:60%;
+  width: 60%;
   height: 60%;
-  transition-property: width;
+  transition-property: width, height;
   transition-duration: 0.5s;
   transition-timing-function: ease-out;
 }
 .body {
   margin:auto;
-  width: 90vw;
-  height: 94vh;
+  width: 100vw;
+  height: 100vh;
   position: relative;
   display: grid;
 
@@ -43,8 +54,8 @@
 }
 .body-slimMenu {
   margin:auto;
-  width: 90vw;
-  height: 94vh;
+  width: 100vw;
+  height: 100vh;
   position: relative;
   display: grid;
 
@@ -91,24 +102,31 @@
   text-align: center;
   align-items: center;
 }
+.navDivMain{
+  padding:1vh;
+
+  text-align: center;
+  align-items: center;
+}
+
 .menuIcons{
 
-  width:40%;
-  height: 40%;
+  width:3.5em;
+  height: 3.5em;
   transition-property: width, height;
-  transition-duration: 0.5s;
+  transition-duration: 0.1s;
   transition-timing-function: ease-in-out;
 }
 
-.navDiv a{
+a{
   text-decoration: none;
 
 }
-.navDiv a:visited{
+a:visited{
   color:black;
 
 }
-.navDiv a:link{
+a:link{
   color:black;
 
 }
@@ -124,5 +142,5 @@
   display:none;
 }
 .navDiv h3{
-  font-size: 1.3vw;
+  font-size: 1.3rem;
 }

@@ -30,13 +30,13 @@ function App() {
 
             setTimeout(()=>{
                 setIsIcon(!isIcon)
-            },500)
+            },450)
         }else{
             setIsOpen(!isOpen);
 
             setTimeout(()=>{
                 setIsIcon(!isIcon)
-            },200)
+            },350)
         }
     }
 
@@ -76,17 +76,17 @@ function App() {
                             <div  className={secoundMenu ? "visible" : "invisible"}>
 
                                 <div className="menuNav">
-                                    <div className="navDiv" >
+                                    <div className="navDivMain" >
                                         <Link to="/Sklepy">{ isIcon ? <h3>sklepy</h3> : <Icon className="menuIcons" icon="mdi:shop-find" />}</Link>
                                     </div>
-                                    <div className="navDiv">
+                                    <div className="navDivMain">
                                         <Link to="/Ustawienia">{isIcon ? <h3>ustawienia</h3> : <Icon className="menuIcons" icon="fa6-solid:screwdriver-wrench" />}</Link>
                                     </div>
-                                    <div className="navDiv">
+                                    <div className="navDivMain">
                                         <Link to="/Pomoc">{isIcon ? <h3>pomoc</h3> : <Icon className="menuIcons" icon="solar:help-linear" />}</Link>
                                     </div>
 
-                                    <div className="navDiv">
+                                    <div className="navDivMain">
 
                                         <button className="menuNavButton"
                                                 onClick={() => {
@@ -98,7 +98,7 @@ function App() {
 
                                     </div>
 
-                                    <div className="navDiv">
+                                    <div className="navDivMain">
                                         <Link to="/Wyloguj">{isIcon ? <h3>wyloguj</h3> : <Icon className="menuIcons" icon="grommet-icons:logout" />}</Link>
                                     </div>
                                 </div>
