@@ -1,38 +1,24 @@
-import mysql.connector
+# Importowanie klas
+from database_connector import DatabaseConnector
+from product_data import ProductData
 
+# Tworzenie instancji klasy DatabaseConnector
+db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 
-# Ustanowienie połączenia z bazą danych
-mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="root",
-    database="Sklep"
-)
+# Łączenie z bazą danych
+db_connector.connect()
 
-# Utworzenie kursora
-cursor = mydb.cursor()
+# Pobieranie połączenia z bazą danych
+connection = db_connector.get_connection()
 
-# Zapytanie SQL do pobrania danych z tabeli 'Produkty'
-query = "SELECT * FROM Produkty"
+# Tworzenie instancji klasy ProductData
+product_data = ProductData(connection)
 
-# Wykonanie zapytania
-cursor.execute(query)
+# Pobieranie danych produktów
+products = product_data.fetch_products()
 
-# Pobranie wszystkich wyników zapytania
-results = cursor.fetchall()
+# Wyświetlanie danych produktów
+product_data.display_products(products)
 
-# Wyświetlenie danych
-for row in results:
-    print("Nazwa: ", row[1])
-    print("Cena: ", row[2])
-    print("Kalorie: ", row[3])
-    print("Tłuszcze: ", row[4])
-    print("Węglowodany: ", row[5])
-    print("Białko: ", row[6])
-    print("Kategoria: ", row[7])
-    print("Ilość: ", row[8])
-    print("-----------------------")
-
-# Zamknięcie kursora i połączenia z bazą danych
-cursor.close()
-mydb.close()
+# Rozłączanie z bazą danych
+db_connector.disconnect()
