@@ -77,15 +77,15 @@ button {  /* resetting button styles */
 .slimMenu{
   position:absolute;
   height: 100%;
-
-  grid-area: menu;
+  width:100%;
+  grid-area: slimMenu;
   background: #F8F8F8;
 
 }
 .menu{
   position:absolute;
   height: 100%;
-
+  width:100%;
   grid-area: menu;
   background: #F8F8F8;
 
@@ -104,16 +104,21 @@ button {  /* resetting button styles */
   position:relative;
   padding:1vh;
   height: 10vh;
-
   text-align: center;
   align-items: center;
+  overflow-wrap: break-word;
+
 
 }
 .navDivMain{
-  padding:1vh;
 
+  position:relative;
+  padding:1vh;
+  height: 10vh;
   text-align: center;
   align-items: center;
+  overflow-wrap: break-word;
+
 }
 
 .menuIcons{
@@ -121,7 +126,7 @@ button {  /* resetting button styles */
   width:4vw;
   height: 4vh;
   transition-property: width, height;
-  transition-duration: 0.1s;
+  transition-duration: 0.5s;
   transition-timing-function: ease-in-out;
 
 }
