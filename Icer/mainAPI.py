@@ -10,6 +10,7 @@ app = Flask(__name__)
 db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 
 # Łączenie z bazą danych
+
 db_connector.connect()
 
 # Tworzenie instancji klasy ProductData

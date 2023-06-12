@@ -1,5 +1,3 @@
-from database_connector import DatabaseConnector
-
 class ProductManager:
     def __init__(self, database_connector):
         self.db_connector = database_connector
@@ -47,5 +45,3 @@ class ProductManager:
                 print("Nie można odjąć większej ilości produktu niż aktualnie dostępnej")
         except Exception as error:
             print("Błąd podczas odejmowania produktu z bazy danych: ", error)
-
-
