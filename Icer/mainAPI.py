@@ -1,4 +1,6 @@
 from flask import Flask, request, jsonify
+
+import value_manager
 from database_connector import DatabaseConnector
 from product_data import ProductData
 
