@@ -1,10 +1,11 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template, redirect, session
 
 import value_manager
 from database_connector import DatabaseConnector
 from product_data import ProductData
 
 app = Flask(__name__)
+app.secret_key = 'secret_key'  # Klucz sesji
 
 # Tworzenie instancji klasy DatabaseConnector
 db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
@@ -13,14 +14,71 @@ db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 
 db_connector.connect()
 
+
+# Strona logowania
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        # Sprawdzanie, czy użytkownik istnieje w bazie danych
+        if check_user(username, password):
+            # Utworzenie sesji dla zalogowanego użytkownika
+            session['username'] = username
+            return redirect('/dashboard')
+        else:
+            error_message = 'Nieprawidłowe dane logowania. Spróbuj ponownie.'
+            return render_template('login.html', error_message=error_message)
+    else:
+        return render_template('login.html')
+
+
+# Strona wylogowania
+@app.route('/logout')
+def logout():
+    # Usunięcie sesji
+    session.pop('username', None)
+    return redirect('/login')
+
+
+# Strona główna po zalogowaniu
+@app.route('/dashboard')
+def dashboard():
+    # Sprawdzenie, czy użytkownik jest zalogowany
+    if 'username' in session:
+        username = session['username']
+        return render_template('dashboard.html', username=username)
+    else:
+        return redirect('/login')
+
+
+# Funkcja sprawdzająca użytkownika w bazie danych
+def check_user(username, password):
+    # Przykładowe zapytanie do bazy danych
+    query = "SELECT COUNT(*) FROM Users WHERE username = %s AND password = %s"
+    values = (username, password)
+    cursor = db_connector.get_connection().cursor()
+    cursor.execute(query, values)
+    result = cursor.fetchone()[0]
+    cursor.close()
+
+    if result == 1:
+        return True
+    else:
+        return False
+
+
 # Tworzenie instancji klasy ProductData
 product_data = ProductData(db_connector.get_connection())
+
 
 # Pobieranie danych produktów
 @app.route('/api/products', methods=['GET'])
 def get_products():
     products = product_data.fetch_products()
     return jsonify(products)
+
 
 # Dodawanie produktu
 @app.route('/api/products', methods=['POST'])
@@ -40,6 +98,7 @@ def add_product():
 
     return jsonify({"message": "Produkt został dodany do bazy danych."})
 
+
 # Odejmowanie produktu
 @app.route('/api/products/<string:nazwa>', methods=['PUT'])
 def remove_product(nazwa):
@@ -51,10 +110,12 @@ def remove_product(nazwa):
 
     return jsonify({"message": "Ilość produktu została zaktualizowana."})
 
+
 # Rozłączanie z bazą danych
 @app.teardown_appcontext
 def teardown_db(exception):
     db_connector.disconnect()
+
 
 if __name__ == '__main__':
     app.run()
