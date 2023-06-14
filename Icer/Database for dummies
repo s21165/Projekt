@@ -1,3 +1,7 @@
+create database sklep;
+
+use sklep;
+
 -- Tworzenie tabeli 'Produkty'
 CREATE TABLE Produkty (
   id INT PRIMARY KEY AUTO_INCREMENT,
