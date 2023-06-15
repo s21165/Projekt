@@ -33,6 +33,30 @@ def get_orders():
         return jsonify({"error": str(error)})
 
 
+# Wyświetlanie zamówień
+@app.route('/api/orders', methods=['GET', 'POST'])
+def get_names():
+    try:
+        if request.method == 'GET':
+            # Obsługa żądania GET
+            query = "SELECT p.nazwa, i.ilosc FROM Icer i JOIN Produkty p ON i.produktID = p.id;"
+
+            cursor = db_connector.get_connection().cursor()
+            cursor.execute(query)
+            results = cursor.fetchall()
+            cursor.close()
+
+            order_list = []
+            for row in results:
+                order_list.append({"nazwa_produktu": row[0], "ilosc": row[1]})
+
+            return jsonify(order_list)
+        elif request.method == 'POST':
+            # Obsługa żądania POST
+            # Tu dodaj odpowiednią logikę dla żądania POST
+            return jsonify({"message": "POST request received"})
+    except Exception as error:
+        return jsonify({"error": str(error)})
 
 
 
