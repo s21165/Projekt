@@ -17,9 +17,12 @@ db_connector.connect()
 # Tworzenie instancji klasy ProductData
 product_data = ProductData(db_connector.get_connection())
 
+
 # Wyświetlanie lodówki
 @app.route('/Icer', methods=['GET'])
 def get_orders():
+    db_connector.connect()
+
     # Przykładowe zapytanie do bazy danych
     query = "SELECT * FROM Icer"
 
@@ -36,6 +39,7 @@ def get_orders():
 # Wyświetlanie zamówień
 @app.route('/api/orders', methods=['GET', 'POST'])
 def get_names():
+    db_connector.connect()
     try:
         if request.method == 'GET':
             # Obsługa żądania GET
@@ -59,10 +63,10 @@ def get_names():
         return jsonify({"error": str(error)})
 
 
-
 # Pobieranie danych produktów
 @app.route('/api/products', methods=['GET'])
 def get_products():
+    db_connector.connect()
     products = product_data.fetch_products()
     return jsonify(products)
 
@@ -70,6 +74,7 @@ def get_products():
 # Strona logowania
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    db_connector.connect()
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
