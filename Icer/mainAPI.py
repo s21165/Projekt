@@ -14,6 +14,34 @@ db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 
 db_connector.connect()
 
+# Tworzenie instancji klasy ProductData
+product_data = ProductData(db_connector.get_connection())
+
+# Wyświetlanie lodówki
+@app.route('/Icer', methods=['GET'])
+def get_orders():
+    # Przykładowe zapytanie do bazy danych
+    query = "SELECT * FROM Icer"
+
+    try:
+        cursor = db_connector.get_connection().cursor()
+        cursor.execute(query)
+        results = cursor.fetchall()
+        cursor.close()
+        return jsonify(results)
+    except Exception as error:
+        return jsonify({"error": str(error)})
+
+
+
+
+
+# Pobieranie danych produktów
+@app.route('/api/products', methods=['GET'])
+def get_products():
+    products = product_data.fetch_products()
+    return jsonify(products)
+
 
 # Strona logowania
 @app.route('/login', methods=['GET', 'POST'])
@@ -56,7 +84,7 @@ def dashboard():
 # Funkcja sprawdzająca użytkownika w bazie danych
 def check_user(username, password):
     # Przykładowe zapytanie do bazy danych
-    query = "SELECT COUNT(*) FROM Users WHERE username = %s AND password = %s"
+    query = "SELECT COUNT(*) FROM Users WHERE username = root AND password = root"
     values = (username, password)
     cursor = db_connector.get_connection().cursor()
     cursor.execute(query, values)
@@ -67,17 +95,6 @@ def check_user(username, password):
         return True
     else:
         return False
-
-
-# Tworzenie instancji klasy ProductData
-product_data = ProductData(db_connector.get_connection())
-
-
-# Pobieranie danych produktów
-@app.route('/api/products', methods=['GET'])
-def get_products():
-    products = product_data.fetch_products()
-    return jsonify(products)
 
 
 # Dodawanie produktu
