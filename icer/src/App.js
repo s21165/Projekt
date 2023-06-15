@@ -16,6 +16,8 @@ import React, {useEffect, useState} from "react";
 
 import Logout from "./mainPages/Logout";
 import EditAccount from "./mainPages/EditAccount";
+import Products from "./mainPages/Products";
+import AddProduct from "./mainPages/AddProduct";
 
 
 function App() {
@@ -50,6 +52,8 @@ function App() {
                     <nav className="wholeContainer">
 
                         <Routes>
+                            <Route path="/dodajProdukt" element={<AddProduct/>}/>
+                            <Route path="/Produkty" element={<Products/>}/>
                             <Route path="/edycjaKonta" element={<EditAccount/>}/>
                             <Route path="/" element={<Fridge/>}/>
                             <Route path="/HistoriaZakupow" element={<History/>}/>
@@ -91,6 +95,14 @@ function App() {
                                         </div>
                                         <div className="navDivMain">
                                             <Link to="/Pomoc">{isIcon ? <h3>pomoc</h3> :
+                                                <Icon className="menuIcons" icon="solar:help-linear"/>}</Link>
+                                        </div>
+                                        <div className="navDivMain">
+                                            <Link to="/Produkty">{isIcon ? <h3>Produkty</h3> :
+                                                <Icon className="menuIcons" icon="solar:help-linear"/>}</Link>
+                                        </div>
+                                        <div className="navDivMain">
+                                            <Link to="/dodajProdukt">{isIcon ? <h3>Dodaj produkt</h3> :
                                                 <Icon className="menuIcons" icon="solar:help-linear"/>}</Link>
                                         </div>
 
