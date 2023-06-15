@@ -1,10 +1,12 @@
 from flask import Flask, request, jsonify, render_template, redirect, session
+from flask_cors import CORS, cross_origin
 
 import value_manager
 from database_connector import DatabaseConnector
 from product_data import ProductData
 
 app = Flask(__name__)
+CORS(app)
 app.secret_key = 'secret_key'  # Klucz sesji
 
 # Tworzenie instancji klasy DatabaseConnector
