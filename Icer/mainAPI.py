@@ -14,9 +14,6 @@ db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 
 db_connector.connect()
 
-# Tworzenie instancji klasy ProductData
-product_data = ProductData(db_connector.get_connection())
-
 
 # Wyświetlanie lodówki
 @app.route('/Icer', methods=['GET'])
@@ -67,6 +64,9 @@ def get_names():
 @app.route('/api/products', methods=['GET'])
 def get_products():
     db_connector.connect()
+    # Tworzenie instancji klasy ProductData
+    product_data = ProductData(db_connector.get_connection())
+
     products = product_data.fetch_products()
     return jsonify(products)
 
