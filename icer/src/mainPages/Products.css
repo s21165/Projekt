@@ -1,0 +1,32 @@
+.productItem {
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.productList :hover{
+    background-color: #D3CFCFFF;
+}
+
+.productItem h2 {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.productItem p {
+    margin: 5px 0;
+}
+
+.productItem button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.productItem button:hover {
+    background-color: #45a049;
+}

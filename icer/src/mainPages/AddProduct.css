@@ -1,0 +1,31 @@
+.addProductForm {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.addProductForm label {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.addProductForm input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.addProductForm button {
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.addProductForm button:hover {
+    background-color: #45a049;
+}
