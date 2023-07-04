@@ -99,11 +99,11 @@ function App() {
                                         </div>
                                         <div className="navDivMain">
                                             <Link to="/Produkty">{isIcon ? <h3>Produkty</h3> :
-                                                <Icon className="menuIcons" icon="solar:help-linear"/>}</Link>
+                                                <Icon className="menuIcons" icon="streamline:shopping-bag-hand-bag-1-shopping-bag-purse-goods-item-products"/>}</Link>
                                         </div>
                                         <div className="navDivMain">
                                             <Link to="/dodajProdukt">{isIcon ? <h3>Dodaj produkt</h3> :
-                                                <Icon className="menuIcons" icon="solar:help-linear"/>}</Link>
+                                                <Icon className="menuIcons" icon="fluent:add-28-filled"/>}</Link>
                                         </div>
 
                                         <div className="navDivMain">

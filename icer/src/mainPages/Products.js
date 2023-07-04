@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-
+import './Products.css';
 function Products() {
     const [data, setData] = useState(null);
     let [jsonData, setJsonData] = useState(null);
@@ -42,9 +42,9 @@ function Products() {
     };
 
     return (
-        <>
+        <div className="productList">
             {data && data.map((data, index) =>
-                <div key={index}>
+                <div key={index} className="productItem">
                     <h2>id: {data[0]}</h2>
                     <p>Nazwa: {data[1]}</p>
                     <p>Cena: {data[2]}</p>
@@ -59,7 +59,7 @@ function Products() {
                     </button>
                 </div>
             )}
-        </>
+        </div>
     );
 };
 export default Products;

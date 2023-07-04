@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import "./AddProduct.css"
 
 function AddProduct() {
     const [product, setProduct] = useState({
@@ -47,7 +48,7 @@ function AddProduct() {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="addProductForm">
             <label>
                 Nazwa:
                 <input type="text" name="nazwa" value={product.nazwa} onChange={handleChange} />
