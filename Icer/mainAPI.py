@@ -1,5 +1,8 @@
 from flask import Flask, request, jsonify, render_template, redirect, session
 from flask_cors import CORS, cross_origin
+import requests
+from dotenv import load_dotenv
+import os
 
 import value_manager
 from database_connector import DatabaseConnector
@@ -8,6 +11,14 @@ from product_data import ProductData
 app = Flask(__name__)
 CORS(app)
 app.secret_key = 'secret_key'  # Klucz sesji
+print("http://127.0.0.1:5000/api/products")
+print("http://127.0.0.1:5000/api/Icer")
+print("http://127.0.0.1:5000/api/products/image")
+
+# Ładuj zmienne środowiskowe z pliku .env
+load_dotenv()
+# Ładuj zmienne środowiskowe z pliku .env
+load_dotenv()
 
 # Tworzenie instancji klasy DatabaseConnector
 db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
@@ -19,7 +30,7 @@ db_connector.connect()
 
 # Wyświetlanie lodówki
 @app.route('/Icer', methods=['GET'])
-def get_orders():
+def get_icer():
     db_connector.connect()
 
     # Przykładowe zapytanie do bazy danych
@@ -35,31 +46,50 @@ def get_orders():
         return jsonify({"error": str(error)})
 
 
-# Wyświetlanie zamówień
-@app.route('/api/orders', methods=['GET', 'POST'])
-def get_names():
-    db_connector.connect()
+# Wyświetlanie produktów z informacjami o obrazach produktów
+@app.route('/api/products/image', methods=['GET', 'POST'])
+def get_images():
     try:
         if request.method == 'GET':
-            # Obsługa żądania GET
-            query = "SELECT p.nazwa, i.ilosc FROM Icer i JOIN Produkty p ON i.produktID = p.id;"
+            query = "SELECT nazwa FROM Produkty"
 
             cursor = db_connector.get_connection().cursor()
             cursor.execute(query)
             results = cursor.fetchall()
             cursor.close()
 
-            order_list = []
+            product_list = []
             for row in results:
-                order_list.append({"nazwa_produktu": row[0], "ilosc": row[1]})
+                product_name = row[0]
+                image_url = search_image(product_name)
+                product_list.append({"nazwa_produktu": product_name, "obraz": image_url})
 
-            return jsonify(order_list)
+            return jsonify(product_list)
         elif request.method == 'POST':
             # Obsługa żądania POST
             # Tu dodaj odpowiednią logikę dla żądania POST
             return jsonify({"message": "POST request received"})
     except Exception as error:
         return jsonify({"error": str(error)})
+
+
+# Funkcja wyszukująca obraz dla danej nazwy produktu
+def search_image(product_name):
+    # Użyj API Google Images lub innego dostępnego API do wyszukiwania obrazów na podstawie nazwy produktu
+    # Tutaj umieść kod żądania do API i przetwarzanie odpowiedzi, aby uzyskać adres URL obrazu
+
+    # Przykładowe zapytanie do API Google Images
+    api_key = "YOUR_API_KEY"
+    search_url = f"https://www.googleapis.com/customsearch/v1?key={api_key}&cx=YOUR_CX&q={product_name}&searchType=image"
+    response = requests.get(search_url)
+    results = response.json()
+
+    if "items" in results:
+        first_result = results["items"][0]
+        image_url = first_result["link"]
+        return image_url
+
+    return ""  # Zwróć pusty ciąg, jeśli nie znaleziono obrazu
 
 
 # Pobieranie danych produktów
