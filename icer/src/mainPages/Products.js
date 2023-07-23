@@ -45,7 +45,6 @@ function Products() {
         <div className="productList">
             {data && data.map((data, index) =>
                 <div key={index} className="productItem">
-                    <h2>id: {data[0]}</h2>
                     <p>Nazwa: {data[1]}</p>
                     <p>Cena: {data[2]}</p>
                     <p>Kalorie: {data[3]}</p>
