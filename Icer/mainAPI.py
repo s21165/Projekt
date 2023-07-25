@@ -29,7 +29,7 @@ db_connector.connect()
 
 
 # Wyświetlanie lodówki
-@app.route('/Icer', methods=['GET'])
+@app.route('/api/Icer', methods=['GET'])
 def get_icer():
     db_connector.connect()
 
@@ -44,6 +44,7 @@ def get_icer():
         return jsonify(results)
     except Exception as error:
         return jsonify({"error": str(error)})
+
 
 
 # Wyświetlanie produktów z informacjami o obrazach produktów
@@ -190,9 +191,9 @@ def remove_product(nazwa):
 
 
 # Rozłączanie z bazą danych
-@app.teardown_appcontext
-def teardown_db(exception):
-    db_connector.disconnect()
+#@app.teardown_appcontext
+#def teardown_db(exception):
+#    db_connector.disconnect()
 
 
 if __name__ == '__main__':
