@@ -29,12 +29,13 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "D:/repo/Projekt",
+    "last_opened_file_path": "D:/RepoA/Projekt-Adi",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -48,7 +49,7 @@
       <updated>1690278418682</updated>
       <workItem from="1690278419677" duration="1892000" />
       <workItem from="1690302644038" duration="604000" />
-      <workItem from="1690303503661" duration="1602000" />
+      <workItem from="1690303503661" duration="2352000" />
     </task>
     <servers />
   </component>

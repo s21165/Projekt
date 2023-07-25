@@ -1,5 +1,5 @@
-from flask import Flask, request, jsonify, render_template, redirect, session
-from flask_cors import CORS, cross_origin
+from flask import Flask, request, jsonify, session, render_template, redirect
+from flask_cors import CORS
 import requests
 from dotenv import load_dotenv
 import os
@@ -11,12 +11,7 @@ from product_data import ProductData
 app = Flask(__name__)
 CORS(app)
 app.secret_key = 'secret_key'  # Klucz sesji
-print("http://127.0.0.1:5000/api/products")
-print("http://127.0.0.1:5000/api/Icer")
-print("http://127.0.0.1:5000/api/products/image")
 
-# Ładuj zmienne środowiskowe z pliku .env
-load_dotenv()
 # Ładuj zmienne środowiskowe z pliku .env
 load_dotenv()
 
@@ -24,15 +19,19 @@ load_dotenv()
 db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 
 # Łączenie z bazą danych
-
 db_connector.connect()
+
+## tutaj jakie sa juz dzialace endpointy
+print("http://127.0.0.1:5000/api/products")
+print("http://127.0.0.1:5000/api/Icer")
+print("http://127.0.0.1:5000/api/login")
+# work in progress
+print("http://127.0.0.1:5000/api/products/image")
 
 
 # Wyświetlanie lodówki
 @app.route('/api/Icer', methods=['GET'])
 def get_icer():
-    db_connector.connect()
-
     # Przykładowe zapytanie do bazy danych
     query = "SELECT * FROM Icer"
 
@@ -44,7 +43,6 @@ def get_icer():
         return jsonify(results)
     except Exception as error:
         return jsonify({"error": str(error)})
-
 
 
 # Wyświetlanie produktów z informacjami o obrazach produktów
@@ -96,10 +94,8 @@ def search_image(product_name):
 # Pobieranie danych produktów
 @app.route('/api/products', methods=['GET'])
 def get_products():
-    db_connector.connect()
     # Tworzenie instancji klasy ProductData
     product_data = ProductData(db_connector.get_connection())
-
     products = product_data.fetch_products()
     return jsonify(products)
 
@@ -107,27 +103,51 @@ def get_products():
 # Strona logowania
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    db_connector.connect()
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        data = request.get_json()
+        username = data['username']
+        password = data['password']
 
         # Sprawdzanie, czy użytkownik istnieje w bazie danych
         if check_user(username, password):
             # Utworzenie sesji dla zalogowanego użytkownika
             session['username'] = username
-            return redirect('/dashboard')
+            return jsonify({"message": "Login successful"})
         else:
-            error_message = 'Nieprawidłowe dane logowania. Spróbuj ponownie.'
-            return render_template('login.html', error_message=error_message)
+            return jsonify({"message": "Invalid credentials"}), 401
     else:
+        return jsonify({"message": "Method not allowed"}), 405
+
+
+# Funkcja sprawdzająca użytkownika w bazie danych
+def check_user(username, password):
+    try:
+        # Przykładowe zapytanie do bazy danych - UWAGA: To jest tylko przykład, NIEBEZPIECZNE dla produkcji!
+        query = "SELECT password FROM Users WHERE username = %s"
+        values = (username,)
+        cursor = db_connector.get_connection().cursor()
+        cursor.execute(query, values)
+        result = cursor.fetchone()
+
+        if result:
+            db_password = result[0]
+            if db_password == password:
+                # Utworzenie sesji po poprawnym uwierzytelnieniu użytkownika
+                session['username'] = username
+                return True
+        return False
+
+    except Exception as error:
+        print("Error during user authentication:", error)
+        return False
+    finally:
+        cursor.close()
+
         return render_template('login.html')
 
 
-# Strona wylogowania
 @app.route('/logout')
 def logout():
-    # Usunięcie sesji
     session.pop('username', None)
     return redirect('/login')
 
@@ -139,24 +159,6 @@ def dashboard():
     if 'username' in session:
         username = session['username']
         return render_template('dashboard.html', username=username)
-    else:
-        return redirect('/login')
-
-
-# Funkcja sprawdzająca użytkownika w bazie danych
-def check_user(username, password):
-    # Przykładowe zapytanie do bazy danych
-    query = "SELECT COUNT(*) FROM Users WHERE username = root AND password = root"
-    values = (username, password)
-    cursor = db_connector.get_connection().cursor()
-    cursor.execute(query, values)
-    result = cursor.fetchone()[0]
-    cursor.close()
-
-    if result == 1:
-        return True
-    else:
-        return False
 
 
 # Dodawanie produktu
@@ -191,10 +193,9 @@ def remove_product(nazwa):
 
 
 # Rozłączanie z bazą danych
-#@app.teardown_appcontext
-#def teardown_db(exception):
+# @app.teardown_appcontext
+# def teardown_db(exception):
 #    db_connector.disconnect()
-
 
 if __name__ == '__main__':
     app.run()
