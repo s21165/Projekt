@@ -1,3 +1,4 @@
+// LoginForm.js
 import React, { useState } from 'react';
 
 function LoginForm({ onLogin }) {
@@ -6,7 +7,7 @@ function LoginForm({ onLogin }) {
 
     const handleSubmit = event => {
         event.preventDefault();
-        onLogin({ username, password });
+        onLogin({ username, password }); // Upewnij się, że przekazujesz dane jako obiekt JSON
     };
 
     return (
