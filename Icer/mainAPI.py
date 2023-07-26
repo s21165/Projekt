@@ -21,14 +21,6 @@ db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 # Łączenie z bazą danych
 db_connector.connect()
 
-## tutaj jakie sa juz dzialace endpointy
-print("http://127.0.0.1:5000/api/products")
-print("http://127.0.0.1:5000/api/Icer")
-print("http://127.0.0.1:5000/api/login")
-# work in progress
-print("http://127.0.0.1:5000/api/products/image")
-
-
 # Wyświetlanie lodówki
 @app.route('/api/Icer', methods=['GET'])
 def get_icer():
@@ -43,7 +35,6 @@ def get_icer():
         return jsonify(results)
     except Exception as error:
         return jsonify({"error": str(error)})
-
 
 # Wyświetlanie produktów z informacjami o obrazach produktów
 @app.route('/api/products/image', methods=['GET', 'POST'])
@@ -71,7 +62,6 @@ def get_images():
     except Exception as error:
         return jsonify({"error": str(error)})
 
-
 # Funkcja wyszukująca obraz dla danej nazwy produktu
 def search_image(product_name):
     # Użyj API Google Images lub innego dostępnego API do wyszukiwania obrazów na podstawie nazwy produktu
@@ -90,7 +80,6 @@ def search_image(product_name):
 
     return ""  # Zwróć pusty ciąg, jeśli nie znaleziono obrazu
 
-
 # Pobieranie danych produktów
 @app.route('/api/products', methods=['GET'])
 def get_products():
@@ -98,7 +87,6 @@ def get_products():
     product_data = ProductData(db_connector.get_connection())
     products = product_data.fetch_products()
     return jsonify(products)
-
 
 # Strona logowania
 @app.route('/login', methods=['GET', 'POST'])
@@ -119,7 +107,7 @@ def login():
         return jsonify({"message": "Method not allowed"}), 405
 
 
-# Funkcja sprawdzająca użytkownika w bazie danych
+
 def check_user(username, password):
     try:
         # Przykładowe zapytanie do bazy danych - UWAGA: To jest tylko przykład, NIEBEZPIECZNE dla produkcji!
@@ -143,59 +131,13 @@ def check_user(username, password):
     finally:
         cursor.close()
 
-        return render_template('login.html')
 
-
+# Strona wylogowania
 @app.route('/logout')
 def logout():
+    # Usunięcie sesji
     session.pop('username', None)
     return redirect('/login')
-
-
-# Strona główna po zalogowaniu
-@app.route('/dashboard')
-def dashboard():
-    # Sprawdzenie, czy użytkownik jest zalogowany
-    if 'username' in session:
-        username = session['username']
-        return render_template('dashboard.html', username=username)
-
-
-# Dodawanie produktu
-@app.route('/api/products', methods=['POST'])
-def add_product():
-    data = request.get_json()
-    nazwa = data['nazwa']
-    cena = data['cena']
-    kalorie = data['kalorie']
-    tluszcze = data['tluszcze']
-    weglowodany = data['weglowodany']
-    bialko = data['bialko']
-    kategoria = data['kategoria']
-    ilosc = data['ilosc']
-
-    product_manager = value_manager.ProductManager(db_connector)
-    product_manager.dodaj_produkt(nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria, ilosc)
-
-    return jsonify({"message": "Produkt został dodany do bazy danych."})
-
-
-# Odejmowanie produktu
-@app.route('/api/products/<string:nazwa>', methods=['PUT'])
-def remove_product(nazwa):
-    data = request.get_json()
-    ilosc_do_odejscia = data['ilosc']
-
-    product_manager = value_manager.ProductManager(db_connector)
-    product_manager.odejmij_produkt(nazwa, ilosc_do_odejscia)
-
-    return jsonify({"message": "Ilość produktu została zaktualizowana."})
-
-
-# Rozłączanie z bazą danych
-# @app.teardown_appcontext
-# def teardown_db(exception):
-#    db_connector.disconnect()
 
 if __name__ == '__main__':
     app.run()
