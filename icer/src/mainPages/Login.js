@@ -1,22 +1,46 @@
-import React, { useState } from 'react';
+// Login.js
+import React, {useContext, useEffect, useState} from 'react';
 import axios from 'axios';
 import LoginForm from './LoginForm';
+import {AuthContext} from "./auth-context";
+
+const backendUrl = 'http://localhost:5000'; // Dodaj backendUrl
 
 function Login() {
-    const [user, setUser] = useState(null);
+    const { login } = useContext(AuthContext);
 
-    const handleLogin = async credentials => {
+    // useEffect(() => {
+    //     const user = JSON.parse(localStorage.getItem('user'));
+    //     if (user) {
+    //         setUser(user);
+    //     }
+    // }, []);
+
+    // Funkcja do wysłania danych logowania (POST)
+    const handlePostLogin = async (credentials) => {
         try {
-            const response = await axios.post('http://localhost:5000/login', credentials);
-
-            setUser(response.data);
+            const response = await axios.post(`${backendUrl}/login`, credentials);
+            const { data } = response;
+            if (data) {
+                login(data);
+            }
         } catch (error) {
-            // Obsługa błędów logowania
-            console.error("Error during login", error);
+            console.error('Error during POST login', error);
         }
     };
 
-    return user ? <div>Welcome, {user.username}!</div> : <LoginForm onLogin={handleLogin} />;
+
+
+    return login.user ? (
+        <div>
+            Welcome, {login.username}!
+
+        </div>
+    ) : (
+        <div>
+            <LoginForm onLogin={handlePostLogin} />
+        </div>
+    );
 }
 
 export default Login;
