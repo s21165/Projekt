@@ -1,3 +1,4 @@
+// LoginForm.js
 import React, { useState } from 'react';
 import './LoginForm.css';
 import google from "../data/google.png";
@@ -8,7 +9,7 @@ function LoginForm({ onLogin }) {
 
     const handleSubmit = event => {
         event.preventDefault();
-        onLogin({ username, password });
+        onLogin({ username, password }); // Upewnij się, że przekazujesz dane jako obiekt JSON
     };
 
     return (
