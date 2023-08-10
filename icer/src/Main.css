@@ -1,7 +1,8 @@
 ::-webkit-scrollbar { width: 0; }
 
 .full{
-    font-size: clamp(12px, 1.2vw, 20px);
+    /*font-size: clamp(12px, 1.2vw, 20px);*/
+    font-size: calc((1.5vw + 1.5vh) / 2);
 
 }
 button {  /* resetting button styles */

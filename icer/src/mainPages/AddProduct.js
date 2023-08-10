@@ -5,13 +5,13 @@ import "./AddProduct.css"
 function AddProduct() {
     const [product, setProduct] = useState({
         nazwa: '',
-        cena: 0,
-        kalorie: 0,
-        tluszcze: 0,
-        weglowodany: 0,
-        bialko: 0,
+        cena: '',
+        kalorie: '',
+        tluszcze: '',
+        weglowodany: '',
+        bialko: '',
         kategoria: '',
-        ilosc: 0,
+        ilosc: '',
     });
 
     const handleChange = (e) => {

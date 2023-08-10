@@ -3,12 +3,13 @@
     flex-direction: column;
     max-width: 400px;
     margin: 0 auto;
+    font-size: calc(0.7vw + 0.7vh);
 }
 
 .addProductForm label {
     display: flex;
     flex-direction: column;
-    margin-bottom: 10px;
+    margin-bottom: 1vh;
 }
 
 .addProductForm input {
@@ -18,14 +19,27 @@
 }
 
 .addProductForm button {
-    padding: 10px 20px;
+    padding: 1vh 2vw;
     background-color: #4caf50;
     color: white;
     border: none;
     border-radius: 4px;
-    cursor: pointer;
+
 }
 
 .addProductForm button:hover {
     background-color: #45a049;
+}
+@media only screen and (max-width: 768px) {
+    .addProductForm {
+        max-width: 95%; /* Pozwala formularzowi zajmować większą część ekranu na tabletach */
+        font-size: 3.5vw; /* Możesz dostosować rozmiar czcionki */
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .addProductForm {
+        max-width: 100%; /* Pozwala formularzowi zajmować całą szerokość ekranu na telefonach */
+        font-size: 4vw; /* Możesz dostosować rozmiar czcionki */
+    }
 }

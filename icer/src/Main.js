@@ -136,10 +136,7 @@ function Main() {
                                             <Link to="/Wyloguj">{isIcon ? <h3>wyloguj</h3> :
                                                 <Icon className="menuIcons" icon="grommet-icons:logout"/>}</Link>
                                         </div>
-                                        <div className="navDivMain">
-                                            <Link to="/Zaloguj">{isIcon ? <h3>Login</h3> :
-                                                <Icon className="menuIcons" icon="solar:help-linear"/>}</Link>
-                                        </div>
+
                                     </div>
                                 </div>
                             )}

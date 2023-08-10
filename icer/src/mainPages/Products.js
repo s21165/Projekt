@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import './Products.css';
+
 function Products() {
     const [data, setData] = useState(null);
-    let [jsonData, setJsonData] = useState(null);
+    // let [jsonData, setJsonData] = useState(null);
     const [refresh, setRefresh] = useState(false); // Dodajemy stan do odświeżania ekranu
 
 
@@ -17,12 +18,12 @@ function Products() {
                 console.error(`There was an error retrieving the data: ${error}`);
             });
     }, []);
-    useEffect(() => {
-        if (data) {
-            setJsonData = JSON.stringify(data);  // Przekształcenie obiektu JavaScript na dane w formacie JSON
-            console.log("jsondata: " + jsonData);
-        }
-    }, [refresh]);
+    // useEffect(() => {
+    //     if (data) {
+    //         setJsonData = JSON.stringify(data);  // Przekształcenie obiektu JavaScript na dane w formacie JSON
+    //         console.log("jsondata: " + jsonData);
+    //     }
+    // }, [refresh]);
     const handleRemove = (id) => {
         const config = {
             headers: {
@@ -42,23 +43,28 @@ function Products() {
     };
 
     return (
-        <div className="productList">
-            {data && data.map((data, index) =>
-                <div key={index} className="productItem">
-                    <p>Nazwa: {data[1]}</p>
-                    <p>Cena: {data[2]}</p>
-                    <p>Kalorie: {data[3]}</p>
-                    <p>Tłuszcze: {data[4]}</p>
-                    <p>Węglowodany: {data[5]}</p>
-                    <p>Białko: {data[6]}</p>
-                    <p>Kategoria: {data[7]}</p>
-                    <p>Ilość: {data[8]}</p>
-                    <button onClick={() => handleRemove(data[0])} data-id={data[0]}>
-                        Usuń
-                    </button>
-                </div>
-            )}
-        </div>
+        <>
+            <div className="productList">
+                {data && data.map((data, index) =>
+                    <div key={index} className="productItem">
+                        <p><h2>Nazwa: {data[1]}</h2></p>
+                        <p><h3>Cena: {data[2]}</h3></p>
+                        <p><h3>Kalorie: {data[3]}</h3></p>
+                        <p><h3>Tłuszcze: {data[4]}</h3></p>
+                        <p><h3>Węglowodany: {data[5]}</h3></p>
+                        <p><h3>Białko: {data[6]}</h3></p>
+                        <p><h3>Kategoria: {data[7]}</h3></p>
+                        <p><h3>Ilość: {data[8]}</h3></p>
+                        <button onClick={() => handleRemove(data[0])} data-id={data[0]}>
+                            <h2>USUŃ</h2>
+                        </button>
+                    </div>
+                )}
+            </div>
+            <div>
+
+            </div>
+        </>
     );
 };
 export default Products;

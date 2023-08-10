@@ -1,32 +1,71 @@
+
+.productList {
+    display: flex;       /* Ustawienie rodzica jako flex container */
+    flex-wrap: wrap;     /* Pozwala na zawijanie elementów do nowych linii */
+}
+
 .productItem {
+    flex: 1 0 35%;
+    margin: calc((0.5vw + 0.5vh)/2);
     background-color: #f5f5f5;
     border: 1px solid #ddd;
     border-radius: 4px;
-    padding: 10px;
-    margin-bottom: 10px;
+    padding: calc(1vw + 1vh);
+
 }
 .productList :hover{
     background-color: #D3CFCFFF;
 }
 
 .productItem h2 {
-    font-size: 18px;
-    margin-bottom: 5px;
+    font-size: calc(1vw + 1vh);
+    margin-bottom: 0.7vh;
+}
+.productItem h3 {
+    font-size: calc(0.6vw + 0.6vh);
+    margin-bottom: 1vh;
 }
 
 .productItem p {
-    margin: 5px 0;
+    margin: 0.7vh 0;
 }
 
 .productItem button {
+
     background-color: #4caf50;
+    text-align: center;
     color: white;
     border: none;
     border-radius: 4px;
-    padding: 5px 10px;
-    cursor: pointer;
+    padding: calc(0.5vw + 0.5vh) calc(1vw + 1vh);
+
+}
+
+.productItem button h2{
+    font-size:calc(0.7vw + 0.7vh) ;
+    margin: 0;
 }
 
 .productItem button:hover {
     background-color: #45a049;
+}
+
+@media only screen and (max-width: 600px) {
+    .productItem {
+
+
+        flex: 1 0 90%;  /* Zajmij całą dostępną szerokość kontenera */
+
+    }
+    .productItem h2 {
+        font-size: 2.5vh;
+        margin-bottom: 1vh;
+    }
+    .productItem p {
+        margin: 0.8vh 0;
+    }
+    .productItem button {
+        padding: 1vh 2vh;
+    }
+
 }

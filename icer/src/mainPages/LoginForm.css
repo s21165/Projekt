@@ -4,39 +4,77 @@
     align-items: center;
     height: 100vh;
     width: 100vw;
-
+    background-color: #eaf6ff;
 }
 
 .loginFormBox{
-    border:1px solid #b3cffd;
+    border: 3px solid #9dc5e8;
     padding: 1rem;
     display:flex;
+    margin-left:3rem;
+    margin-right:3rem;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    min-height: 70vh;
     max-width: 500px; /* Limit the maximum width of the box */
     width: 100%; /* Use full width available */
-
+    background-color: #d4e8f5;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    position: relative;
 }
+.loginFormBox::before {
+    content: "";
+    position: absolute;
+    right: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 60px;
+    background: linear-gradient(#9dc5e8, #b3cffd, #9dc5e8);
+    border-radius: 10px 0 0 10px;
+}
+
+
 
 .username, .password {
-    margin-bottom: 1rem;
-    border:1px solid #b3cffd;
-    padding: 0.5rem;
-    width: 100%; /* Use full width available */
+    margin: 5vh 4vw 2vh;
+
+    min-height: 10vh;
+    border:2px solid #b3cffd;
+    padding: 0.5vh;
+    width: 90%; /* Use full width available */
 }
 
-.loginButton{
-    border:1px solid #b3cffd;
-    margin-top: 1rem;
-    padding:0.5rem;
-    width: 100%; /* Use full width available */
+.username:focus, .password:focus {
+    background-color: #ffffcc;
+    border-color: #b3cffd;
+    box-shadow: 0 0 8px rgba(179, 207, 253, 0.5);
+    outline: none;
 }
+
+
+.loginButton{
+    border: 2px solid #b3cffd;
+    margin-top: 5vh;
+    padding:0.5vw 0.5vw;
+    width: 100%;
+    background-color: #9dc5e8;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.loginButton:hover {
+    background-color: #7fb0d5; /* Chłodniejszy kolor po najechaniu */
+}
+
 .loginTypes {
     display: flex;
-    border: 1px solid #b3cffd;
-    margin-top: 1rem;
-    padding: 0.5rem;
+
+    margin-top: 4vh;
+    margin-bottom: 5vh;
+    padding: 3rem 0.5rem 0.5rem;
     width:80%;
     justify-content: space-between; /* Rozdziela elementy równomiernie wzdłuż linii */
 }
@@ -51,18 +89,28 @@
     align-items: center; /* Wyśrodkowuje zawartość elementu wzdłuż krzyżowej osi */
     text-align: center; /* Wyśrodkowuje tekst */
     padding: 0.5rem;
+    border: 2px solid transparent;
+    transition: border-color 0.3s ease;
+
+}
+
+.loginGoogle:hover, .loginFacebook:hover {
+    background-color: #deeffc; /* Akcent po najechaniu myszą */
+    transform: scale(1.1); /* Powiększa element o 10% */
+    transition: transform 0.3s ease;
+
 }
 
 .googleLogo{
 
-    width:100%;
-    height:100%;
+    width:80%;
+    height:80%;
 
 }
 
 .facebookLogo{
 
-    width:50%;
-    height:50%;
+    width:80%;
+    height:80%;
 
 }
