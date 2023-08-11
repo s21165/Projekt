@@ -19,12 +19,14 @@ button {  /* resetting button styles */
 .navExpandButton{
     position:absolute;
 
+
 }
 
 .logoContainer{
     display: flex;
     justify-content: center;
     align-items: center;
+
     padding: 5px;
     background: #F8F8F8;
     margin-bottom: 2px;
@@ -77,7 +79,7 @@ button {  /* resetting button styles */
 
     grid-area: all;
     text-align: center;
-
+    background-color: white;
 }
 .slimMenu{
     position: fixed;
@@ -115,23 +117,27 @@ button {  /* resetting button styles */
 }
 .navDiv{
     position:relative;
-    padding:1vh;
+    padding:1vh ;
     height: 10vh;
     text-align: center;
+    display:grid;
     align-items: center;
+
     overflow-wrap: break-word;
-
-
+    justify-content: center;
+    border-bottom: #F2F2F5 1px solid;
 }
 .navDivMain{
-
     position:relative;
-    padding:1vh;
+    padding:1vh ;
     height: 10vh;
     text-align: center;
+    display:grid;
     align-items: center;
-    overflow-wrap: break-word;
 
+    overflow-wrap: break-word;
+    justify-content: center;
+    border-bottom: #F2F2F5 1px solid;
 }
 
 .menuIcons{
@@ -157,7 +163,10 @@ a:link{
 
 }
 .menuNavButton{
-
+    width:100%;
+    height:100%;
+    justify-content: center;
+    align-items: center;
     margin:auto;
     display:grid;
     border:none;
@@ -174,3 +183,100 @@ a:link{
     margin-right:1vw;
 
 }
+
+
+@media only screen and (min-width: 1200px) {
+
+    .body {
+
+        grid:
+    "all menu" 1fr
+    / 83.5% 16%;
+    }
+    .menu{
+
+        width: 16vw;
+
+    }
+    .body-slimMenu{
+        grid:
+    "all slimMenu" 1fr
+    /  94.5% 5%;
+
+    }
+    .slimMenu{
+        width:5.4vw;
+    }
+    .navDiv, .navDivMain{
+
+        padding:calc(0.5vw + 0.5vh / 2) ;
+
+    }
+
+
+
+}
+
+
+@media only screen and (max-width: 800px) {
+
+    .body {
+
+        grid:
+    "all menu" 1fr
+    / 75.5% 24%;
+    }
+    .menu{
+
+        width: 24vw;
+
+    }
+    .smallLogo{
+        width:70%;
+        height: 70%;
+    }
+    .logo {
+
+
+        width: 55%;
+        height: 55%;
+    }
+    .menuIcons{
+        width: 4.3vw;
+        height:4.3vh;
+
+
+    }
+
+
+}
+@media only screen and (max-width: 500px) {
+
+    .body-slimMenu{
+        grid:
+    "all slimMenu" 1fr
+    /  87.5% 12%;
+
+    }
+    .slimMenu{
+        width:12vw;
+    }
+
+    .smallLogo{
+        width:75%;
+        height: 75%;
+    }
+    .logo {
+
+
+        width: 60%;
+        height: 60%;
+    }
+    .menuIcons{
+        width: 5vw;
+        height:5vh;
+
+
+    }
+}
+

@@ -6,7 +6,7 @@
 
 .productItem {
     flex: 1 0 35%;
-    margin: calc((0.5vw + 0.5vh)/2);
+    margin: 0.4vh 0.2vw;
     background-color: #f5f5f5;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -14,7 +14,7 @@
 
 }
 .productList :hover{
-    background-color: #D3CFCFFF;
+    background-color: #F2F2F5;
 }
 
 .productItem h2 {
