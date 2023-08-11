@@ -6,6 +6,15 @@ import reportWebVitals from './reportWebVitals';
 import {AuthProvider} from "./mainPages/auth-context";
 
 
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('%PUBLIC_URL%/sw.js').then(registration => {
+            console.log('Service Worker zarejestrowany:', registration);
+        }).catch(registrationError => {
+            console.log('Rejestracja Service Worker nie powiodła się:', registrationError);
+        });
+    });
+}
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
