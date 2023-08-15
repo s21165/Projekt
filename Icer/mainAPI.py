@@ -130,7 +130,9 @@ def check_user(username, password):
         return False
     finally:
         cursor.close()
-
+# Dodawanie produktu
+@app.route('/api/products', methods=['POST'])
+def add_product():
 
 # Strona wylogowania
 @app.route('/logout')
