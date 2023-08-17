@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session, render_template, redirect
+from flask import Flask, request, jsonify, session, render_template, redirect 
 from flask_cors import CORS
 import requests
 from dotenv import load_dotenv
@@ -21,9 +21,30 @@ db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 # Łączenie z bazą danych
 db_connector.connect()
 
-#Dodawanie produktu
-product_manager = value_manager.ProductManager(db_connector)  # Tworzenie instancji klasy ProductManager
-product_manager.dodaj_produkt("Kokos", 2.5, 52, 0.2, 13.8, 0.3, "Owoce", 10)
+@app.route('/api/add_product', methods=['POST'])
+def add_product():
+    try:
+        # Pobieranie danych produktu z żądania
+        data = request.json
+
+        nazwa = data['nazwa']
+        cena = data['cena']
+        bialko = data['bialko']
+        tluszcze = data['tluszcze']
+        weglowodany = data['weglowodany']
+        blonnik = data['blonnik']
+        kategoria = data['kategoria']
+        ilosc = data['ilosc']
+
+
+
+        return jsonify({"message": "Produkt został dodany!"})
+
+    except Exception as error:
+        return jsonify({"error": str(error)})
+
+
+# # Dodawanie produktu do bazy danych za pomocą metody 'dodaj_produkt'        product_manager.dodaj_produkt(nazwa, cena, bialko, tluszcze, weglowodany, blonnik, kategoria, ilosc)
 
 # Wyświetlanie lodówki
 @app.route('/api/Icer', methods=['GET'])
@@ -134,10 +155,50 @@ def check_user(username, password):
         return False
     finally:
         cursor.close()
-# Dodawanie produktu
-@app.route('/api/products', methods=['POST'])
-def add_product():
 
+
+
+@app.route('/api/edit_user', methods=['POST'])
+def edit_user():
+    # Sprawdzanie, czy użytkownik jest zalogowany
+    if 'username' not in session:
+        return jsonify({"error": "Musisz być zalogowany, aby edytować dane."})
+
+    try:
+        data = request.json
+        new_password = data.get('new_password')
+        new_username = data.get('new_username')
+
+        cursor = db_connector.get_connection().cursor()
+
+        # Jeśli użytkownik dostarczył nowe hasło, aktualizuj hasło
+        if new_password:
+            query = "UPDATE Users SET password = %s WHERE username = %s"
+            values = (new_password, session['username'])
+            cursor.execute(query, values)
+
+        # Jeśli użytkownik dostarczył nową nazwę użytkownika, aktualizuj nazwę użytkownika
+        if new_username:
+            # Najpierw sprawdź, czy nowa nazwa użytkownika jest unikatowa
+            check_query = "SELECT * FROM Users WHERE username = %s"
+            cursor.execute(check_query, (new_username,))
+            if cursor.fetchone():
+                return jsonify({"error": "Nazwa użytkownika jest już zajęta."})
+
+            query = "UPDATE Users SET username = %s WHERE username = %s"
+            values = (new_username, session['username'])
+            cursor.execute(query, values)
+
+            # Aktualizacja nazwy użytkownika w sesji
+            session['username'] = new_username
+
+        db_connector.get_connection().commit()
+        cursor.close()
+
+        return jsonify({"message": "Dane zostały zaktualizowane!"})
+
+    except Exception as error:
+        return jsonify({"error": str(error)})
 
 
 # Strona wylogowania
