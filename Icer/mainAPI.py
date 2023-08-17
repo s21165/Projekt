@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session, render_template, redirect 
+from flask import Flask, request, jsonify, session, render_template, redirect
 from flask_cors import CORS
 import requests
 from dotenv import load_dotenv
@@ -42,9 +42,24 @@ def add_product():
 
     except Exception as error:
         return jsonify({"error": str(error)})
-
-
 # # Dodawanie produktu do bazy danych za pomocą metody 'dodaj_produkt'        product_manager.dodaj_produkt(nazwa, cena, bialko, tluszcze, weglowodany, blonnik, kategoria, ilosc)
+
+
+@app.route('/api/edit_product/<int:product_id>', methods=['PUT'])
+def edit_product(product_id):
+    try:
+        # Pobieranie danych produktu z żądania
+        data = request.json
+
+        # Aktualizacja produktu w bazie danych
+        db_connector.update_product(product_id, data)
+
+        return jsonify({"message": "Produkt został zaktualizowany!"})
+
+    except Exception as error:
+        return jsonify({"error": str(error)})
+
+
 
 # Wyświetlanie lodówki
 @app.route('/api/Icer', methods=['GET'])

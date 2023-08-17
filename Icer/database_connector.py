@@ -21,6 +21,23 @@ class DatabaseConnector:
         except mysql.connector.Error as error:
             print("Błąd połączenia z bazą danych: ", error)
 
+    def update_product(self, product_id, data):
+        query = """UPDATE products SET 
+                       nazwa=%s, 
+                       cena=%s, 
+                       bialko=%s, 
+                       tluszcze=%s, 
+                       weglowodany=%s, 
+                       blonnik=%s, 
+                       kategoria=%s, 
+                       ilosc=%s 
+                      WHERE id=%s"""
+
+        self.cursor.execute(query, (data['nazwa'], data['cena'], data['bialko'], data['tluszcze'],
+                                    data['weglowodany'], data['blonnik'], data['kategoria'],
+                                    data['ilosc'], product_id))
+        self.connection.commit()
+
     def disconnect(self):
         if self.connection:
             self.connection.close()
