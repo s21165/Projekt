@@ -21,6 +21,10 @@ db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 # Łączenie z bazą danych
 db_connector.connect()
 
+#Dodawanie produktu
+product_manager = value_manager.ProductManager(db_connector)  # Tworzenie instancji klasy ProductManager
+product_manager.dodaj_produkt("Kokos", 2.5, 52, 0.2, 13.8, 0.3, "Owoce", 10)
+
 # Wyświetlanie lodówki
 @app.route('/api/Icer', methods=['GET'])
 def get_icer():
@@ -133,6 +137,8 @@ def check_user(username, password):
 # Dodawanie produktu
 @app.route('/api/products', methods=['POST'])
 def add_product():
+
+
 
 # Strona wylogowania
 @app.route('/logout')
