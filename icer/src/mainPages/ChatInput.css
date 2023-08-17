@@ -1,0 +1,59 @@
+.chat-input-container {
+    position: absolute;   /* Pozycjonowanie absolutne względem najbliższego rodzica z pozycjonowaniem innym niż statyczne */
+    bottom: 0;            /* Ustawia położenie na samym dole rodzica */
+    left: 50%;            /* Ustawia na środku rodzica względem osi X */
+    transform: translateX(-50%); /* Kompensuje położenie, aby były dokładnie wyśrodkowane względem osi X */
+    background-color: #fff;      /* Biały kolor tła, można dostosować */
+    padding: 1rem;               /* Dodaje trochę przestrzeni wokół treści */
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    width:100%;
+    justify-content: space-between;
+}
+
+.chatInput {
+    width:80%;
+    padding: 0.5rem;
+
+      /* Trochę przestrzeni między inputem a przyciskiem */
+}
+
+.chatInputButton{
+    padding: 0.5rem 1rem; /* Przestrzeń wokół tekstu przycisku */
+    display: inline-block;
+    width:15%;
+}
+.minimize-button {
+    position: absolute;
+    top: 1%;
+    left: 1%;
+    padding: 0.5% 1%;
+    cursor: pointer;
+    z-index: 10;  /* Upewnij się, że przycisk jest zawsze widoczny */
+}
+
+.chat-icon-container {
+    position: absolute;
+    top: 1%;
+    left: 1%;
+    padding: 0.5% 1%;
+    cursor: pointer;
+    z-index: 10;       /* Upewnij się, że ikona jest zawsze widoczna */
+}
+.minimizeIcon{
+    width:150%;
+    height:150%;
+}
+.chatOpenIcon{
+    width:150%;
+    height:150%;
+}
+@media (max-width: 1000px) {
+    .minimizeIcon{
+        width:200%;
+        height:200%;
+    }
+    .chatOpenIcon{
+        width:200%;
+        height:200%;
+    }
+}

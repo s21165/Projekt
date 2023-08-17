@@ -76,7 +76,7 @@ button {  /* resetting button styles */
     transition: grid 0.5s ease-out 0.10s;
 }
 .wholeContainer{
-
+    position: relative;
     grid-area: all;
     text-align: center;
     background-color: white;

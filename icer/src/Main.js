@@ -21,6 +21,7 @@ import AddProduct from "./mainPages/AddProduct";
 import LoginForm from "./mainPages/LoginForm";
 import Login from "./mainPages/Login";
 import Help from "./mainPages/Help";
+import ChatContainer from "./mainPages/ChatContainer";
 
 
 function Main() {
@@ -72,8 +73,8 @@ function Main() {
                             <Route path="/Ustawienia" element={<History/>}/>
                             <Route path="/Pomoc" element={<Help/>}/>
                             <Route path="/Wyloguj" element={<Logout/>}/>
-                            <Route path="/Zaloguj" element={<Login/>}/>
-
+                            <Route path="/Zaloguj" element={<Fridge/>}/>
+                            <Route path="/Chatbot" element={<ChatContainer/>}/>
 
                         </Routes>
                     </nav>

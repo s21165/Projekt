@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import './LoginForm.css';
 import google from "../data/google.png";
 import facebook from "../data/facebook.png";
+import {Icon} from "@iconify/react";
+import {Link} from "react-router-dom";
 function LoginForm({ onLogin }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -27,7 +29,9 @@ function LoginForm({ onLogin }) {
                     onChange={e => setPassword(e.target.value)}
                     placeholder="Password"
                 />
+
                 <button type="submit" className="loginButton">Login</button>
+
                 <div className="loginTypes">
                     <button className="loginGoogle">
                         <img src={google} alt="googleLogo" className="googleLogo"/>
