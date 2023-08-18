@@ -3,7 +3,7 @@ from flask_cors import CORS
 import requests
 from dotenv import load_dotenv
 import os
-
+import bcrypt
 import value_manager
 from database_connector import DatabaseConnector
 from product_data import ProductData
@@ -21,6 +21,7 @@ db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 # Łączenie z bazą danych
 db_connector.connect()
 
+
 @app.route('/api/add_product', methods=['POST'])
 def add_product():
     try:
@@ -36,12 +37,12 @@ def add_product():
         kategoria = data['kategoria']
         ilosc = data['ilosc']
 
-
-
         return jsonify({"message": "Produkt został dodany!"})
 
     except Exception as error:
         return jsonify({"error": str(error)})
+
+
 # # Dodawanie produktu do bazy danych za pomocą metody 'dodaj_produkt'        product_manager.dodaj_produkt(nazwa, cena, bialko, tluszcze, weglowodany, blonnik, kategoria, ilosc)
 
 
@@ -60,7 +61,6 @@ def edit_product(product_id):
         return jsonify({"error": str(error)})
 
 
-
 # Wyświetlanie lodówki
 @app.route('/api/Icer', methods=['GET'])
 def get_icer():
@@ -75,6 +75,7 @@ def get_icer():
         return jsonify(results)
     except Exception as error:
         return jsonify({"error": str(error)})
+
 
 # Wyświetlanie produktów z informacjami o obrazach produktów
 @app.route('/api/products/image', methods=['GET', 'POST'])
@@ -102,6 +103,7 @@ def get_images():
     except Exception as error:
         return jsonify({"error": str(error)})
 
+
 # Funkcja wyszukująca obraz dla danej nazwy produktu
 def search_image(product_name):
     # Użyj API Google Images lub innego dostępnego API do wyszukiwania obrazów na podstawie nazwy produktu
@@ -120,6 +122,7 @@ def search_image(product_name):
 
     return ""  # Zwróć pusty ciąg, jeśli nie znaleziono obrazu
 
+
 # Pobieranie danych produktów
 @app.route('/api/products', methods=['GET'])
 def get_products():
@@ -127,6 +130,7 @@ def get_products():
     product_data = ProductData(db_connector.get_connection())
     products = product_data.fetch_products()
     return jsonify(products)
+
 
 # Strona logowania
 @app.route('/login', methods=['GET', 'POST'])
@@ -147,10 +151,55 @@ def login():
         return jsonify({"message": "Method not allowed"}), 405
 
 
+## funkcje wykorzystywane do rejestracji
+def user_exists(username):
+    query = "SELECT * FROM Users WHERE username = %s"
+    values = (username,)
+    cursor = db_connector.get_connection().cursor()
+    cursor.execute(query, values)
+    result = cursor.fetchone()
+    cursor.close()
+
+    return True if result else False
+
+
+def save_user(username, hashed_pw):
+    try:
+        query = "INSERT INTO Users (username, password) VALUES (%s, %s)"
+        values = (username, hashed_pw.decode('utf-8'))
+        cursor = db_connector.get_connection().cursor()
+        cursor.execute(query, values)
+        db_connector.get_connection().commit()
+        return True
+    except Exception as error:
+        print("Error during registration:", error)
+        return False
+    finally:
+        cursor.close()
+
+
+@app.route('/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    username = data['username']
+    password = data['password']
+
+    # Sprawdzenie, czy użytkownik już istnieje
+    if user_exists(username):
+        return jsonify({"message": "User already exists"}), 400
+
+    # Szyfrowanie hasła
+    hashed_pw = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+
+    # Zapisanie użytkownika w bazie danych
+    if save_user(username, hashed_pw):
+        return jsonify({"message": "Registration successful"})
+    else:
+        return jsonify({"message": "Registration failed"}), 500
+
 
 def check_user(username, password):
     try:
-        # Przykładowe zapytanie do bazy danych - UWAGA: To jest tylko przykład, NIEBEZPIECZNE dla produkcji!
         query = "SELECT password FROM Users WHERE username = %s"
         values = (username,)
         cursor = db_connector.get_connection().cursor()
@@ -158,9 +207,8 @@ def check_user(username, password):
         result = cursor.fetchone()
 
         if result:
-            db_password = result[0]
-            if db_password == password:
-                # Utworzenie sesji po poprawnym uwierzytelnieniu użytkownika
+            db_password = result[0].encode('utf-8')
+            if bcrypt.checkpw(password.encode('utf-8'), db_password):
                 session['username'] = username
                 return True
         return False
@@ -170,7 +218,6 @@ def check_user(username, password):
         return False
     finally:
         cursor.close()
-
 
 
 @app.route('/api/edit_user', methods=['POST'])
@@ -222,6 +269,7 @@ def logout():
     # Usunięcie sesji
     session.pop('username', None)
     return redirect('/login')
+
 
 if __name__ == '__main__':
     app.run()
