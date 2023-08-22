@@ -5,14 +5,20 @@ import google from "../data/google.png";
 import facebook from "../data/facebook.png";
 import {Icon} from "@iconify/react";
 import {Link} from "react-router-dom";
-function LoginForm({ onLogin }) {
+import logo from "../data/logo.svg";
+
+function LoginForm({ onLogin , onSwitchToRegister  }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     const handleSubmit = event => {
         event.preventDefault();
-        onLogin({ username, password }); // Upewnij się, że przekazujesz dane jako obiekt JSON
+        if (onLogin) {
+            onLogin({ username, password });
+        }
+
     };
+
 
     return (
         <form onSubmit={handleSubmit} className="loginFormAll">
@@ -30,7 +36,11 @@ function LoginForm({ onLogin }) {
                     placeholder="Password"
                 />
 
-                <button type="submit" className="loginButton">Login</button>
+                <button type="submit" className="loginButton">Zaloguj</button>
+                <button type="button" className="registerButton" onClick={onSwitchToRegister}>
+                    Zarejestruj się
+                </button>
+
 
                 <div className="loginTypes">
                     <button className="loginGoogle">

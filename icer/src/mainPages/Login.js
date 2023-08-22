@@ -3,20 +3,13 @@ import React, {useContext, useEffect, useState} from 'react';
 import axios from 'axios';
 import LoginForm from './LoginForm';
 import {AuthContext} from "./auth-context";
+import RegisterForm from "./RegisterForm";
 
 const backendUrl = 'http://localhost:5000'; // Dodaj backendUrl
 
 function Login() {
     const { login } = useContext(AuthContext);
-
-    // useEffect(() => {
-    //     const user = JSON.parse(localStorage.getItem('user'));
-    //     if (user) {
-    //         setUser(user);
-    //     }
-    // }, []);
-
-    // Funkcja do wysłania danych logowania (POST)
+    const [mode, setMode] = useState('login');
     const handlePostLogin = async (credentials) => {
         try {
             const response = await axios.post(`${backendUrl}/login`, credentials);
@@ -29,16 +22,28 @@ function Login() {
         }
     };
 
+    const handlePostRegister = async (data) => {
+        try {
+            await axios.post(`${backendUrl}/register`, data);
+
+        } catch (error) {
+            console.error('Error during POST register', error);
+        }
+    };
 
 
     return login.user ? (
         <div>
-            Welcome, {login.username}!
+            Witaj, {login.username}!
 
         </div>
     ) : (
         <div>
-            <LoginForm onLogin={handlePostLogin} />
+            {mode === 'login' ?
+            <LoginForm onSwitchToRegister={() => setMode('register')} onLogin={handlePostLogin} />
+            :
+            <RegisterForm onSwitchToLogin={() => setMode('login')} onRegister={handlePostRegister} />
+            }
         </div>
     );
 }

@@ -24,6 +24,7 @@ import Help from "./mainPages/Help";
 import ChatContainer from "./mainPages/ChatContainer";
 
 
+
 function Main() {
 
     const [secoundMenu, setSecoundMenu] = useState(false);
@@ -75,6 +76,7 @@ function Main() {
                             <Route path="/Wyloguj" element={<Logout/>}/>
                             <Route path="/Zaloguj" element={<Fridge/>}/>
                             <Route path="/Chatbot" element={<ChatContainer/>}/>
+
 
                         </Routes>
                     </nav>
