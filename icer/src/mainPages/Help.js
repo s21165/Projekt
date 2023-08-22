@@ -5,9 +5,7 @@ import './Help.css';
 import {Icon} from "@iconify/react";
 function Help({isMinimized}){
 
-    if(isMinimized){
 
-    }
     return(
     <>
         <div>

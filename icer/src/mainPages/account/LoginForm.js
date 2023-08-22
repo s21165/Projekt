@@ -1,11 +1,11 @@
 // LoginForm.js
 import React, { useState } from 'react';
 import './LoginForm.css';
-import google from "../data/google.png";
-import facebook from "../data/facebook.png";
+import google from "../../data/google.png";
+import facebook from "../../data/facebook.png";
 import {Icon} from "@iconify/react";
 import {Link} from "react-router-dom";
-import logo from "../data/logo.svg";
+import logo from "../../data/logo.svg";
 
 function LoginForm({ onLogin , onSwitchToRegister  }) {
     const [username, setUsername] = useState('');

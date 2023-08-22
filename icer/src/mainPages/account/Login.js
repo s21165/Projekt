@@ -5,7 +5,7 @@ import LoginForm from './LoginForm';
 import {AuthContext} from "./auth-context";
 import RegisterForm from "./RegisterForm";
 
-const backendUrl = 'http://localhost:5000'; // Dodaj backendUrl
+const backendUrl = 'http://localhost:5000';
 
 function Login() {
     const { login } = useContext(AuthContext);

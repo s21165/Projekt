@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {AuthProvider} from "./mainPages/auth-context";
+import {AuthProvider} from "./mainPages/account/auth-context";
 
 
 if ('serviceWorker' in navigator) {

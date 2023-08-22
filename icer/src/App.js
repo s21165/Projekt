@@ -1,10 +1,10 @@
 import './App.css';
 import React, {useContext, useState} from "react";
-import {AuthContext} from "./mainPages/auth-context";
+import {AuthContext} from "./mainPages/account/auth-context";
 import Main from "./Main";
-import LoginForm from "./mainPages/LoginForm";
-import RegisterForm from "./mainPages/RegisterForm";
-import Login from "./mainPages/Login";
+import LoginForm from "./mainPages/account/LoginForm";
+import RegisterForm from "./mainPages/account/RegisterForm";
+import Login from "./mainPages/account/Login";
 
 function App() {
     const {user} = useContext(AuthContext);

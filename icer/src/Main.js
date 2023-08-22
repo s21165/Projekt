@@ -6,22 +6,22 @@ import {
     Route,
     Link, useLocation, Await
 } from "react-router-dom";
-import {Fridge} from "./mainPages/Fridge";
+import {Fridge} from "./mainPages/products/Fridge";
 import {History} from "./mainPages/History";
 import {Shops} from "./mainPages/Shops";
-import {Account} from "./mainPages/Account";
+import {Account} from "./mainPages/account/Account";
 import {Notifications} from "./mainPages/Notifications";
 import {Icon} from '@iconify/react';
 import React, {useEffect, useState} from "react";
 
-import Logout from "./mainPages/Logout";
-import EditAccount from "./mainPages/EditAccount";
-import Products from "./mainPages/Products";
-import AddProduct from "./mainPages/AddProduct";
-import LoginForm from "./mainPages/LoginForm";
-import Login from "./mainPages/Login";
+import Logout from "./mainPages/account/Logout";
+import EditAccount from "./mainPages/account/EditAccount";
+import Products from "./mainPages/products/Products";
+import AddProduct from "./mainPages/products/AddProduct";
+import LoginForm from "./mainPages/account/LoginForm";
+import Login from "./mainPages/account/Login";
 import Help from "./mainPages/Help";
-import ChatContainer from "./mainPages/ChatContainer";
+import ChatContainer from "./mainPages/chatBot/ChatContainer";
 
 
 

@@ -1,4 +1,4 @@
-.messageDiv {
+.userMessageDiv {
     background-color: #f1f1f1; /* jasnoszary kolor tła */
     border-radius: 8px;        /* zaokrąglone rogi */
     padding: 10px 15px;        /* padding wewnątrz chmurki */
@@ -9,10 +9,10 @@
     position: relative;        /* pozycja potrzebna do tworzenia "ogonka" chmurki */
 }
 
-.messageDiv::after {
+.userMessageDiv::after {
     content: '';               /* pusty content, aby pseudo-element był widoczny */
     position: absolute;        /* absolutne pozycjonowanie względem .messageDiv */
-    left: -10px;                /* przesunięcie na lewo od głównej chmurki */
+    left: -8px;                /* przesunięcie na lewo od głównej chmurki */
     top: 5px;                 /* przesunięcie od góry chmurki */
     width: 0;                  /* szerokość "ogonka" */
     height: 0;                 /* wysokość "ogonka" */
@@ -25,24 +25,62 @@
 
 
     width: 90%; /* Możesz dostosować tę wartość */
-    margin: auto; /* Wycentrowanie kontenera */
-
+    /* Wycentrowanie kontenera */
+    margin: auto auto 10vh;
 
 }
+.botMessageDiv {
+    background-color: #e6e6e6; /* przykładowy kolor tła dla bota */
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin: 10px 0 0 30px;
+    display: block;
+    max-width: 80%;
+    word-wrap: break-word;
+    position: relative;
+}
+
+.botMessageDiv::after {
+    content: '';
+    position: absolute;
+    right: -8px;             /* przesunięcie na prawo od głównej chmurki */
+    top: 5px;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid #e6e6e6; /* lewa część trójkąta, która tworzy "ogonek" */
+}
+
+
+
+
 
 @media (max-width: 1200px) {
-    .messageDiv {
+    .userMessageDiv, .botMessagesDiv {
         margin: 1.5% 2% 0 1%;
+    }
+    .messagesContainer{
+        margin-bottom:  15vh;
+
     }
 }
 @media (max-width: 1000px) {
-    .messageDiv {
+    .userMessageDiv, .botMessagesDiv {
         margin: 1.5% 2% 0 3%;
+    }
+    .messagesContainer{
+        margin-bottom:  17vh;
+
     }
 }
 @media (max-width: 600px) {
-    .messageDiv {
+    .userMessageDiv, .botMessagesDiv {
         margin: 1.5% 2% 0 5%;
+    }
+    .messagesContainer{
+        margin-bottom:  20vh;
+
     }
 }
 
