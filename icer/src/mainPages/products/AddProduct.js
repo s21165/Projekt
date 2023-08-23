@@ -12,6 +12,7 @@ function AddProduct() {
         bialko: '',
         kategoria: '',
         ilosc: '',
+        data_waznosci:'',
     });
 
     const handleChange = (e) => {
@@ -24,12 +25,14 @@ function AddProduct() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log("Wysyłam produkt:", product);
 
         axios
-            .post('http://localhost:5000/api/products', product)
+            .post('http://localhost:5000/api/add_product', product)
             .then((response) => {
-                console.log(response.data);
-                // Możesz wykonać odpowiednie akcje po dodaniu produktu, np. zaktualizować listę produktów
+
+                console.log(`Dodane: ${JSON.stringify(response.data)}`);
+                
             })
             .catch((error) => {
                 console.error(`There was an error adding the product: ${error}`);
@@ -44,6 +47,7 @@ function AddProduct() {
             bialko: 0,
             kategoria: '',
             ilosc: 0,
+            data_waznosci:'',
         });
     };
 
@@ -80,6 +84,10 @@ function AddProduct() {
             <label>
                 Ilość:
                 <input type="text" name="ilosc" value={product.ilosc} onChange={handleChange} />
+            </label>
+            <label>
+                Data ważności:
+                <input type="text" name="data_waznosci" value={product.data_waznosci} onChange={handleChange} />
             </label>
 
             <button type="submit">Dodaj produkt</button>
