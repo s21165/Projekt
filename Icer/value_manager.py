@@ -1,3 +1,4 @@
+
 class ProductManager:
     def __init__(self, database_connector):
         self.db_connector = database_connector

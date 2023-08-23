@@ -24,7 +24,7 @@ db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 db_connector.connect()
 
 # Tworzenie instancji ProductManager
-product_manager = value_manager.ProductManager(database_connector)
+product_manager = value_manager.ProductManager(db_connector)
 
 
 @app.route('/api/add_product', methods=['POST'])
