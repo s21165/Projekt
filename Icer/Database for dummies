@@ -8,7 +8,7 @@ CREATE TABLE Users (
     password VARCHAR(255) NOT NULL
 );
 INSERT INTO Users (username, password)
-VALUES ('root', 'root');
+VALUES ('root', '$2b$12$8JnOBy0M5Edogzihz79MsOUzPQVLlWtYBnf3X9KQSaQx825MqFbsu');
 
 -- tworzenie tabeli Produkty
 CREATE TABLE Produkty (
