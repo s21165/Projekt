@@ -1,14 +1,12 @@
-from flask import Flask, request, jsonify, session, render_template, redirect
+from flask import Flask, request, jsonify, session, redirect
 from flask_cors import CORS
 import requests
 from dotenv import load_dotenv
-import os
 import bcrypt
 
-import database_connector
-import value_manager
-from database_connector import DatabaseConnector
-from product_data import ProductData
+from modules import value_manager
+from node_modules.database_connector import DatabaseConnector
+from modules.product_data import ProductData
 
 app = Flask(__name__)
 CORS(app)
