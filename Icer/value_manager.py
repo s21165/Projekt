@@ -2,13 +2,13 @@ class ProductManager:
     def __init__(self, database_connector):
         self.db_connector = database_connector
 
-    def dodaj_produkt(self, nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria, ilosc):
+    def dodaj_produkt(self, nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria, ilosc, data_waznosci):
         try:
             connection = self.db_connector.get_connection()
             cursor = connection.cursor()
 
-            query = "INSERT INTO Produkty (nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria, ilosc) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-            values = (nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria, ilosc)
+            query = "INSERT INTO Produkty (nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria, ilosc, data_waznosci) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            values = (nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria, ilosc, data_waznosci)
 
             cursor.execute(query, values)
 

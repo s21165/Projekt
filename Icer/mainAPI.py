@@ -4,6 +4,8 @@ import requests
 from dotenv import load_dotenv
 import os
 import bcrypt
+
+import database_connector
 import value_manager
 from database_connector import DatabaseConnector
 from product_data import ProductData
@@ -21,6 +23,9 @@ db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 # Łączenie z bazą danych
 db_connector.connect()
 
+# Tworzenie instancji ProductManager
+product_manager = value_manager.ProductManager(database_connector)
+
 
 @app.route('/api/add_product', methods=['POST'])
 def add_product():
@@ -30,20 +35,21 @@ def add_product():
 
         nazwa = data['nazwa']
         cena = data['cena']
+        kalorie = data['kalorie']
         bialko = data['bialko']
         tluszcze = data['tluszcze']
         weglowodany = data['weglowodany']
-        blonnik = data['blonnik']
         kategoria = data['kategoria']
         ilosc = data['ilosc']
+        data_waznosci = data['data_waznosci']
+
+        # Użycie klasy ProductManager do dodawania produktu do bazy danych
+        product_manager.dodaj_produkt(nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria, ilosc, data_waznosci)
 
         return jsonify({"message": "Produkt został dodany!"})
 
     except Exception as error:
         return jsonify({"error": str(error)})
-
-
-# # Dodawanie produktu do bazy danych za pomocą metody 'dodaj_produkt'        product_manager.dodaj_produkt(nazwa, cena, bialko, tluszcze, weglowodany, blonnik, kategoria, ilosc)
 
 
 @app.route('/api/edit_product/<int:product_id>', methods=['PUT'])
