@@ -44,9 +44,26 @@ def add_product():
         data_waznosci = data['data_waznosci']
 
         # Użycie klasy ProductManager do dodawania produktu do bazy danych
-        product_manager.dodaj_produkt(nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria, ilosc, data_waznosci)
+        product_manager.dodaj_produkt(nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria, ilosc,
+                                      data_waznosci)
 
         return jsonify({"message": "Produkt został dodany!"})
+
+    except Exception as error:
+        return jsonify({"error": str(error)})
+
+
+@app.route('/api/subtract_product', methods=['POST'])
+def subtract_product():
+    try:
+        data = request.json
+        id_produktu = data['id_produktu']
+        ilosc_do_odejscia = data['ilosc_do_odejscia']
+
+        # Użycie klasy ProductManager do odejmowania ilości produktu w bazie danych
+        product_manager.odejmij_produkt(id_produktu, ilosc_do_odejscia)
+
+        return jsonify({"message": "Ilość produktu została zaktualizowana!"})
 
     except Exception as error:
         return jsonify({"error": str(error)})
