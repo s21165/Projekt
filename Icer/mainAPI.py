@@ -9,7 +9,6 @@ from node_modules.database_connector import DatabaseConnector
 from modules.product_data import ProductData
 from datetime import datetime, timedelta
 
-
 app = Flask(__name__)
 CORS(app)
 app.secret_key = 'secret_key'  # Klucz sesji
@@ -29,27 +28,74 @@ product_manager = value_manager.ProductManager(db_connector)
 
 @app.route('/api/add_product', methods=['POST'])
 def add_product():
+    TESTING = True
+
+    if TESTING:
+        session['username'] = 'root'
+
+    connection = None
+    cursor = None
     try:
-        # Pobieranie danych produktu z żądania
+        if 'username' not in session:
+            return jsonify({"error": "User not logged in"}), 401
+
+        username = session['username']
+
+        connection = db_connector.get_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        # Sprawdzenie użytkownika
+        user_query = "SELECT id FROM Users WHERE username = %s"
+        cursor.execute(user_query, (username,))
+        user_result = cursor.fetchone()
+
+        if not user_result:
+            cursor.close()
+            connection.close()
+            return jsonify({"error": "User not found"}), 401
+
         data = request.json
+        UserID = user_result['id']
 
-        nazwa = data['nazwa']
-        cena = data['cena']
-        kalorie = data['kalorie']
-        bialko = data['bialko']
-        tluszcze = data['tluszcze']
-        weglowodany = data['weglowodany']
-        kategoria = data['kategoria']
-        ilosc = data['ilosc']
-        data_waznosci = data['data_waznosci']
+        # Sprawdzenie, czy produkt już istnieje
+        check_product_query = "SELECT id FROM Produkty WHERE nazwa = %s AND cena = %s"
+        cursor.execute(check_product_query, (data['nazwa'], data['cena']))
+        product_exists = cursor.fetchone()
 
-        # Użycie klasy ProductManager do dodawania produktu do bazy danych
-        product_manager.dodaj_produkt(nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria, ilosc,
-                                      data_waznosci)
+        # Jeśli produkt istnieje, użyj jego ID. W przeciwnym razie dodaj nowy produkt.
+        if product_exists:
+            produktID = product_exists['id']
+        else:
+            produktID = product_manager.dodaj_produkt(
+                data['nazwa'],
+                data['cena'],
+                data['kalorie'],
+                data['tluszcze'],
+                data['weglowodany'],
+                data['bialko'],
+                data['kategoria']
+            )
+
+            if produktID is None:  # Sprawdzenie, czy produkt został poprawnie dodany
+                cursor.close()
+                connection.close()
+                return jsonify({"error": "Failed to add product to Produkty table."})
+
+        # Dodawanie produktu do tabeli Icer
+        icer_query = "INSERT INTO Icer (UserID, produktID, ilosc, data_waznosci) VALUES (%s, %s, %s, %s)"
+        cursor.execute(icer_query, (UserID, produktID, data['ilosc'], data['data_waznosci']))
+        connection.commit()
+
+        cursor.close()
+        connection.close()
 
         return jsonify({"message": "Produkt został dodany!"})
 
     except Exception as error:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
         return jsonify({"error": str(error)})
 
 
@@ -86,40 +132,41 @@ def edit_product(product_id):
 
 @app.route('/api/Icer', methods=['GET'])
 def get_icer():
-    # Przykładowe zapytanie do bazy danych
-    query = """SELECT Icer.id, Icer.UserID, Icer.produktID, Icer.ilosc, 
-               Icer.trzecia_wartosc, Produkty.data_waznosci 
-               FROM Icer INNER JOIN Produkty 
-               ON Icer.produktID = Produkty.id"""
+    connection = db_connector.get_connection()
+    cursor = connection.cursor(dictionary=True)
 
     try:
-        connection = db_connector.get_connection()
-        cursor = connection.cursor(dictionary=True)
-        cursor.execute(query)
+        if 'username' not in session:
+            return jsonify({"error": "User not logged in"}), 401
+
+        # Pobranie ID aktualnie zalogowanego użytkownika
+        username = session['username']
+        user_query = "SELECT id FROM Users WHERE username = %s"
+        cursor.execute(user_query, (username,))
+        user_result = cursor.fetchone()
+
+        if not user_result:
+            return jsonify({"error": "User not found"}), 401
+
+        # Modyfikacja zapytania SQL, aby pokazywać tylko produkty dla aktualnego użytkownika
+        user_id = user_result['id']
+        query = """
+            SELECT Icer.id, Icer.UserID, Icer.produktID, Icer.ilosc, 
+                   Icer.data_waznosci, Icer.trzecia_wartosc
+            FROM Icer
+            INNER JOIN Produkty ON Icer.produktID = Produkty.id
+            WHERE Icer.UserID = %s
+        """
+        cursor.execute(query, (user_id,))
         results = cursor.fetchall()
 
-        today = datetime.today().date()
-
-        for result in results:
-            data_waznosci = result['data_waznosci']
-            if data_waznosci == today + timedelta(days=1):
-                result['trzecia_wartosc'] = 1
-                update_query = """UPDATE Icer SET trzecia_wartosc = 1 WHERE id = %s"""
-                cursor.execute(update_query, (result['id'],))
-            elif data_waznosci >= today and data_waznosci <= today + timedelta(days=7):
-                result['trzecia_wartosc'] = 2
-                update_query = """UPDATE Icer SET trzecia_wartosc = 2 WHERE id = %s"""
-                cursor.execute(update_query, (result['id'],))
-            elif data_waznosci > today + timedelta(days=7):
-                result['trzecia_wartosc'] = 3
-                update_query = """UPDATE Icer SET trzecia_wartosc = 3 WHERE id = %s"""
-                cursor.execute(update_query, (result['id'],))
-
-        connection.commit()
-        cursor.close()
         return jsonify(results)
+
     except Exception as error:
         return jsonify({"error": str(error)})
+
+    finally:
+        cursor.close()
 
 
 # Wyświetlanie produktów z informacjami o obrazach produktów

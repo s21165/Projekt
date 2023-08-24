@@ -1,9 +1,8 @@
 import requests
 
 url = "http://localhost:5000/api/add_product"
-
 data = {
-    "nazwa": "Testowy produkt",
+    "nazwa": "Testowy Chuj",
     "cena": 10.50,
     "kalorie": 100,
     "bialko": 2.5,
@@ -14,9 +13,9 @@ data = {
     "data_waznosci": "2023-08-25"
 }
 
-#response = requests.post(url, json=data)
+response = requests.post(url, json=data)
 
-#print(response.text)
+print(response.text)
 
 url2 = "http://localhost:5000/api/subtract_product"
 
@@ -40,5 +39,5 @@ data3 = {
     "new_username": "NowaNazwaUzytkownika"  # Przykładowa nowa nazwa użytkownika
 }
 
-response3 = requests.post(url3, json=data3)
-print(response3.text)
+#response3 = requests.post(url3, json=data3)
+#print(response3.text)
