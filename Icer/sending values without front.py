@@ -1,21 +1,70 @@
 import requests
 
 url = "http://localhost:5000/api/add_product"
-data = {
-    "nazwa": "Testowy Chuj",
-    "cena": 10.50,
-    "kalorie": 100,
-    "bialko": 2.5,
-    "tluszcze": 1.5,
-    "weglowodany": 20,
-    "kategoria": "Napoje",
-    "ilosc": 5,
-    "data_waznosci": "2023-08-25"
-}
 
-response = requests.post(url, json=data)
+products = [
+    {
+        "nazwa": "Mleko",
+        "cena": 2.50,
+        "kalorie": 42,
+        "bialko": 3.4,
+        "tluszcze": 1.2,
+        "weglowodany": 5.0,
+        "kategoria": "Napoje",
+        "ilosc": 5,
+        "data_waznosci": "2023-08-25"
+    },
+    {
+        "nazwa": "Jajko",
+        "cena": 0.50,
+        "kalorie": 68,
+        "bialko": 5.5,
+        "tluszcze": 4.8,
+        "weglowodany": 0.6,
+        "kategoria": "Nabiał",
+        "ilosc": 10,
+        "data_waznosci": "2023-09-10"
+    },
+    # ... dodaj kolejne produkty
+    {
+        "nazwa": "Chleb",
+        "cena": 2.80,
+        "kalorie": 265,
+        "bialko": 8.2,
+        "tluszcze": 1.1,
+        "weglowodany": 48.0,
+        "kategoria": "Pieczywo",
+        "ilosc": 3,
+        "data_waznosci": "2023-08-27"
+    },
+    {
+        "nazwa": "Szynka",
+        "cena": 12.00,
+        "kalorie": 250,
+        "bialko": 22.0,
+        "tluszcze": 18.0,
+        "weglowodany": 0.5,
+        "kategoria": "Mięso",
+        "ilosc": 2,
+        "data_waznosci": "2023-09-02"
+    },
+    {
+        "nazwa": "Pomidor",
+        "cena": 1.20,
+        "kalorie": 22,
+        "bialko": 0.9,
+        "tluszcze": 0.2,
+        "weglowodany": 4.7,
+        "kategoria": "Warzywa",
+        "ilosc": 7,
+        "data_waznosci": "2023-09-15"
+    }
+    # ... dodaj kolejne produkty do osiągnięcia 10 produktów
+]
 
-print(response.text)
+for product in products:
+    response = requests.post(url, json=product)
+    print(f"Response for {product['nazwa']}: {response.text}")
 
 url2 = "http://localhost:5000/api/subtract_product"
 
