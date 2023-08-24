@@ -59,6 +59,7 @@ products = [
         "ilosc": 7,
         "data_waznosci": "2023-09-15"
     }
+
     # ... dodaj kolejne produkty do osiągnięcia 10 produktów
 ]
 

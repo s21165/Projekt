@@ -9,15 +9,17 @@ class ProductManager:
 
             query = "INSERT INTO Produkty (nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria) VALUES (%s, %s, %s, %s, %s, %s, %s)"
             values = (nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria)
-            cursor.execute(query, values)
 
-            connection.commit()
+            with connection.cursor() as cursor:
+                cursor.execute(query, values)
+                connection.commit()
 
-            return cursor.lastrowid  # Zwraca ID dodanego produktu
+                return cursor.lastrowid  # Zwraca ID dodanego produktu
 
         except Exception as error:
             print("Błąd podczas dodawania produktu do bazy danych: ", error)
             return None
+
 
     def odejmij_produkt(self, id_produktu, ilosc_do_odejscia):
         try:

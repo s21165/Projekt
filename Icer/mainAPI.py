@@ -9,6 +9,8 @@ from node_modules.database_connector import DatabaseConnector
 from modules.product_data import ProductData
 from datetime import datetime, timedelta
 
+from modules.value_manager import ProductManager
+
 app = Flask(__name__)
 CORS(app)
 app.secret_key = 'secret_key'  # Klucz sesji
@@ -23,50 +25,61 @@ db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 db_connector.connect()
 
 # Tworzenie instancji ProductManager
-product_manager = value_manager.ProductManager(db_connector)
+product_manager = ProductManager(db_connector)
 
 
 @app.route('/api/add_product', methods=['POST'])
-def add_product():
-    TESTING = True
 
-    if TESTING:
-        session['username'] = 'root'
+
+
+def add_product():
+    # Tworzenie instancji klasy DatabaseConnector
+    db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+
+    # Łączenie z bazą danych
+    db_connector.connect()
+
+    # Tworzenie instancji ProductManager
+    product_manager = ProductManager(db_connector)
 
     connection = None
     cursor = None
+
     try:
+        # Opcjonalnie: Wersja testowa z domyślnym użytkownikiem
+        TESTING = True
+        if TESTING:
+            session['username'] = 'root'
+
+        # Sprawdzenie, czy użytkownik jest zalogowany
         if 'username' not in session:
             return jsonify({"error": "User not logged in"}), 401
-
-        username = session['username']
 
         connection = db_connector.get_connection()
         cursor = connection.cursor(dictionary=True)
 
-        # Sprawdzenie użytkownika
+        username = session['username']
+
+        # Pobranie ID użytkownika na podstawie nazwy użytkownika
         user_query = "SELECT id FROM Users WHERE username = %s"
         cursor.execute(user_query, (username,))
         user_result = cursor.fetchone()
 
         if not user_result:
-            cursor.close()
-            connection.close()
             return jsonify({"error": "User not found"}), 401
 
         data = request.json
-        UserID = user_result['id']
+        user_id = user_result['id']
 
         # Sprawdzenie, czy produkt już istnieje
         check_product_query = "SELECT id FROM Produkty WHERE nazwa = %s AND cena = %s"
         cursor.execute(check_product_query, (data['nazwa'], data['cena']))
         product_exists = cursor.fetchone()
 
-        # Jeśli produkt istnieje, użyj jego ID. W przeciwnym razie dodaj nowy produkt.
         if product_exists:
-            produktID = product_exists['id']
+            product_id = product_exists['id']
         else:
-            produktID = product_manager.dodaj_produkt(
+            product_id = product_manager.dodaj_produkt(
                 data['nazwa'],
                 data['cena'],
                 data['kalorie'],
@@ -76,27 +89,24 @@ def add_product():
                 data['kategoria']
             )
 
-            if produktID is None:  # Sprawdzenie, czy produkt został poprawnie dodany
-                cursor.close()
-                connection.close()
+            if product_id is None:
                 return jsonify({"error": "Failed to add product to Produkty table."})
 
         # Dodawanie produktu do tabeli Icer
         icer_query = "INSERT INTO Icer (UserID, produktID, ilosc, data_waznosci) VALUES (%s, %s, %s, %s)"
-        cursor.execute(icer_query, (UserID, produktID, data['ilosc'], data['data_waznosci']))
-        connection.commit()
+        cursor.execute(icer_query, (user_id, product_id, data['ilosc'], data['data_waznosci']))
 
-        cursor.close()
-        connection.close()
+        connection.commit()
 
         return jsonify({"message": "Produkt został dodany!"})
 
     except Exception as error:
+        return jsonify({"error": str(error)}), 500
+    finally:
         if cursor:
             cursor.close()
         if connection:
             connection.close()
-        return jsonify({"error": str(error)})
 
 
 @app.route('/api/subtract_product', methods=['POST'])
