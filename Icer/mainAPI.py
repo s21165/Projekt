@@ -7,6 +7,8 @@ import bcrypt
 from modules import value_manager
 from node_modules.database_connector import DatabaseConnector
 from modules.product_data import ProductData
+from datetime import datetime, timedelta
+
 
 app = Flask(__name__)
 CORS(app)
@@ -82,16 +84,38 @@ def edit_product(product_id):
         return jsonify({"error": str(error)})
 
 
-# Wyświetlanie lodówki
 @app.route('/api/Icer', methods=['GET'])
 def get_icer():
     # Przykładowe zapytanie do bazy danych
-    query = "SELECT * FROM Icer"
+    query = """SELECT Icer.id, Icer.UserID, Icer.produktID, Icer.ilosc, 
+               Icer.trzecia_wartosc, Produkty.data_waznosci 
+               FROM Icer INNER JOIN Produkty 
+               ON Icer.produktID = Produkty.id"""
 
     try:
-        cursor = db_connector.get_connection().cursor()
+        connection = db_connector.get_connection()
+        cursor = connection.cursor(dictionary=True)
         cursor.execute(query)
         results = cursor.fetchall()
+
+        today = datetime.today().date()
+
+        for result in results:
+            data_waznosci = result['data_waznosci']
+            if data_waznosci == today + timedelta(days=1):
+                result['trzecia_wartosc'] = 1
+                update_query = """UPDATE Icer SET trzecia_wartosc = 1 WHERE id = %s"""
+                cursor.execute(update_query, (result['id'],))
+            elif data_waznosci >= today and data_waznosci <= today + timedelta(days=7):
+                result['trzecia_wartosc'] = 2
+                update_query = """UPDATE Icer SET trzecia_wartosc = 2 WHERE id = %s"""
+                cursor.execute(update_query, (result['id'],))
+            elif data_waznosci > today + timedelta(days=7):
+                result['trzecia_wartosc'] = 3
+                update_query = """UPDATE Icer SET trzecia_wartosc = 3 WHERE id = %s"""
+                cursor.execute(update_query, (result['id'],))
+
+        connection.commit()
         cursor.close()
         return jsonify(results)
     except Exception as error:
@@ -243,6 +267,7 @@ def check_user(username, password):
 
 @app.route('/api/edit_user', methods=['POST'])
 def edit_user():
+    print("test")
     # Sprawdzanie, czy użytkownik jest zalogowany
     if 'username' not in session:
         return jsonify({"error": "Musisz być zalogowany, aby edytować dane."})

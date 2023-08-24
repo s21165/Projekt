@@ -45,8 +45,19 @@ CREATE TABLE Icer (
     UserID INT,
     produktID INT,
     ilosc INT,
+    trzecia_wartosc TINYINT CHECK (trzecia_wartosc >= 1 AND trzecia_wartosc <= 3),
     FOREIGN KEY (UserID) REFERENCES Users (id),
     FOREIGN KEY (produktID) REFERENCES Produkty (id)
+);
+
+CREATE TABLE UserProdukty (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    produkt_id INT,
+    trzecia_wartosc TINYINT CHECK (trzecia_wartosc >= 1 AND trzecia_wartosc <= 3),
+
+    FOREIGN KEY (user_id) REFERENCES Users(id),
+    FOREIGN KEY (produkt_id) REFERENCES Produkty(id)
 );
 
 
