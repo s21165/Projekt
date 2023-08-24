@@ -1,4 +1,59 @@
 
+.listButtons {
+    position:sticky;
+    top: 0;
+    display: flex;
+    justify-content: center; /* Wyrównuje elementy do początku */
+    margin-left: 0.2vw;
+    margin-right: 0.2vw;
+
+}
+
+.listButtons div {
+
+
+
+    flex: 1;  /* Po połowie dostępnej przestrzeni dla każdego przycisku */
+    height:100%;
+
+}
+.leftButtonDiv {
+
+    background-color: #4caf50;
+    text-align: center;
+    color: white;
+    border: none;
+
+    padding: calc(0.5vw + 0.5vh);
+    border-right: #F8F8F8 3px solid;
+    border-radius: 4px;
+    /* Zapewnienie, że nie ma marginesów, które mogą wpływać na wysokość */
+}
+.rightButtonDiv{
+    background-color: #4caf50;
+    text-align: center;
+    color: white;
+    border: none;
+
+    padding: calc(0.5vw + 0.5vh) ;
+    border-left: #F8F8F8 3px solid;
+    border-radius: 4px;
+
+}
+.leftButton{
+    width:100%;
+    height:100%;
+
+    margin:0;
+    padding:0;
+}
+.rightButton{
+    width:100%;
+    height:100%;
+
+    margin:0;
+    padding:0;
+}
 .productList {
     display: flex;       /* Ustawienie rodzica jako flex container */
     flex-wrap: wrap;     /* Pozwala na zawijanie elementów do nowych linii */

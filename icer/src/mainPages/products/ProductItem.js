@@ -15,7 +15,7 @@ function ProductItem({ index, data, handleRemove, handleEditClick,handleIncrease
 
                     <button onClick={() => handleIncrease(data[0])}>zostaw</button>
                 </>):<>
-                <p><h2>Nazwa: {data[1]}</h2></p>
+                <p><h2>{data[1]}</h2></p>
                 <p><h3>Cena: {data[2]}</h3></p>
                 <p><h3>Kalorie: {data[3]}</h3></p>
                 <p><h3>Tłuszcze: {data[4]}</h3></p>

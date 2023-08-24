@@ -9,17 +9,7 @@ function Products() {
     // let [jsonData, setJsonData] = useState(null);
 
     const [refresh, setRefresh] = useState(false); // Dodajemy stan do odświeżania ekranu
-    const [editingProduct, setEditingProduct] = useState({
-        nazwa: '',
-        cena: '',
-        kalorie: '',
-        tluszcze: '',
-        weglowodany: '',
-        bialko: '',
-        kategoria: '',
-        ilosc: '',
-        data_waznosci:'',
-    });
+    const [editingProduct, setEditingProduct] = useState(null);
     const handleEditClick = (product) => {
         setEditingProduct({
             id: product[0],
@@ -34,7 +24,7 @@ function Products() {
             data_waznosci: new Date(product[9]).toISOString().split('T')[0]
         });
     };
-    const handleEdit =() => {
+    const handleEdit = () => {
         const id = editingProduct.id;
         const config = {
             headers: {
@@ -78,7 +68,7 @@ function Products() {
 
     useEffect(() => {
         setEditingProduct(null);
-        axios.get('http://localhost:5000/api/products')  // zmień URL na rzeczywisty adres endpointa
+        axios.get('http://localhost:5000/api/Icer')  // zmień URL na rzeczywisty adres endpointa
             .then((response) => {
                 setData(response.data);
 
@@ -116,23 +106,33 @@ function Products() {
 
     return (
         <>
+            <div className="listButtons">
+                <div className="leftButtonDiv">
+                    <button className="leftButton" onClick={() => handleRemove(data[0])}>Aktualne</button>
+                </div>
+                <div className="rightButtonDiv">
+                    <button className="rightButton" onClick={() => handleIncrease(data[0])}>Stare</button>
+                </div>
+            </div>
             <div className="productList">
+
                 {editingProduct && (
                     <ProductEdit
                         product={editingProduct}
                         handleEdit={handleEdit}
                         setEditingProduct={setEditingProduct}
                     />
-                )}{data && !editingProduct &&data.map((data, index) =>
-                    <ProductItem
-                        key={index}
-                        data={data}
-                        handleRemove={handleRemove}
-                        handleEditClick={handleEditClick}
-                        handleIncrease={handleIncrease}
-                        handleDecrease={handleDecrease}
-                    />
-                )}
+                )}{data && !editingProduct && data.map((data, index) =>
+
+                <ProductItem
+                    key={index}
+                    data={data}
+                    handleRemove={handleRemove}
+                    handleEditClick={handleEditClick}
+                    handleIncrease={handleIncrease}
+                    handleDecrease={handleDecrease}
+                />
+            )}
             </div>
             <div>
 
