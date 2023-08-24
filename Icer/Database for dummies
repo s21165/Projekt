@@ -23,19 +23,6 @@ CREATE TABLE Produkty (
 
 );
 
--- Wstawianie danych do tabeli 'Produkty' z datą ważności
-INSERT INTO Produkty (nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria)
-VALUES
-  ('Jabłko', 2.50, 52, 0.2, 14, 0.3, 'Owoce', '2023-09-01'),
-  ('Jajko', 0.40, 78, 5, 0.6, 6, 'Nabiał', '2023-09-07'),
-  ('Filet z kurczaka', 12.00, 165, 3.6, 0, 31, 'Mięso', '2023-08-25'),
-  ('Mleko', 2.80, 60, 3.6, 4.7, 3.3, 'Nabiał', '2023-08-24'),
-  ('Marchewka', 1.20, 41, 0.2, 10, 0.9, 'Warzywa', '2023-09-05'),
-  ('Chleb pszenny', 3.50, 265, 2.5, 49, 9, 'Pieczywo', '2023-08-27'),
-  ('Jogurt naturalny', 2.20, 57, 3.3, 4.7, 3.6, 'Nabiał', '2023-08-30'),
-  ('Pomidor', 1.80, 18, 0.2, 3.9, 0.9, 'Warzywa', '2023-09-03'),
-  ('Tuńczyk w puszce', 8.50, 116, 0.7, 0, 27, 'Konserwy', '2024-08-01'),
-  ('Makaron pełnoziarnisty', 4.20, 352, 1.8, 71, 13, 'Makarony', '2024-01-01');
 
 
 
