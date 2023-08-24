@@ -20,7 +20,6 @@ CREATE TABLE Produkty (
   weglowodany DECIMAL(4,2),
   bialko DECIMAL(4,2),
   kategoria VARCHAR(50),
-  ilosc INT
 
 );
 

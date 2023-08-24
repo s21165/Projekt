@@ -158,11 +158,14 @@ def get_icer():
         if not user_result:
             return jsonify({"error": "User not found"}), 401
 
-        # Modyfikacja zapytania SQL, aby pokazywać tylko produkty dla aktualnego użytkownika
+        # Modyfikacja zapytania SQL, aby pokazywać wszystkie informacje o produkcie
         user_id = user_result['id']
         query = """
             SELECT Icer.id, Icer.UserID, Icer.produktID, Icer.ilosc, 
-                   Icer.data_waznosci, Icer.trzecia_wartosc
+                   Icer.data_waznosci, Icer.trzecia_wartosc,
+                   Produkty.nazwa, Produkty.cena, Produkty.kalorie,
+                   Produkty.tluszcze, Produkty.weglowodany, Produkty.bialko,
+                   Produkty.kategoria
             FROM Icer
             INNER JOIN Produkty ON Icer.produktID = Produkty.id
             WHERE Icer.UserID = %s
