@@ -87,7 +87,7 @@ function AddProduct() {
             </label>
             <label>
                 Data ważności:
-                <input type="text" name="data_waznosci" value={product.data_waznosci} onChange={handleChange} />
+                <input type="date" name="data_waznosci" value={product.data_waznosci} onChange={handleChange} />
             </label>
 
             <button type="submit">Dodaj produkt</button>
