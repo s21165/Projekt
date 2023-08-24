@@ -18,7 +18,7 @@
     border-radius: 4px;
 }
 
-.addProductForm button {
+.addProductButton {
     padding: 1vh 2vw;
     background-color: #4caf50;
     color: white;
@@ -27,9 +27,15 @@
 
 }
 
-.addProductForm button:hover {
+.scanners{
+    display:none
+
+}
+
+.addProductButton :hover {
     background-color: #45a049;
 }
+
 @media only screen and (max-width: 768px) {
     .addProductForm {
         max-width: 95%; /* Pozwala formularzowi zajmować większą część ekranu na tabletach */
@@ -41,5 +47,34 @@
     .addProductForm {
         max-width: 100%; /* Pozwala formularzowi zajmować całą szerokość ekranu na telefonach */
         font-size: 4vw; /* Możesz dostosować rozmiar czcionki */
+    }
+}
+
+@media (pointer: coarse){
+
+    .scanners {
+        display: flex;
+        justify-content: center;
+        height: 10vh;
+
+        margin-left: 2vw;
+        margin-right: 2vw;
+    }
+    .scanners div {
+        flex: 1;
+
+    }
+    .qrDiv{
+
+    }
+    .qrIcon{
+        width: 10vw;
+        height: 10vh;
+
+    }
+
+    .barcodeIcon {
+        width: 10vw;
+        height: 10vh;
     }
 }

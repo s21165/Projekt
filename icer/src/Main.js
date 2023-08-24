@@ -24,7 +24,6 @@ import Help from "./mainPages/Help";
 import ChatContainer from "./mainPages/chatBot/ChatContainer";
 
 
-
 function Main() {
 
     const [secoundMenu, setSecoundMenu] = useState(false);
@@ -145,12 +144,12 @@ function Main() {
                                             </div>
                                         </button>
 
-
-                                        <div className="navDivMain">
-                                            <Link to="/Wyloguj">{isIcon ? <h3>wyloguj</h3> :
-                                                <Icon className="menuIcons" icon="grommet-icons:logout"/>}</Link>
-                                        </div>
-
+                                        <Link to="/Wyloguj">
+                                            <div className="navDivMain">
+                                                {isIcon ? <h3>wyloguj</h3> :
+                                                    <Icon className="menuIcons" icon="grommet-icons:logout"/>}
+                                            </div>
+                                        </Link>
                                     </div>
                                 </div>
                             )}
