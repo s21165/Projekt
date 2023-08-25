@@ -29,9 +29,6 @@ product_manager = ProductManager(db_connector)
 
 
 @app.route('/api/add_product', methods=['POST'])
-
-
-
 def add_product():
     # Tworzenie instancji klasy DatabaseConnector
     db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
@@ -46,10 +43,6 @@ def add_product():
     cursor = None
 
     try:
-        # Opcjonalnie: Wersja testowa z domyślnym użytkownikiem
-        TESTING = True
-        if TESTING:
-            session['username'] = 'root'
 
         # Sprawdzenie, czy użytkownik jest zalogowany
         if 'username' not in session:
@@ -237,7 +230,10 @@ def get_products():
     return jsonify(products)
 
 
-# Strona logowania
+from flask import session, jsonify, request
+import uuid  # potrzebne do generowania unikalnych ID sesji
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -249,7 +245,9 @@ def login():
         if check_user(username, password):
             # Utworzenie sesji dla zalogowanego użytkownika
             session['username'] = username
-            return jsonify({"message": "Login successful"})
+            session_id = str(uuid.uuid4())  # Generowanie unikalnego ID sesji
+            session['session_id'] = session_id  # Przechowywanie ID sesji
+            return jsonify({"message": "Login successful", "session_id": session_id})
         else:
             return jsonify({"message": "Invalid credentials"}), 401
     else:
