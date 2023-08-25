@@ -4,7 +4,8 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {AuthProvider} from "./mainPages/account/auth-context";
-
+import axios from "axios";
+axios.defaults.withCredentials = true;
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
