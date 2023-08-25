@@ -3,8 +3,13 @@ import axios from 'axios';
 import "./AddProduct.css"
 import {ScanQr} from "./ScanQr";
 import {ScanBr} from "./scanBr";
+import {useContext} from 'react';
+import {AuthContext} from '../account/auth-context';
 
 function AddProduct() {
+    const {user} = useContext(AuthContext);
+    const sessionId = user ? user.sessionId : null;
+
     const [product, setProduct] = useState({
         nazwa: '',
         cena: '',
@@ -28,9 +33,15 @@ function AddProduct() {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Wysyłam produkt:", product);
-
+        console.log('id-sesji:' +sessionId);
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'session_id': sessionId  // dodajemy sessionId
+            },
+        };
         axios
-            .post('http://localhost:5000/api/add_product', product)
+            .post('http://localhost:5000/api/add_product', product, config)
             .then((response) => {
 
                 console.log(`Dodane: ${JSON.stringify(response.data)}`);

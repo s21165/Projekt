@@ -1,21 +1,25 @@
-// Login.js
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import LoginForm from './LoginForm';
-import {AuthContext} from "./auth-context";
+import { AuthContext } from "./auth-context";
 import RegisterForm from "./RegisterForm";
 
 const backendUrl = 'http://localhost:5000';
 
 function Login() {
-    const { login } = useContext(AuthContext);
+    const authContext = useContext(AuthContext);
     const [mode, setMode] = useState('login');
+
     const handlePostLogin = async (credentials) => {
         try {
             const response = await axios.post(`${backendUrl}/login`, credentials);
             const { data } = response;
-            if (data) {
-                login(data);
+            if (data && data.session_id) {
+                // Aktualizacja kontekstu z danymi użytkownika i sessionId
+                authContext.login({
+                    username: credentials.username,
+                    sessionId: data.session_id
+                });
             }
         } catch (error) {
             console.error('Error during POST login', error);
@@ -25,24 +29,22 @@ function Login() {
     const handlePostRegister = async (data) => {
         try {
             await axios.post(`${backendUrl}/register`, data);
-
+            // Możesz również dodać automatyczne logowanie po udanej rejestracji lub komunikat o sukcesie
         } catch (error) {
             console.error('Error during POST register', error);
         }
     };
 
-
-    return login.user ? (
+    return authContext.user ? (
         <div>
-            Witaj, {login.username}!
-
+            Witaj, {authContext.user.username}!
         </div>
     ) : (
         <div>
             {mode === 'login' ?
-            <LoginForm onSwitchToRegister={() => setMode('register')} onLogin={handlePostLogin} />
-            :
-            <RegisterForm onSwitchToLogin={() => setMode('login')} onRegister={handlePostRegister} />
+                <LoginForm onSwitchToRegister={() => setMode('register')} onLogin={handlePostLogin} />
+                :
+                <RegisterForm onSwitchToLogin={() => setMode('login')} onRegister={handlePostRegister} />
             }
         </div>
     );

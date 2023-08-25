@@ -1,9 +1,9 @@
 import React from 'react';
 import {Link} from "react-router-dom";
-
+import './Account.css';
 export function Account(props){
     return (
-        <div>
+        <div className="accountInfo">
             <div>
                 <h3> zdjęcie</h3>
             </div>

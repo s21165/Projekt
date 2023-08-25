@@ -3,9 +3,15 @@ import axios from 'axios';
 import './Products.css';
 import ProductEdit from "./ProductEdit";
 import ProductItem from "./ProductItem";
+import { useContext } from 'react';
+import { AuthContext } from '../account/auth-context';
 
 function Products() {
+
+    const { user } = useContext(AuthContext);
+    const sessionId = user ? user.sessionId : null;
     const [data, setData] = useState(null);
+
     // let [jsonData, setJsonData] = useState(null);
 
     const [refresh, setRefresh] = useState(false); // Dodajemy stan do odświeżania ekranu
@@ -29,6 +35,8 @@ function Products() {
         const config = {
             headers: {
                 'Content-Type': 'application/json', // informuje serwer, że dane wysyłane w żądaniu są w formacie JSON.
+                'session_id': sessionId
+
             },
         };
 
@@ -68,12 +76,12 @@ function Products() {
 
     useEffect(() => {
         setEditingProduct(null);
-        axios.get('http://localhost:5000/api/Icer')  // zmień URL na rzeczywisty adres endpointa
+        axios.get('http://localhost:5000/api/Icer', { withCredentials: true })
             .then((response) => {
                 setData(response.data);
 
 
-                // console.log("sama data:" + data);
+                 console.log("sama data:" + data);
 
             })
             .catch((error) => {
@@ -90,6 +98,7 @@ function Products() {
         const config = {
             headers: {
                 'Content-Type': 'application/json',
+                'Session-ID': sessionId
             },
         };
 
