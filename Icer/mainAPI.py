@@ -31,12 +31,9 @@ product_manager = ProductManager(db_connector)
 TESTING = True
 
 
-@app.route('/api/add_product', methods=['POST'])
-def add_product():
-    # Jeśli jesteśmy w trybie testowym, ustalmy sesję dla 'root'
-    if TESTING:
-        session['username'] = 'root'
-    # Tworzenie instancji klasy DatabaseConnector
+@app.route('/api/subtract_product', methods=['POST'])
+def subtract_product():
+    # Tworzenie instancji klasy DatabaseConnector (jeśli go nie masz wcześniej zdefiniowanego w tym miejscu, dodaj odpowiednio)
     db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 
     # Łączenie z bazą danych
@@ -49,10 +46,15 @@ def add_product():
     cursor = None
 
     try:
+        # Upewnienie się co do sesji
+        data = request.get_json()
+        received_session_id = data.get('sessionId', None)
+        if not received_session_id:
+            raise ValueError("Session ID not provided")
 
         # Sprawdzenie, czy użytkownik jest zalogowany
         if 'username' not in session:
-            return jsonify({"error": "User not logged in"}), 401
+            raise PermissionError("User not logged in")
 
         connection = db_connector.get_connection()
         cursor = connection.cursor(dictionary=True)
@@ -65,40 +67,33 @@ def add_product():
         user_result = cursor.fetchone()
 
         if not user_result:
-            return jsonify({"error": "User not found"}), 401
+            raise LookupError("User not found")
 
-        data = request.json
         user_id = user_result['id']
 
-        # Sprawdzenie, czy produkt już istnieje
-        check_product_query = "SELECT id FROM Produkty WHERE nazwa = %s AND cena = %s"
-        cursor.execute(check_product_query, (data['nazwa'], data['cena']))
-        product_exists = cursor.fetchone()
+        # Pobieranie informacji o produkcie
+        id_produktu = data['id_produktu']
+        ilosc_do_odejscia = data['ilosc_do_odejscia']
 
-        if product_exists:
-            product_id = product_exists['id']
-        else:
-            product_id = product_manager.dodaj_produkt(
-                data['nazwa'],
-                data['cena'],
-                data['kalorie'],
-                data['tluszcze'],
-                data['weglowodany'],
-                data['bialko'],
-                data['kategoria']
-            )
+        # Sprawdzenie, czy produkt należy do aktualnie zalogowanego użytkownika
+        ownership_check_query = "SELECT id FROM Icer WHERE UserID = %s AND produktID = %s"
+        cursor.execute(ownership_check_query, (user_id, id_produktu))
+        ownership_result = cursor.fetchone()
 
-            if product_id is None:
-                return jsonify({"error": "Failed to add product to Produkty table."})
+        if not ownership_result:
+            raise PermissionError("This product does not belong to the user.")
 
-        # Dodawanie produktu do tabeli Icer
-        icer_query = "INSERT INTO Icer (UserID, produktID, ilosc, data_waznosci) VALUES (%s, %s, %s, %s)"
-        cursor.execute(icer_query, (user_id, product_id, data['ilosc'], data['data_waznosci']))
+        # Użycie klasy ProductManager do odejmowania ilości produktu w bazie danych
+        product_manager.odejmij_produkt(id_produktu, ilosc_do_odejscia)
 
-        connection.commit()
+        return jsonify({"message": "Ilość produktu została zaktualizowana!"})
 
-        return jsonify({"message": "Produkt został dodany!"})
-
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except PermissionError as pe:
+        return jsonify({"error": str(pe)}), 401
+    except LookupError as le:
+        return jsonify({"error": str(le)}), 404
     except Exception as error:
         return jsonify({"error": str(error)}), 500
     finally:
@@ -106,6 +101,7 @@ def add_product():
             cursor.close()
         if connection:
             connection.close()
+
 
 
 @app.route('/api/subtract_product', methods=['POST'])
