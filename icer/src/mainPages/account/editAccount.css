@@ -1,0 +1,74 @@
+/* Dla etykiet */
+h3 {
+
+    color: #333;
+}
+
+.editAccount button {
+    background-color: #7fb0d5;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.editAccount button:hover {
+    background-color: #0056b3;
+}
+
+/* Styl dla inputów */
+.accountInfo input {
+    width: 80%;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s, border-color 0.3s;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+input:focus {
+    outline: none;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+    border-color: #7fb0d5;
+}
+
+/* Styl dla przycisków */
+.editAccount button {
+    cursor: pointer;
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
+    background-color: #7fb0d5;
+    color: white;
+    transition: background-color 0.3s;
+    font-size: 15px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+
+button:hover {
+    background-color: #0056b3;
+}
+@media only screen and (max-width: 1200px) {
+    .editAccount button {
+        font-size: 13px;
+
+    }
+
+
+}
+    @media only screen and (max-width: 600px) {
+    .editAccount button {
+        font-size: 10px;
+
+    }
+
+}

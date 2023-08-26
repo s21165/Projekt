@@ -1,8 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { Link } from "react-router-dom";
 import './Account.css';
+import './editAccount.css';
 import face from "../../data/face.jpg";
 import { AuthContext } from "./auth-context";
+import axios from "axios";
 
 function EditAccount(props) {
     const { user } = useContext(AuthContext);
@@ -11,15 +13,29 @@ function EditAccount(props) {
     const [formData, setFormData] = useState({
         username: user.username,
         email: props.email,
-        phone: props.phone
+        new_password: ''
     });
 
-
-
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        // Tu można wywołać funkcję do aktualizacji danych użytkownika na serwerze
-    }
+
+        try {
+            const response = await axios.post('http://localhost:5000/api/edit_user', {
+                new_username: formData.username,
+                new_password: formData.new_password,
+                sessionId: sessionId
+            });
+
+            if (response.data.message) {
+                alert(response.data.message);
+            } else if (response.data.error) {
+                alert(response.data.error);
+            }
+        } catch (error) {
+            alert(`Wystąpił błąd podczas aktualizacji konta: ${error}`);
+        }
+    };
+
 
     return (
         <div className="accountContainer">
@@ -39,30 +55,30 @@ function EditAccount(props) {
                             />
                         </h3>
                     </div>
-                    <div className="accountMail">
+                    <div className="accountPassword">
                         <h3>
-                            Email:
+                            New Password:
                             <input
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                type="password" // użyj typu password, aby ukryć wpisywane hasło
+                                name="new_password"
+                                value={formData.new_password}
+                                onChange={(e) => setFormData({ ...formData, new_password: e.target.value })}
                             />
                         </h3>
                     </div>
-                    <div className="accountPhone">
-                        <h3>
-                            Phone:
-                            <input
-                                type="tel"
-                                name="phone"
-                                value={formData.phone}
-                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                            />
-                        </h3>
-                    </div>
+                    {/*<div className="accountPhone">*/}
+                    {/*    <h3>*/}
+                    {/*        Phone:*/}
+                    {/*        <input*/}
+                    {/*            type="tel"*/}
+                    {/*            name="phone"*/}
+                    {/*            value={formData.phone}*/}
+                    {/*            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}*/}
+                    {/*        />*/}
+                    {/*    </h3>*/}
+                    {/*</div>*/}
                     <div className="editAccount">
-                        <button type="submit"><h3>Zapisz zmiany</h3></button>
+                        <button  type="submit"><h3>Zapisz zmiany</h3></button>
                         <Link to="/konto">
                             <button type= "button"><h3>Anuluj</h3></button>
                         </Link>
