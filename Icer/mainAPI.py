@@ -189,7 +189,7 @@ def get_icer_zero():
                    Produkty.kategoria
             FROM Icer
             INNER JOIN Produkty ON Icer.produktID = Produkty.id
-            WHERE Icer.UserID = %s AND Icer.produktID = 0
+            WHERE Icer.UserID = %s AND Icer.ilosc = 0
         """
         cursor.execute(query, (user_id,))
         results = cursor.fetchall()
