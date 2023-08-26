@@ -1,9 +1,11 @@
+
 .addProductForm {
     display: flex;
     flex-direction: column;
     max-width: 400px;
     margin: 0 auto;
     font-size: calc(0.7vw + 0.7vh);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
 
 .addProductForm label {

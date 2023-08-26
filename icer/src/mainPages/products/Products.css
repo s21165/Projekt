@@ -9,33 +9,38 @@
 
 }
 
+
 .listButtons div {
+
+
 
     flex: 1;  /* Po połowie dostępnej przestrzeni dla każdego przycisku */
     height:100%;
-
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
+
 .leftButtonDiv {
 
-    background-color: #4caf50;
-    text-align: center;
-    color: white;
-    border: none;
+     background-color: #4caf50;
+     text-align: center;
+     color: white;
 
-    padding: calc(0.5vw + 0.5vh);
-    border-right: #F8F8F8 3px solid;
-    border-radius: 4px;
-    /* Zapewnienie, że nie ma marginesów, które mogą wpływać na wysokość */
-}
+
+     padding: calc(0.5vw + 0.5vh);
+     border-right:  #f5f5f5 7px solid;
+
+
+     /* Zapewnienie, że nie ma marginesów, które mogą wpływać na wysokość */
+ }
 .rightButtonDiv{
     background-color: #4caf50;
     text-align: center;
     color: white;
-    border: none;
+
 
     padding: calc(0.5vw + 0.5vh) ;
-    border-left: #F8F8F8 3px solid;
-    border-radius: 4px;
+
+
 
 }
 .leftButton{
@@ -102,7 +107,22 @@
 .productItem button:hover {
     background-color: #45a049;
 }
+@media only screen and (max-width: 1600px) {
+    .leftButtonDiv {
 
+        border-right:  #f5f5f5 5px solid;
+
+    }
+
+}
+@media only screen and (max-width: 900px) {
+    .leftButtonDiv {
+
+        border-right:  #f5f5f5 3px solid;
+
+    }
+
+}
 @media only screen and (max-width: 600px) {
     .productItem {
 
@@ -119,6 +139,11 @@
     }
     .productItem button {
         padding: 1vh 2vh;
+    }
+    .leftButtonDiv {
+
+        border-right:  #f5f5f5 2px solid;
+
     }
 
 }

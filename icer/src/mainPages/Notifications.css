@@ -1,0 +1,61 @@
+
+.notificationsList {
+    position:absolute;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+.notificationsList.small {
+    position:absolute;
+    top:4vh;
+    right:1vw;
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+.notificationProductDiv {
+    width: 100%;
+}
+
+.notificationsNameDiv {
+    width: 100%;
+    background-color: #7fb0d5;
+    cursor: pointer;
+    padding: 10px 0 10px 0;
+    border-bottom: 1px solid gray;
+    text-align: center;
+}
+
+.notificationsList p {
+    background-color: #deeffc;
+    margin: 5px 0;
+
+    text-align: center;
+    width: 100%;
+
+    overflow: hidden;
+    transition: max-height 3s ease-in-out; /* Dodanie animacji */
+}
+
+/* Styl dla rozwiniętego produktu */
+.notificationProductDiv.expanded p {
+    max-height: 500px; /* Przykładowa wartość, można dostosować */
+}
+.notificationsProductInfo {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+.notificationsProductInfo.expanded {
+    max-height: 500px; /* Możesz dostosować tę wartość w zależności od potrzeb */
+    opacity: 1;
+    transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
