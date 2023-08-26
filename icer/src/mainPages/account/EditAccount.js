@@ -1,42 +1,75 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { Link } from "react-router-dom";
+import './Account.css';
+import face from "../../data/face.jpg";
+import { AuthContext } from "./auth-context";
 
-export default function EditAccount(props){
-    const [firstName, setFirstName] = useState(props.firstName);
-    const [lastName, setLastName] = useState(props.lastName);
-    const [email, setEmail] = useState(props.email);
-    const [phone, setPhone] = useState(props.phone);
-    const [address, setAddress] = useState(props.address);
+function EditAccount(props) {
+    const { user } = useContext(AuthContext);
+    const sessionId = user ? user.sessionId : null;
+
+    const [formData, setFormData] = useState({
+        username: user.username,
+        email: props.email,
+        phone: props.phone
+    });
+
+
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        // Wysłanie danych do API, aby zaktualizować informacje o użytkowniku
-        // props.onSave({ firstName, lastName, email, phone, address });
-    };
+        // Tu można wywołać funkcję do aktualizacji danych użytkownika na serwerze
+    }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <label>
-                First Name:
-                <input type="text" value={firstName} onChange={(event) => setFirstName(event.target.value)} />
-            </label>
-            <label>
-                Last Name:
-                <input type="text" value={lastName} onChange={(event) => setLastName(event.target.value)} />
-            </label>
-            <label>
-                Email:
-                <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
-            </label>
-            <label>
-                Phone:
-                <input type="text" value={phone} onChange={(event) => setPhone(event.target.value)} />
-            </label>
-            <label>
-                Address:
-                <input type="text" value={address} onChange={(event) => setAddress(event.target.value)} />
-            </label>
-            <button type="submit">Save</button>
-        </form>
+        <div className="accountContainer">
+            <div className="accountInfo">
+                <div className="accountPhoto">
+                    <img src={face} alt="Your Image" className="accountPhotoImage" />
+                </div>
+                <form onSubmit={handleSubmit}>
+                    <div className="accountName">
+                        <h3>
+                            Username:
+                            <input
+                                type="text"
+                                name="username"
+                                value={formData.username}
+                                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                            />
+                        </h3>
+                    </div>
+                    <div className="accountMail">
+                        <h3>
+                            Email:
+                            <input
+                                type="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            />
+                        </h3>
+                    </div>
+                    <div className="accountPhone">
+                        <h3>
+                            Phone:
+                            <input
+                                type="tel"
+                                name="phone"
+                                value={formData.phone}
+                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                            />
+                        </h3>
+                    </div>
+                    <div className="editAccount">
+                        <button type="submit"><h3>Zapisz zmiany</h3></button>
+                        <Link to="/konto">
+                            <button type= "button"><h3>Anuluj</h3></button>
+                        </Link>
+                    </div>
+                </form>
+            </div>
+        </div>
     );
 }
-
+export default EditAccount;

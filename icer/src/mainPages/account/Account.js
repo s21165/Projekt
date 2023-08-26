@@ -9,6 +9,7 @@ export function Account(props){
     const sessionId = user ? user.sessionId : null;
 
     return (
+        <div className="accountContainer">
         <div className="accountInfo">
             <div className="accountPhoto">
                 <img src={face} alt="Your Image" className="accountPhotoImage" />
@@ -25,8 +26,9 @@ export function Account(props){
             </div>
 
             <div className="editAccount">
-                <Link to="/edycjaKonta"><button><h3>edytuj konto</h3></button></Link>
+                <Link to="/edycjaKonta"><button><h3 >edytuj konto</h3></button></Link>
             </div>
+        </div>
         </div>
     );
 }
