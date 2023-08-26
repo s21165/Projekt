@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import "./AddProduct.css"
 import {ScanQr} from "./ScanQr";
@@ -11,14 +11,14 @@ function AddProduct() {
     const sessionId = user ? user.sessionId : null;
 
     const [product, setProduct] = useState({
-        nazwa: '',
-        cena: '',
-        kalorie: '',
-        tluszcze: '',
-        weglowodany: '',
-        bialko: '',
-        kategoria: '',
-        ilosc: '',
+        nazwa: 'Nowy Produkt',
+        cena: 0,
+        kalorie: 0,
+        tluszcze: 0,
+        weglowodany: 0,
+        bialko: 0,
+        kategoria: 'Jedzenie',
+        ilosc: 1,
         data_waznosci: '',
     });
 
@@ -29,7 +29,13 @@ function AddProduct() {
             [name]: value,
         }));
     };
-
+    useEffect(() => {
+        const today = new Date().toISOString().split('T')[0];
+        setProduct((prevState) => ({
+            ...prevState,
+            data_waznosci: today,
+        }));
+    }, []);
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Wysyłam produkt:", product);
