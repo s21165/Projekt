@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session, redirect
+from flask import Flask, request, jsonify, session, redirect, current_app
 from flask_cors import CORS
 import requests
 from dotenv import load_dotenv
@@ -10,9 +10,9 @@ from modules.product_data import ProductData
 from datetime import datetime, timedelta
 
 from modules.value_manager import ProductManager
-
+import time
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
 app.secret_key = 'secret_key'  # Klucz sesji
 
 # Ładuj zmienne środowiskowe z pliku .env
@@ -136,26 +136,44 @@ def edit_product(product_id):
         return jsonify({"error": str(error)})
 
 
-@app.route('/api/Icer', methods=['GET'])
+@app.route('/api/Icer', methods=['POST'])
 def get_icer():
-    # Jeśli jesteśmy w trybie testowym, ustalmy sesję dla 'root'
-    if TESTING:
-        session['username'] = 'root'
-    connection = db_connector.get_connection()
-    cursor = connection.cursor(dictionary=True)
+    # Tworzenie instancji klasy DatabaseConnector
+    db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+
+    # Łączenie z bazą danych
+    db_connector.connect()
 
     try:
+
+        # Uzyskanie połączenia z bazą danych
+        connection = db_connector.get_connection()
+        if not connection:
+            raise ConnectionError("Failed to establish a connection with the database.")
+
+        cursor = connection.cursor(dictionary=True)
+        if not cursor:
+            raise Exception("Failed to create a cursor for the database.")
+
+        data = request.get_json()
+
+        # Upewnienie się co do sesji
+        received_session_id = data.get('sessionId', None)
+        if not received_session_id:
+            raise ValueError("Session ID not provided")
+
+        # Jeśli użytkownik nie jest zalogowany
         if 'username' not in session:
-            return jsonify({"error": "User not logged in"}), 401
+            raise PermissionError("User not logged in")
 
         # Pobranie ID aktualnie zalogowanego użytkownika
         username = session['username']
+
         user_query = "SELECT id FROM Users WHERE username = %s"
         cursor.execute(user_query, (username,))
         user_result = cursor.fetchone()
-
         if not user_result:
-            return jsonify({"error": "User not found"}), 401
+            raise LookupError("User not found")
 
         # Modyfikacja zapytania SQL, aby pokazywać wszystkie informacje o produkcie
         user_id = user_result['id']
@@ -174,12 +192,22 @@ def get_icer():
 
         return jsonify(results)
 
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except PermissionError as pe:
+        return jsonify({"error": str(pe)}), 401
+    except LookupError as le:
+        return jsonify({"error": str(le)}), 404
+    except ConnectionError as ce:
+        return jsonify({"error": str(ce)}), 500
     except Exception as error:
-        return jsonify({"error": str(error)})
+        # Tutaj możemy logować błąd w bardziej szczegółowy sposób
+        current_app.logger.error(f"Unexpected error: {error}")
+        return jsonify({"error": "Unexpected server error"}), 500
 
     finally:
-        cursor.close()
-
+        if cursor:
+            cursor.close()
 
 # Wyświetlanie produktów z informacjami o obrazach produktów
 @app.route('/api/products/image', methods=['GET', 'POST'])
@@ -246,14 +274,17 @@ def login():
         data = request.get_json()
         username = data['username']
         password = data['password']
-
+        print("funkcja login")
         # Sprawdzanie, czy użytkownik istnieje w bazie danych
         if check_user(username, password):
             # Utworzenie sesji dla zalogowanego użytkownika
             session['username'] = username
             session_id = str(uuid.uuid4())  # Generowanie unikalnego ID sesji
             session['session_id'] = session_id  # Przechowywanie ID sesji
+            print("sesja" + session['session_id'] + "sessionid: " + session_id)
             return jsonify({"message": "Login successful", "session_id": session_id})
+
+
         else:
             return jsonify({"message": "Invalid credentials"}), 401
     else:
