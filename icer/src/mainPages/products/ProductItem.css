@@ -1,0 +1,128 @@
+.productItem {
+    flex: 1 0 35%;
+    margin: 0.4vh 0.2vw;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: calc(1vw + 1vh);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.productItem h2 {
+    font-size: calc(1vw + 1vh);
+    margin-bottom: 0.7vh;
+}
+
+.productItem h3 {
+    font-size: calc(0.7vw + 0.7vh);
+    margin-bottom: 1vh;
+}
+
+.productItem div {
+    margin: 0.7vh 0;
+}
+
+.decreaseProduct {
+    background-color: red;
+    text-align: center;
+    border-radius: 4px;
+    padding: calc(0.2vw + 0.2vh) calc(0.4vw + 0.4vh);
+}
+
+.increaseProduct {
+    background-color: #4caf50;
+    text-align: center;
+    border-radius: 4px;
+    padding: calc(0.2vw + 0.2vh) calc(0.4vw + 0.4vh);
+}
+
+.productItemQuantityDiv {
+    display: flex;
+    align-items: center;
+    justify-content:center;
+}
+
+.quantityControl {
+    display: flex;
+    align-items: center;
+    margin-left: 0.5vw;
+}
+
+.quantityControl span {
+    margin: 0 2.5vw;
+}
+
+
+.productItem button h2 {
+    font-size: calc(0.7vw + 0.7vh);
+    margin: 0;
+}
+
+.decreaseProduct:hover {
+    background-color: #D9214CFF;
+
+}
+.increaseProduct:hover{
+    background-color: #45a049;
+}
+.iconContainer {
+    display: flex;
+
+     gap: 0.5vw;
+}
+
+.removeButton, .editButton {
+    display: flex; /* zmieniaj przyciski w kontenery flexa, aby ikony mogły się rozciągnąć */
+    justify-content: center; /* wyśrodkuj ikony w poziomie */
+    align-items: center; /* wyśrodkuj ikony w pionie */
+    width: 100%; /* zapewnij, że przyciski zajmują całą dostępną szerokość */
+    height: 100%; /* zapewnij, że przyciski zajmują całą dostępną wysokość */
+    padding: calc(0.2vw + 0.2vh) calc(0.4vw + 0.4vh);
+    border-radius: 4px;
+}
+.removeButton {
+    background-color: red;
+
+}
+
+/* Dla przycisków edycji */
+.editButton {
+    background-color: #4caf50;
+
+}
+
+/* Dla ikon wewnątrz przycisków */
+.iconifyIcon {
+    font-size: calc(1vw + 1vh); /* Ustawić rozmiar fontu ikon na podobny rozmiar co przyciski + i - */
+    color: white; /* Ustawić kolor ikon na biały, tak jak tekst w przyciskach + i - */
+    width: 100%; /* Ustawić szerokość ikony na 100% */
+    height: 100%; /* Ustawić wysokość ikony na 100% */
+}
+.removeButton:hover{
+    background-color: #D9214CFF;
+
+}
+.editButton:hover {
+    background-color: #45a049; /* Kolor tła podczas najechania */
+}
+
+.removeButton:hover .iconifyIcon, .editButton:hover .iconifyIcon {
+    filter: brightness(0.8); /* Lekkie przyciemnienie ikony podczas najechania */
+}
+
+
+@media only screen and (max-width: 600px) {
+    .productItem {
+        flex: 1 0 90%;  /* Zajmij całą dostępną szerokość kontenera */
+    }
+    .productItem h2 {
+        font-size: calc(1.2vw + 1.2vh);
+        margin-bottom: 1vh;
+    }
+    .productItem div {
+        margin: 0.8vh 0;
+    }
+    .productItem button {
+        padding: 1vh 2vh;
+    }
+}

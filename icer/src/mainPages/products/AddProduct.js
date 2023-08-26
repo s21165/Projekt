@@ -9,7 +9,7 @@ import {AuthContext} from '../account/auth-context';
 function AddProduct() {
     const {user} = useContext(AuthContext);
     const sessionId = user ? user.sessionId : null;
-
+    const [refresh, setRefresh] = useState(false);
     const [product, setProduct] = useState({
         nazwa: 'Nowy Produkt',
         cena: 0,
@@ -35,7 +35,7 @@ function AddProduct() {
             ...prevState,
             data_waznosci: today,
         }));
-    }, []);
+    }, [refresh]);
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Wysyłam produkt:", product);
@@ -56,16 +56,16 @@ function AddProduct() {
             .catch((error) => {
                 console.error(`There was an error adding the product: ${error}`);
             });
-
+        setRefresh(!refresh);
         setProduct({
-            nazwa: '',
+            nazwa: 'Nowy Produkt',
             cena: 0,
             kalorie: 0,
             tluszcze: 0,
             weglowodany: 0,
             bialko: 0,
-            kategoria: '',
-            ilosc: 0,
+            kategoria: 'Jedzenie',
+            ilosc: 1,
             data_waznosci: '',
         });
     };
