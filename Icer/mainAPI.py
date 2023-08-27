@@ -187,6 +187,33 @@ def add_product():
             connection.close()
 
 
+@app.route('/remove_product_for_user', methods=['POST'])
+def remove_product_for_user():
+    try:
+        # Pobranie danych z żądania
+        data = request.get_json()
+        user_id = data['UserID']
+        product_id = data['produktID']
+
+        cursor = db_connector.get_connection().cursor()
+
+        # Usunięcie powiązania użytkownika z produktem
+        query = "DELETE FROM Icer WHERE UserID = %s AND produktID = %s"
+        values = (user_id, product_id)
+        cursor.execute(query, values)
+
+        # Zatwierdzenie zmian
+        db_connector.get_connection().commit()
+
+        # Zamknięcie kursora
+        cursor.close()
+
+        return jsonify({"message": "Powiązanie zostało usunięte pomyślnie!"})
+
+    except Exception as error:
+        return jsonify({"error": str(error)})
+
+
 @app.route('/api/edit_product/<int:product_id>', methods=['PUT'])
 def edit_product(product_id):
     try:
@@ -202,8 +229,8 @@ def edit_product(product_id):
         return jsonify({"error": str(error)})
 
 
-@app.route('/api/IcerZero', methods=['POST', 'GET'])
-def get_icer_zero():
+@app.route('/api/shoppingList', methods=['POST', 'GET'])
+def get_icer_shopping():
     print("test?")
     # Tworzenie instancji klasy DatabaseConnector
     db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
