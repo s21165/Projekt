@@ -39,7 +39,6 @@ def run_daily_procedure():
     cursor.close()
     local_connector.get_connection().commit()
 
-
 @app.route('/api/subtract_product', methods=['POST'])
 def subtract_product():
     # Tworzenie instancji klasy DatabaseConnector (jeśli go nie masz wcześniej zdefiniowanego w tym miejscu, dodaj odpowiednio)
@@ -82,7 +81,7 @@ def subtract_product():
 
         # Pobieranie informacji o produkcie
         id_produktu = data['id_produktu']
-        ilosc_do_odejscia = data['ilosc_do_odejscia']
+        ilosc_do_odejscia = data.get('ilosc_do_odejscia', 1)  # Używam metody get() dla słownika, żeby ustawić domyślną wartość
 
         # Sprawdzenie, czy produkt należy do aktualnie zalogowanego użytkownika
         ownership_check_query = "SELECT id FROM Icer WHERE UserID = %s AND produktID = %s"
@@ -110,6 +109,7 @@ def subtract_product():
             cursor.close()
         if connection:
             connection.close()
+
 
 
 @app.route('/api/add_product', methods=['POST'])
