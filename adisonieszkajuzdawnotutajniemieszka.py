@@ -1,6 +1,20 @@
+from flask import Flask, request, jsonify, session, redirect, current_app, render_template, send_file, redirect, url_for, send_from_directory, make_response
+from flask_cors import CORS
+import requests
+from dotenv import load_dotenv
+import bcrypt
+from apscheduler.schedulers.background import BackgroundScheduler
+
+from modules import value_manager
+from node_modules.database_connector import DatabaseConnector
+from modules.product_data import ProductData
+from datetime import datetime, timedelta
+
+from modules.value_manager import ProductManager
+import time
+
 import os
 import threading
-from flask import Flask, request, render_template, send_file, redirect, url_for, send_from_directory, make_response
 from modules.bot_module.bot import get_bot_response
 from modules.scan_module.gen import generate_qr_code, generate_barcode
 from modules.scan_module.forms import BarcodeForm
@@ -9,30 +23,13 @@ from modules.advert_module.monitor import start_camera_monitoring
 from modules.foodIdent_module.foodIdent import foodIdent
 import sys
 
-
-from flask import Flask, request, jsonify, session, redirect
-from flask_cors import CORS
-import requests
-from dotenv import load_dotenv
-import bcrypt
-
-from modules import value_manager
-from node_modules.database_connector import DatabaseConnector
-from modules.product_data import ProductData
-from datetime import datetime, timedelta
-
-from modules.value_manager import ProductManager
-
-
-
+app = Flask(__name__)
+CORS(app, supports_credentials=True)
+app.secret_key = 'secret_key'  # Klucz sesji
 app.config['BARCODE_FOLDER'] = os.path.join(app.static_folder, 'barcodes')
 app.config['QR_CODE_FOLDER'] = os.path.join(app.static_folder, 'qrcodes')  
-app.config['SECRET_KEY'] = 'key'  # Replace with a strong secret key
+app.config['SECRET_KEY'] = 'secret_key'  # Replace with a strong secret key
 #app.config['BARCODE_FOLDER'] = 'static/barcodes
-
-app = Flask(__name__)
-CORS(app)
-app.secret_key = 'secret_key'  # Klucz sesji
 
 # Ładuj zmienne środowiskowe z pliku .env
 load_dotenv()
@@ -47,11 +44,17 @@ db_connector.connect()
 product_manager = ProductManager(db_connector)
 
 
-@app.route('/api/add_product', methods=['POST'])
 
+def run_daily_procedure():
+    local_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+    local_connector.connect()
+    cursor = local_connector.get_connection().cursor()
+    cursor.callproc('UpdateTrzeciaWartosc')
+    cursor.close()
+    local_connector.get_connection().commit()
 
-
-def add_product():
+@app.route('/api/add_to_product', methods=['POST'])
+def add_to_product():
     # Tworzenie instancji klasy DatabaseConnector
     db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 
@@ -65,10 +68,145 @@ def add_product():
     cursor = None
 
     try:
-        # Opcjonalnie: Wersja testowa z domyślnym użytkownikiem
-        TESTING = True
-        if TESTING:
-            session['username'] = 'root'
+        # Upewnienie się co do sesji
+        data = request.get_json()
+        received_session_id = data.get('sessionId', None)
+        if not received_session_id:
+            raise ValueError("Session ID not provided")
+
+        # Sprawdzenie, czy użytkownik jest zalogowany
+        if 'username' not in session:
+            raise PermissionError("User not logged in")
+
+        connection = db_connector.get_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        username = session['username']
+
+        # Pobranie ID użytkownika na podstawie nazwy użytkownika
+        user_query = "SELECT id FROM Users WHERE username = %s"
+        cursor.execute(user_query, (username,))
+        user_result = cursor.fetchone()
+
+        if not user_result:
+            raise LookupError("User not found")
+
+        user_id = user_result['id']
+
+        # Pobieranie informacji o produkcie
+        id_produktu = data['id_produktu']
+        ilosc_do_dodania = data.get('ilosc_do_dodania', 1)  # Jeśli ilość nie zostanie podana, domyślnie dodaje 1
+
+        # Użycie klasy ProductManager do dodawania ilości produktu w bazie danych
+        product_manager.dodaj_produkt(id_produktu, ilosc_do_dodania)
+
+        return jsonify({"message": "Ilość produktu została dodana!"})
+
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except PermissionError as pe:
+        return jsonify({"error": str(pe)}), 401
+    except LookupError as le:
+        return jsonify({"error": str(le)}), 404
+    except Exception as error:
+        return jsonify({"error": str(error)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
+
+
+
+@app.route('/api/subtract_product', methods=['POST'])
+def subtract_product():
+    # Tworzenie instancji klasy DatabaseConnector (jeśli go nie masz wcześniej zdefiniowanego w tym miejscu, dodaj odpowiednio)
+    db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+
+    # Łączenie z bazą danych
+    db_connector.connect()
+
+    # Tworzenie instancji ProductManager
+    product_manager = ProductManager(db_connector)
+
+    connection = None
+    cursor = None
+
+    try:
+        # Upewnienie się co do sesji
+        data = request.get_json()
+        received_session_id = data.get('sessionId', None)
+        if not received_session_id:
+            raise ValueError("Session ID not provided")
+
+        # Sprawdzenie, czy użytkownik jest zalogowany
+        if 'username' not in session:
+            raise PermissionError("User not logged in")
+
+        connection = db_connector.get_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        username = session['username']
+
+        # Pobranie ID użytkownika na podstawie nazwy użytkownika
+        user_query = "SELECT id FROM Users WHERE username = %s"
+        cursor.execute(user_query, (username,))
+        user_result = cursor.fetchone()
+
+        if not user_result:
+            raise LookupError("User not found")
+
+        user_id = user_result['id']
+
+        # Pobieranie informacji o produkcie
+        id_produktu = data['id_produktu']
+        ilosc_do_odejscia = data.get('ilosc_do_odejscia', 1)  # Używam metody get() dla słownika, żeby ustawić domyślną wartość
+
+        # Sprawdzenie, czy produkt należy do aktualnie zalogowanego użytkownika
+        ownership_check_query = "SELECT id FROM Icer WHERE UserID = %s AND produktID = %s"
+        cursor.execute(ownership_check_query, (user_id, id_produktu))
+        ownership_result = cursor.fetchone()
+
+        if not ownership_result:
+            raise PermissionError("This product does not belong to the user.")
+
+        # Użycie klasy ProductManager do odejmowania ilości produktu w bazie danych
+        product_manager.odejmij_produkt(id_produktu, ilosc_do_odejscia)
+
+        return jsonify({"message": "Ilość produktu została zaktualizowana!"})
+
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except PermissionError as pe:
+        return jsonify({"error": str(pe)}), 401
+    except LookupError as le:
+        return jsonify({"error": str(le)}), 404
+    except Exception as error:
+        return jsonify({"error": str(error)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
+
+
+
+@app.route('/api/add_product', methods=['POST'])
+def add_product():
+
+    # Tworzenie instancji klasy DatabaseConnector
+    db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+
+    # Łączenie z bazą danych
+    db_connector.connect()
+
+    # Tworzenie instancji ProductManager
+    product_manager = ProductManager(db_connector)
+    username = session['username']
+    connection = None
+    cursor = None
+    print(session['username'])
+    try:
 
         # Sprawdzenie, czy użytkownik jest zalogowany
         if 'username' not in session:
@@ -128,17 +266,28 @@ def add_product():
             connection.close()
 
 
-@app.route('/api/subtract_product', methods=['POST'])
-def subtract_product():
+@app.route('/remove_product_for_user', methods=['POST'])
+def remove_product_for_user():
     try:
-        data = request.json
-        id_produktu = data['id_produktu']
-        ilosc_do_odejscia = data['ilosc_do_odejscia']
+        # Pobranie danych z żądania
+        data = request.get_json()
+        user_id = data['UserID']
+        product_id = data['produktID']
 
-        # Użycie klasy ProductManager do odejmowania ilości produktu w bazie danych
-        product_manager.odejmij_produkt(id_produktu, ilosc_do_odejscia)
+        cursor = db_connector.get_connection().cursor()
 
-        return jsonify({"message": "Ilość produktu została zaktualizowana!"})
+        # Usunięcie powiązania użytkownika z produktem
+        query = "DELETE FROM Icer WHERE UserID = %s AND produktID = %s"
+        values = (user_id, product_id)
+        cursor.execute(query, values)
+
+        # Zatwierdzenie zmian
+        db_connector.get_connection().commit()
+
+        # Zamknięcie kursora
+        cursor.close()
+
+        return jsonify({"message": "Powiązanie zostało usunięte pomyślnie!"})
 
     except Exception as error:
         return jsonify({"error": str(error)})
@@ -159,23 +308,197 @@ def edit_product(product_id):
         return jsonify({"error": str(error)})
 
 
-@app.route('/api/Icer', methods=['GET'])
-def get_icer():
-    connection = db_connector.get_connection()
-    cursor = connection.cursor(dictionary=True)
+@app.route('/api/shoppingList', methods=['POST', 'GET'])
+def get_icer_shopping():
+    print("test?")
+    # Tworzenie instancji klasy DatabaseConnector
+    db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+
+    # Łączenie z bazą danych
+    db_connector.connect()
 
     try:
+
+        # Uzyskanie połączenia z bazą danych
+        connection = db_connector.get_connection()
+        if not connection:
+            raise ConnectionError("Failed to establish a connection with the database.")
+
+        cursor = connection.cursor(dictionary=True)
+        if not cursor:
+            raise Exception("Failed to create a cursor for the database.")
+
+        data = request.get_json()
+
+        # Upewnienie się co do sesji
+        received_session_id = data.get('sessionId', None)
+        if not received_session_id:
+            raise ValueError("Session ID not provided")
+
+        # Jeśli użytkownik nie jest zalogowany
         if 'username' not in session:
-            return jsonify({"error": "User not logged in"}), 401
+            raise PermissionError("User not logged in")
 
         # Pobranie ID aktualnie zalogowanego użytkownika
         username = session['username']
+
         user_query = "SELECT id FROM Users WHERE username = %s"
         cursor.execute(user_query, (username,))
         user_result = cursor.fetchone()
-
         if not user_result:
-            return jsonify({"error": "User not found"}), 401
+            raise LookupError("User not found")
+
+        # Modyfikacja zapytania SQL, aby pokazywać wszystkie informacje o produkcie
+        user_id = user_result['id']
+        query = """
+            SELECT Icer.id, Icer.UserID, Icer.produktID, Icer.ilosc, 
+                   Icer.data_waznosci, Icer.trzecia_wartosc,
+                   Produkty.nazwa, Produkty.cena, Produkty.kalorie,
+                   Produkty.tluszcze, Produkty.weglowodany, Produkty.bialko,
+                   Produkty.kategoria
+            FROM Icer
+            INNER JOIN Produkty ON Icer.produktID = Produkty.id
+            WHERE Icer.UserID = %s AND Icer.ilosc = 0 or Icer.trzecia_wartosc =0
+        """
+        cursor.execute(query, (user_id,))
+        results = cursor.fetchall()
+
+        return jsonify(results)
+
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except PermissionError as pe:
+        return jsonify({"error": str(pe)}), 401
+    except LookupError as le:
+        return jsonify({"error": str(le)}), 404
+    except ConnectionError as ce:
+        return jsonify({"error": str(ce)}), 500
+    except Exception as error:
+        # Tutaj możemy logować błąd w bardziej szczegółowy sposób
+        current_app.logger.error(f"Unexpected error: {error}")
+        return jsonify({"error": "Unexpected server error"}), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+
+
+@app.route('/api/productsRedFlag', methods=['POST', 'GET'])
+def get_products_with_red_flag():
+    print("test?")
+    # Tworzenie instancji klasy DatabaseConnector
+    db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+
+    # Łączenie z bazą danych
+    db_connector.connect()
+
+    try:
+        # Uzyskanie połączenia z bazą danych
+        connection = db_connector.get_connection()
+        if not connection:
+            raise ConnectionError("Failed to establish a connection with the database.")
+
+        cursor = connection.cursor(dictionary=True)
+        if not cursor:
+            raise Exception("Failed to create a cursor for the database.")
+
+        data = request.get_json()
+
+        # Upewnienie się co do sesji
+        received_session_id = data.get('sessionId', None)
+        if not received_session_id:
+            raise ValueError("Session ID not provided")
+
+        # Jeśli użytkownik nie jest zalogowany
+        if 'username' not in session:
+            raise PermissionError("User not logged in")
+
+        # Pobranie ID aktualnie zalogowanego użytkownika
+        username = session['username']
+
+        user_query = "SELECT id FROM Users WHERE username = %s"
+        cursor.execute(user_query, (username,))
+        user_result = cursor.fetchone()
+        if not user_result:
+            raise LookupError("User not found")
+
+        # Modyfikacja zapytania SQL, aby pokazywać tylko te produkty z flagą 1
+        user_id = user_result['id']
+        query = """
+            SELECT Icer.id, Icer.UserID, Icer.produktID, Icer.ilosc, 
+                   Icer.data_waznosci, Icer.trzecia_wartosc,
+                   Produkty.nazwa, Produkty.cena, Produkty.kalorie,
+                   Produkty.tluszcze, Produkty.weglowodany, Produkty.bialko,
+                   Produkty.kategoria
+            FROM Icer
+            INNER JOIN Produkty ON Icer.produktID = Produkty.id
+            WHERE Icer.UserID = %s AND Icer.trzecia_wartosc = 1
+        """
+        cursor.execute(query, (user_id,))
+        results = cursor.fetchall()
+
+        return jsonify(results)
+
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except PermissionError as pe:
+        return jsonify({"error": str(pe)}), 401
+    except LookupError as le:
+        return jsonify({"error": str(le)}), 404
+    except ConnectionError as ce:
+        return jsonify({"error": str(ce)}), 500
+    except Exception as error:
+        # Tutaj możemy logować błąd w bardziej szczegółowy sposób
+        current_app.logger.error(f"Unexpected error: {error}")
+        return jsonify({"error": "Unexpected server error"}), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+
+@app.route('/api/Icer', methods=['POST'])
+def get_icer():
+    # Tworzenie instancji klasy DatabaseConnector
+    db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+
+    # Łączenie z bazą danych
+    db_connector.connect()
+
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(run_daily_procedure, 'interval', seconds=60)
+    scheduler.start()
+    print("wjaaat?")
+
+    try:
+
+        # Uzyskanie połączenia z bazą danych
+        connection = db_connector.get_connection()
+        if not connection:
+            raise ConnectionError("Failed to establish a connection with the database.")
+
+        cursor = connection.cursor(dictionary=True)
+        if not cursor:
+            raise Exception("Failed to create a cursor for the database.")
+
+        data = request.get_json()
+
+        # Upewnienie się co do sesji
+        received_session_id = data.get('sessionId', None)
+        if not received_session_id:
+            raise ValueError("Session ID not provided")
+
+        # Jeśli użytkownik nie jest zalogowany
+        if 'username' not in session:
+            raise PermissionError("User not logged in")
+
+        # Pobranie ID aktualnie zalogowanego użytkownika
+        username = session['username']
+
+        user_query = "SELECT id FROM Users WHERE username = %s"
+        cursor.execute(user_query, (username,))
+        user_result = cursor.fetchone()
+        if not user_result:
+            raise LookupError("User not found")
 
         # Modyfikacja zapytania SQL, aby pokazywać wszystkie informacje o produkcie
         user_id = user_result['id']
@@ -194,11 +517,22 @@ def get_icer():
 
         return jsonify(results)
 
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except PermissionError as pe:
+        return jsonify({"error": str(pe)}), 401
+    except LookupError as le:
+        return jsonify({"error": str(le)}), 404
+    except ConnectionError as ce:
+        return jsonify({"error": str(ce)}), 500
     except Exception as error:
-        return jsonify({"error": str(error)})
+        # Tutaj możemy logować błąd w bardziej szczegółowy sposób
+        current_app.logger.error(f"Unexpected error: {error}")
+        return jsonify({"error": "Unexpected server error"}), 500
 
     finally:
-        cursor.close()
+        if cursor:
+            cursor.close()
 
 
 # Wyświetlanie produktów z informacjami o obrazach produktów
@@ -256,19 +590,27 @@ def get_products():
     return jsonify(products)
 
 
-# Strona logowania
+from flask import session, jsonify, request
+import uuid  # potrzebne do generowania unikalnych ID sesji
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         data = request.get_json()
         username = data['username']
         password = data['password']
-
+        print("funkcja login")
         # Sprawdzanie, czy użytkownik istnieje w bazie danych
         if check_user(username, password):
             # Utworzenie sesji dla zalogowanego użytkownika
             session['username'] = username
-            return jsonify({"message": "Login successful"})
+            session_id = str(uuid.uuid4())  # Generowanie unikalnego ID sesji
+            session['session_id'] = session_id  # Przechowywanie ID sesji
+            print("sesja" + session['session_id'] + "sessionid: " + session_id)
+            return jsonify({"message": "Login successful", "session_id": session_id})
+
+
         else:
             return jsonify({"message": "Invalid credentials"}), 401
     else:
@@ -360,6 +702,8 @@ def edit_user():
 
         # Jeśli użytkownik dostarczył nowe hasło, aktualizuj hasło
         if new_password:
+            # Szyfrowanie nowego hasła
+            hashed_new_pw = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
             query = "UPDATE Users SET password = %s WHERE username = %s"
             values = (new_password, session['username'])
             cursor.execute(query, values)
@@ -394,7 +738,6 @@ def logout():
     # Usunięcie sesji
     session.pop('username', None)
     return redirect('/login')
-
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -503,6 +846,5 @@ def start_food_identification_route():
     return redirect(url_for('index'))
 
 
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
