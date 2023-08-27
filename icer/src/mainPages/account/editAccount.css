@@ -54,7 +54,7 @@ input:focus {
 }
 
 
-button:hover {
+.editAccount button:hover {
     background-color: #0056b3;
 }
 @media only screen and (max-width: 1200px) {

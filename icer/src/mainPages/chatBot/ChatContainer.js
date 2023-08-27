@@ -13,10 +13,11 @@ function ChatContainer() {
 
     const handleBotResponse = async (userMessage) => {
         try {
-            const response = await axios.post('http://localhost:5000/bot', new URLSearchParams({
+            const response = await axios.post('http://localhost:5000/get_response', {
                 user_input: userMessage
-            }));
-            const botResponse = response.data;
+
+            });
+            const botResponse = response.data.response;
             setMessages(prevMessages => [...prevMessages, { text: botResponse, id: Date.now(), sender: 'bot' }]);
         } catch (error) {
             console.error("There was an error:", error);

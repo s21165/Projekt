@@ -12,18 +12,7 @@ import { useEffect } from 'react';
 function App() {
     const {user} = useContext(AuthContext);
 
-    useEffect(() => {
 
-            // Jeśli użytkownik jest zalogowany, wywołaj funkcję start_camera_monitoring_route
-            axios.post('/start_camera_monitoring')
-                .then((response) => {
-                    console.log('Kamera rozpoczęła monitoring');
-                })
-                .catch((error) => {
-                    console.error(`Wystąpił błąd podczas rozpoczynania monitoringu kamery: ${error}`);
-                });
-
-    }, [user]);
 
     return(
         <>

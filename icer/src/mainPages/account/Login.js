@@ -12,7 +12,7 @@ function Login() {
 
     const handlePostLogin = async (credentials) => {
         try {
-            const response = await axios.post(`${backendUrl}/login`, credentials);
+            const response = await axios.post(`http://192.168.0.130:5000/login`, credentials);
             const { data } = response;
             if (data && data.session_id) {
                 // Aktualizacja kontekstu z danymi użytkownika i sessionId
@@ -28,7 +28,7 @@ function Login() {
 
     const handlePostRegister = async (data) => {
         try {
-            await axios.post(`${backendUrl}/register`, data);
+            await axios.post(`http://192.168.0.130:5000/register`, data);
             // Możesz również dodać automatyczne logowanie po udanej rejestracji lub komunikat o sukcesie
         } catch (error) {
             console.error('Error during POST register', error);

@@ -4,7 +4,7 @@ import './MessageList.css';
 import axios from "axios";
 
 function MessageList({messages}) {
-    const backendUrl = 'http://localhost:5000';
+
     const [answer,setAnswer] = useState('');
     const lastMessage = messages[messages.length - 1];
 
