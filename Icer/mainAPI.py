@@ -3,6 +3,7 @@ from flask_cors import CORS
 import requests
 from dotenv import load_dotenv
 import bcrypt
+from apscheduler.schedulers.background import BackgroundScheduler
 
 from modules import value_manager
 from node_modules.database_connector import DatabaseConnector
@@ -27,6 +28,17 @@ db_connector.connect()
 
 # Tworzenie instancji ProductManager
 product_manager = ProductManager(db_connector)
+
+
+
+def run_daily_procedure():
+    local_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+    local_connector.connect()
+    cursor = local_connector.get_connection().cursor()
+    cursor.callproc('UpdateTrzeciaWartosc')
+    cursor.close()
+    local_connector.get_connection().commit()
+
 
 @app.route('/api/subtract_product', methods=['POST'])
 def subtract_product():
@@ -240,7 +252,7 @@ def get_icer_zero():
                    Produkty.kategoria
             FROM Icer
             INNER JOIN Produkty ON Icer.produktID = Produkty.id
-            WHERE Icer.UserID = %s AND Icer.ilosc = 0
+            WHERE Icer.UserID = %s AND Icer.ilosc = 0 or Icer.trzecia_wartosc =0
         """
         cursor.execute(query, (user_id,))
         results = cursor.fetchall()
@@ -272,6 +284,11 @@ def get_icer():
 
     # Łączenie z bazą danych
     db_connector.connect()
+
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(run_daily_procedure, 'interval', seconds=60)
+    scheduler.start()
+    print("wjaaat?")
 
     try:
 

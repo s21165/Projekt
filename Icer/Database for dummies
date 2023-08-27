@@ -32,18 +32,34 @@ CREATE TABLE Icer (
     UserID INT,
     produktID INT,
     ilosc INT,
-    data_waznosci DATE,
-    trzecia_wartosc TINYINT CHECK (trzecia_wartosc >= 1 AND trzecia_wartosc <= 3),
+    trzecia_wartosc TINYINT CHECK (trzecia_wartosc >= 0 AND trzecia_wartosc <= 3),  -- Zmieniono ograniczenie na >= 0
+    data_waznosci DATE,  -
     FOREIGN KEY (UserID) REFERENCES Users (id),
     FOREIGN KEY (produktID) REFERENCES Produkty (id)
-);
+)
 
 
-INSERT INTO Icer (UserID, produktID, ilosc)
-VALUES
-(1, 1, FLOOR(RAND() * 10) + 1),
-(1, 2, FLOOR(RAND() * 10) + 1),
-(1, 3, FLOOR(RAND() * 10) + 1),
-(1, 4, FLOOR(RAND() * 10) + 1),
-(1, 5, FLOOR(RAND() * 10) + 1),
-(1, 6, FLOOR(RAND() * 10) + 1)
+DELIMITER //
+CREATE PROCEDURE UpdateTrzeciaWartosc()
+BEGIN
+    -- Flagowanie produktów, które już wygasły
+    UPDATE Icer
+    SET trzecia_wartosc = 0
+    WHERE DATE(data_waznosci) < DATE(NOW());
+
+    -- Flagowanie produktów z 1 dniem do końca ważności
+    UPDATE Icer
+    SET trzecia_wartosc = 1
+    WHERE DATE(data_waznosci) = DATE(NOW() + INTERVAL 1 DAY);
+
+    -- Flagowanie produktów z tygodniem do końca ważności
+    UPDATE Icer
+    SET trzecia_wartosc = 2
+    WHERE DATE(data_waznosci) BETWEEN DATE(NOW() + INTERVAL 1 DAY) AND DATE(NOW() + INTERVAL 7 DAY);
+
+    -- Flagowanie produktów z ponad miesiącem do końca ważności
+    UPDATE Icer
+    SET trzecia_wartosc = 3
+    WHERE DATE(data_waznosci) > DATE(NOW() + INTERVAL 7 DAY);
+END //
+DELIMITER ;
