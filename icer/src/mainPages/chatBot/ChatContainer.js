@@ -6,6 +6,10 @@ import Main from "../../Main";
 import Help from "../Help";
 import { Icon } from '@iconify/react';
 import axios from "axios";
+import {API_URL} from "../../config";
+
+
+
 function ChatContainer() {
     const [messages, setMessages] = useState([]);
     const [isMinimized, setIsMinimized] = useState(false);
@@ -13,7 +17,7 @@ function ChatContainer() {
 
     const handleBotResponse = async (userMessage) => {
         try {
-            const response = await axios.post('http://localhost:5000/get_response', {
+            const response = await axios.post(`${API_URL}/get_response`, {
                 user_input: userMessage
 
             });

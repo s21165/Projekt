@@ -5,6 +5,9 @@ import {ScanQr} from "./ScanQr";
 import {ScanBr} from "./scanBr";
 import {useContext} from 'react';
 import {AuthContext} from '../account/auth-context';
+import {API_URL} from "../../config";
+
+
 
 function AddProduct() {
     const {user} = useContext(AuthContext);
@@ -47,7 +50,7 @@ function AddProduct() {
             },
         };
         axios
-            .post('http://192.168.0.130:5000/api/add_product', product, config)
+            .post(`${API_URL}/api/add_product`, product, config)
             .then((response) => {
 
                 console.log(`Dodane: ${JSON.stringify(response.data)}`);

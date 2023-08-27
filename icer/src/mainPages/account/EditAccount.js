@@ -5,6 +5,10 @@ import './editAccount.css';
 import face from "../../data/face.jpg";
 import { AuthContext } from "./auth-context";
 import axios from "axios";
+import {API_URL} from "../../config";
+
+
+
 
 function EditAccount(props) {
     const { user } = useContext(AuthContext);
@@ -20,7 +24,7 @@ function EditAccount(props) {
         event.preventDefault();
 
         try {
-            const response = await axios.post('http://192.168.0.130:5000/api/edit_user', {
+            const response = await axios.post(`${API_URL}/api/edit_user`, {
                 new_username: formData.username,
                 new_password: formData.new_password,
                 sessionId: sessionId

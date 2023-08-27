@@ -5,6 +5,7 @@ import ProductEdit from "./ProductEdit";
 import ProductItem from "./ProductItem";
 import { useContext } from 'react';
 import { AuthContext } from '../account/auth-context';
+import {API_URL} from "../../config";
 
 function Products() {
 
@@ -17,20 +18,20 @@ function Products() {
 
     const [refresh, setRefresh] = useState(false); // Dodajemy stan do odświeżania ekranu
     const [editingProduct, setEditingProduct] = useState(null);
-    const handleEditClick = (product) => {
-        setEditingProduct({
-            id: product[0],
-            nazwa: product[1],
-            cena: product[2],
-            kalorie: product[3],
-            tluszcze: product[4],
-            weglowodany: product[5],
-            bialko: product[6],
-            kategoria: product[7],
-            ilosc: product[8],
-            data_waznosci: new Date(product[9]).toISOString().split('T')[0]
-        });
-    };
+    // const handleEditClick = (product) => {
+    //     setEditingProduct({
+    //         id: product[0],
+    //         nazwa: product[1],
+    //         cena: product[2],
+    //         kalorie: product[3],
+    //         tluszcze: product[4],
+    //         weglowodany: product[5],
+    //         bialko: product[6],
+    //         kategoria: product[7],
+    //         ilosc: product[8],
+    //         data_waznosci: new Date(product[9]).toISOString().split('T')[0]
+    //     });
+    // };
     const handleEdit = () => {
         const id = editingProduct.id;
         const config = {
@@ -42,23 +43,21 @@ function Products() {
         };
 
         axios
-            .put(`'http://192.168.0.130:5000/api/edit_product/${id}`, editingProduct, config)
+            .put(`${API_URL}/api/edit_product/${id}`, editingProduct, config)
             .then((response) => {
                 console.log(response.data);
                 setEditingProduct(null);
                 setRefresh(!refresh);
             })
             .catch((error) => {
-                console.error.response.data(`There was an error updating the product: ${error}`);
+                console.error(`There was an error updating the product: ${error}`);
             });
     };
-    function handleIncrease(productId){
-
+    const handleIncrease = (productId) => {
         // Znajdź produkt o danym ID i zwiększ jego ilość
-        axios.post('http://192.168.0.130:5000/api/add_to_product',
+        axios.post(`${API_URL}/api/add_to_product`,
             {sessionId:sessionId,
-                id_produktu: productId,
-                ilosc_do_dodania:1
+                id_produktu: productId
             } )
             .then((response) => {
                 setData(response.data);
@@ -66,18 +65,16 @@ function Products() {
                 console.log("dodano 1 do produktu: " + data.nazwa)
             })
             .catch((error) => {
-                console.error.response.data(`There was an error retrieving the data: ${error}`);
+                console.error(`There was an error retrieving the data: ${error}`);
             });
     };
 
 
-    const handleDecrease = (productId,decrease) => {
-        console.log("proba odjęto produkt: " + data.nazwa,decrease)
+    const handleDecrease = (productId) => {
         // Znajdź produkt o danym ID i zmniejsz jego ilość
-        axios.post('http://192.168.0.130:5000/api/subtract_product',
+        axios.post(`${API_URL}/api/subtract_product`,
             {sessionId:sessionId,
-                id_produktu: productId,
-                ilosc_do_odejscia: decrease
+                id_produktu: productId
         } )
             .then((response) => {
                 setData(response.data);
@@ -85,7 +82,7 @@ function Products() {
                 setRefresh(!refresh);
             })
             .catch((error) => {
-                console.error.response.data(`There was an error retrieving the data: ${error}`);
+                console.error(`There was an error retrieving the data: ${error}`);
             });
     };
 
@@ -97,19 +94,19 @@ function Products() {
 
 
 
-        axios.post('http://192.168.0.130:5000/api/Icer',{sessionId:sessionId} )
+        axios.post(`${API_URL}/api/Icer`,{sessionId:sessionId} )
             .then((response) => {
                 setData(response.data);
 
             })
             .catch((error) => {
-                console.error.response.data(`There was an error retrieving the data: ${error}`);
+                console.error(`There was an error retrieving the data: ${error}`);
             });
     }, [refresh]);
     const handleRemove = (id) => {
-        console.log("proba usuniecia produkt: " + data.nazwa)
+
         axios
-            .delete(`'http://192.168.0.130:5000/api/remove_product_for_user`,{
+            .delete(`${API_URL}/api/remove_product_for_user`,{
                 'SessionId': sessionId,
                 produktID:id
             },)
@@ -118,7 +115,7 @@ function Products() {
                 setRefresh(!refresh); // Refresh the product list after deletion
             })
             .catch((error) => {
-                console.error.response.data(`There was an error removing the product: ${error}`);
+                console.error(`There was an error removing the product: ${error}`);
             });
     };
 
@@ -158,7 +155,7 @@ function Products() {
                     key={index}
                     data={data}
                     handleRemove={handleRemove}
-                    handleEditClick={handleEditClick}
+                    // handleEditClick={handleEditClick}
                     handleIncrease={handleIncrease}
                     handleDecrease={handleDecrease}
                     filter={filter}
@@ -170,5 +167,5 @@ function Products() {
             </div>
         </>
     );
-}
+};
 export default Products;

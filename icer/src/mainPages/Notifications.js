@@ -8,6 +8,10 @@ import './Notifications.css'
 import {NotificationsList} from "./NotificationsList";
 import {AuthContext} from "./account/auth-context";
 import {GetBorderStyle} from "./products/GetBorderStyle";
+import {API_URL} from "../config";
+
+
+
 export function Notifications( { small }) {
     const [data, setData] = useState(null);
     const { user } = useContext(AuthContext);
@@ -15,7 +19,7 @@ export function Notifications( { small }) {
 
     useEffect(() => {
 
-        axios.post('http://192.168.0.130:5000/api/Icer',{sessionId:sessionId} )
+        axios.post(`${API_URL}/api/Icer`,{sessionId:sessionId} )
             .then((response) => {
                 setData(response.data);
 

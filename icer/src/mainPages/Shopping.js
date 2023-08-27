@@ -6,7 +6,7 @@ import axios from "axios";
 import {AuthContext} from "./account/auth-context";
 import './Notifications.css'
 import {ShoppingList} from "./ShoppingList";
-
+import {API_URL} from "../config";
 
 export function Shopping() {
 
@@ -25,7 +25,7 @@ export function Shopping() {
     }
     useEffect(() => {
 
-        axios.post('http://192.168.0.130:5000/api/shoppingList',{sessionId:sessionId} )
+        axios.post(`${API_URL}/api/shoppingList`,{sessionId:sessionId} )
             .then((response) => {
                 setData(response.data);
 

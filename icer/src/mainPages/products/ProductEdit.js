@@ -78,7 +78,7 @@ function ProductEdit({ product, handleEdit, setEditingProduct }) {
                 />
             </p>
 
-            <button onClick={() => handleEdit()}>Zaktualizuj</button>
+            <button onClick={() => handleEdit(product)}>Zaktualizuj</button>
             <button onClick={() => setEditingProduct(null)}>Anuluj</button>
 
         </div>

@@ -3,6 +3,7 @@ import axios from 'axios';
 import LoginForm from './LoginForm';
 import { AuthContext } from "./auth-context";
 import RegisterForm from "./RegisterForm";
+import {API_URL} from "../../config";
 
 const backendUrl = 'http://localhost:5000';
 
@@ -12,7 +13,7 @@ function Login() {
 
     const handlePostLogin = async (credentials) => {
         try {
-            const response = await axios.post(`http://192.168.0.130:5000/login`, credentials);
+            const response = await axios.post(`${API_URL}/login`, credentials);
             const { data } = response;
             if (data && data.session_id) {
                 // Aktualizacja kontekstu z danymi użytkownika i sessionId
@@ -28,7 +29,7 @@ function Login() {
 
     const handlePostRegister = async (data) => {
         try {
-            await axios.post(`http://192.168.0.130:5000/register`, data);
+            await axios.post(`${API_URL}/register`, data);
             // Możesz również dodać automatyczne logowanie po udanej rejestracji lub komunikat o sukcesie
         } catch (error) {
             console.error('Error during POST register', error);

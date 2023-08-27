@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { API_URL } from './config';
 
 function RemoveProduct() {
     const [product, setProduct] = useState({
@@ -19,7 +20,7 @@ function RemoveProduct() {
         e.preventDefault();
 
         axios
-            .put(`http://localhost:5000/api/products/${product.nazwa}`, product)
+            .put(`${API_URL}/api/products/${product.nazwa}`, product)
             .then((response) => {
                 console.log(response.data);
                 // Możesz wykonać odpowiednie akcje po usunięciu produktu
