@@ -11,7 +11,7 @@ function EditAccount(props) {
     const sessionId = user ? user.sessionId : null;
 
     const [formData, setFormData] = useState({
-        username: user.username,
+        username: '',
         email: props.email,
         new_password: ''
     });
@@ -20,7 +20,7 @@ function EditAccount(props) {
         event.preventDefault();
 
         try {
-            const response = await axios.post('http://localhost:5000/api/edit_user', {
+            const response = await axios.post('http://192.168.0.130:5000/api/edit_user', {
                 new_username: formData.username,
                 new_password: formData.new_password,
                 sessionId: sessionId

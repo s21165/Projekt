@@ -1,10 +1,11 @@
 import {useState} from "react";
 import {GetBorderStyle} from "./products/GetBorderStyle";
 
-export function NotificationsList({ data, small = false, onProductClick }) {
+export function ShoppingList({ data, onProductClick }) {
 
     const [expandedProduct, setExpandedProduct] = useState(null);
     const style = GetBorderStyle(data);
+
     // Funkcja do przełączania rozwinięcia produktu
     const handleToggleExpand = (productId) => {
         if (expandedProduct === productId) {
@@ -15,9 +16,9 @@ export function NotificationsList({ data, small = false, onProductClick }) {
     }
 
     return (
-        <div className={`notificationsList ${small ? "small" : ""}`}>
+        <div className={'notificationsList'}>
             {data && data.map(product => (
-                <div className={"notificationProductDiv"} key={product.id} style={GetBorderStyle(product,1,1)}>
+                <div className={"notificationProductDiv"} key={product.id}>
 
                     <div
                         className="notificationsNameDiv"

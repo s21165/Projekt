@@ -47,7 +47,7 @@ function AddProduct() {
             },
         };
         axios
-            .post('http://localhost:5000/api/add_product', product, config)
+            .post('http://192.168.0.130:5000/api/add_product', product, config)
             .then((response) => {
 
                 console.log(`Dodane: ${JSON.stringify(response.data)}`);

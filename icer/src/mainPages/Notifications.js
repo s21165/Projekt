@@ -1,17 +1,21 @@
 
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import axios from 'axios';
 import './products/Products.css';
 import ProductEdit from "./products/ProductEdit";
 import ProductItem from "./products/ProductItem";
 import './Notifications.css'
 import {NotificationsList} from "./NotificationsList";
+import {AuthContext} from "./account/auth-context";
+import {GetBorderStyle} from "./products/GetBorderStyle";
 export function Notifications( { small }) {
     const [data, setData] = useState(null);
+    const { user } = useContext(AuthContext);
+    const sessionId = user ? user.sessionId : null;
 
     useEffect(() => {
 
-        axios.get('http://localhost:5000/api/products')
+        axios.post('http://192.168.0.130:5000/api/Icer',{sessionId:sessionId} )
             .then((response) => {
                 setData(response.data);
 

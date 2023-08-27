@@ -7,7 +7,7 @@ import {
     Link, useLocation, Await
 } from "react-router-dom";
 import {Fridge} from "./mainPages/products/Fridge";
-import {History} from "./mainPages/History";
+import {Shopping} from "./mainPages/Shopping";
 import {Shops} from "./mainPages/Shops";
 import {Account} from "./mainPages/account/Account";
 import {Notifications} from "./mainPages/Notifications";
@@ -65,12 +65,12 @@ function Main() {
                             <Route path="/Produkty" element={<Products/>}/>
                             <Route path="/edycjaKonta" element={<EditAccount/>}/>
                             <Route path="/" element={<Fridge/>}/>
-                            <Route path="/HistoriaZakupow" element={<History/>}/>
+                            <Route path="/ListaZakupow" element={<Shopping/>}/>
                             <Route path="/Sklepy" element={<Shops/>}/>
                             <Route path="/Konto" element={<Account/>}/>
                             <Route path="/Powiadomienia" element={<Notifications/>}/>
                             <Route path="/Sklepy" element={<Fridge/>}/>
-                            <Route path="/Ustawienia" element={<History/>}/>
+                            <Route path="/Ustawienia" element={<Shopping/>}/>
                             <Route path="/Pomoc" element={<Help/>}/>
                             <Route path="/Wyloguj" element={<Logout/>}/>
                             <Route path="/Zaloguj" element={<Fridge/>}/>
@@ -120,14 +120,14 @@ function Main() {
                                         </Link>
                                         <Link to="/Produkty">
                                             <div className="navDivMain">
-                                                {isIcon ? <h3>Produkty</h3> :
+                                                {isIcon ? <h3>produkty</h3> :
                                                     <Icon className="menuIcons"
                                                           icon="streamline:shopping-bag-hand-bag-1-shopping-bag-purse-goods-item-products"/>}
                                             </div>
                                         </Link>
                                         <Link to="/dodajProdukt">
                                             <div className="navDivMain">
-                                                {isIcon ? <h3>Dodaj produkt</h3> :
+                                                {isIcon ? <h3>dodaj produkt</h3> :
                                                     <Icon className="menuIcons" icon="fluent:add-28-filled"/>}
                                             </div>
                                         </Link>
@@ -162,9 +162,9 @@ function Main() {
                                                     <Icon className="menuIcons" icon="tabler:fridge"/>}
                                             </div>
                                         </Link>
-                                        <Link to="/HistoriaZakupow">
+                                        <Link to="/ListaZakupow">
                                             <div className="navDiv">
-                                                {isIcon ? <h3>historia zakupów</h3> :
+                                                {isIcon ? <h3>lista zakupów</h3> :
                                                     <Icon className="menuIcons"
                                                           icon="material-symbols:history-rounded"/>}
                                             </div>
