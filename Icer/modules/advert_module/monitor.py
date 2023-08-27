@@ -29,55 +29,76 @@ def display_warning_image(image):
 def start_camera_monitoring():
     # Initialize video captures
     cap1 = cv2.VideoCapture(0)  # Webcam
-    cap2 = cv2.VideoCapture('modules/advert_module/videoplayback.mp4')  # Video file
+    cap2 = cv2.VideoCapture('modules/advert_module/videoplayback.mp4')  # Default video file
+    alt_cap = cv2.VideoCapture('modules/advert_module/videoplaybackalt.mp4')  # Alternate video file
     img2 = cv2.imread('modules/advert_module/image.jpg')  # Warning image
 
-    count = 0
-    beep = 0
-    frm2 = None
+    # Check if the webcam is accessible
+    if not cap1.isOpened():
+        print("Webcam not detected. Playing alternate video without monitoring.")
+        while alt_cap.isOpened():
+            ret_alt, frame_alt = alt_cap.read()
+            if ret_alt:
+                cv2.imshow("Alternate Video Playback", frame_alt)
+                if cv2.waitKey(int(1000 / alt_cap.get(cv2.CAP_PROP_FPS))) & 0xFF == ord('q'):
+                    break
+            else:
+                break
+    else:
+        count = 0
+        beep = 0
+        frm2 = None
 
-    while cap2.isOpened():
-        ret1, frm1 = cap2.read()
-        if ret1:
-            if count > 5:
-                _, frm2 = cap2.read()
+        while cap2.isOpened():
+            ret1, frm1 = cap2.read()
+            if ret1:
+                if count > 5:
+                    _, frm2 = cap2.read()
 
-            if frm2 is not None:
-                cv2.imshow("AD", frm2)
+                if frm2 is not None:
+                    cv2.imshow("AD", frm2)
 
-            if frm1 is not None:
-                ret, img = cap1.read()
-                detected_faces, detected_eyes = detect_faces_and_eyes(img)
+                if frm1 is not None:
+                    ret, img = cap1.read()
+                    detected_faces, detected_eyes = detect_faces_and_eyes(img)
 
-                # Draw rectangles around detected faces and eyes
-                for (x, y, width, height) in detected_faces:
-                    cv2.rectangle(img, (x, y), (x + width, y + height), (0, 0, 255), 10)
+                    # Draw rectangles around detected faces and eyes
+                    for (x, y, width, height) in detected_faces:
+                        cv2.rectangle(img, (x, y), (x + width, y + height), (0, 0, 255), 10)
 
-                for (x, y, w, h) in detected_eyes:
-                    cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 255), 3)
+                    for (x, y, w, h) in detected_eyes:
+                        cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 255), 3)
 
-                cv2.imshow("monitoring", img)
+                    cv2.imshow("monitoring", img)
 
-                # Play warning audio and display warning image if no faces or eyes detected
-                if len(detected_eyes) == 0 and len(detected_faces) == 0:
-                    if beep == 5:
-                        play_audio_warning()
-                        beep = 0
-                        display_warning_image(img2)
+                    # Play warning audio and display warning image if no faces or eyes detected
+                    if len(detected_eyes) == 0 and len(detected_faces) == 0:
+                        if beep == 5:
+                            play_audio_warning()
+                            beep = 0
+                            display_warning_image(img2)
+                        else:
+                            beep += 1
                     else:
-                        beep += 1
-                else:
-                    beep = 0
+                        beep = 0
 
-            count += 1
-            cv2.waitKey(1)
+                count += 1
+                cv2.waitKey(1)
 
-        else:
-            break
+            else:
+                break
 
-    cap1.release()
+        cap1.release()
+
     cap2.release()
+    alt_cap.release()
     cv2.destroyAllWindows()
+
+if __name__ == '__main__':
+    start_camera_monitoring()
+
+
+
 
 #if __name__ == '__main__':
 #    start_camera_monitoring()
