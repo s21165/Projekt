@@ -40,7 +40,7 @@ def run_daily_procedure():
     local_connector.get_connection().commit()
 
 @app.route('/api/add_to_product', methods=['POST'])
-def add_product():
+def add_to_product():
     # Tworzenie instancji klasy DatabaseConnector
     db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 
