@@ -2,6 +2,8 @@ create database sklep;
 
 use sklep;
 
+SET SQL_SAFE_UPDATES = 0;
+
 CREATE TABLE Users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
@@ -27,16 +29,19 @@ CREATE TABLE Produkty (
 
 
 
+
+
 CREATE TABLE Icer (
     id INT AUTO_INCREMENT PRIMARY KEY,
     UserID INT,
     produktID INT,
     ilosc INT,
-    trzecia_wartosc TINYINT CHECK (trzecia_wartosc >= 0 AND trzecia_wartosc <= 3),  -- Zmieniono ograniczenie na >= 0
-    data_waznosci DATE,  -
+    trzecia_wartosc TINYINT CHECK (trzecia_wartosc >= 1 AND trzecia_wartosc <= 4),
+    data_waznosci DATE,
     FOREIGN KEY (UserID) REFERENCES Users (id),
     FOREIGN KEY (produktID) REFERENCES Produkty (id)
 )
+
 
 
 DELIMITER //
@@ -44,22 +49,27 @@ CREATE PROCEDURE UpdateTrzeciaWartosc()
 BEGIN
     -- Flagowanie produktów, które już wygasły
     UPDATE Icer
-    SET trzecia_wartosc = 0
+    SET trzecia_wartosc = 1
     WHERE DATE(data_waznosci) < DATE(NOW());
 
     -- Flagowanie produktów z 1 dniem do końca ważności
     UPDATE Icer
     SET trzecia_wartosc = 1
-    WHERE DATE(data_waznosci) = DATE(NOW() + INTERVAL 1 DAY);
+    WHERE DATE(data_waznosci) = DATE(NOW());
 
-    -- Flagowanie produktów z tygodniem do końca ważności
+    -- Flagowanie produktów z 3 dniami do końca ważności
     UPDATE Icer
     SET trzecia_wartosc = 2
-    WHERE DATE(data_waznosci) BETWEEN DATE(NOW() + INTERVAL 1 DAY) AND DATE(NOW() + INTERVAL 7 DAY);
+    WHERE DATE(data_waznosci) BETWEEN DATE(NOW()) AND DATE(NOW() + INTERVAL 3 DAY);
 
-    -- Flagowanie produktów z ponad miesiącem do końca ważności
+    -- Flagowanie produktów z pomiędzy 3 a 7 dni do końca ważności
     UPDATE Icer
     SET trzecia_wartosc = 3
-    WHERE DATE(data_waznosci) > DATE(NOW() + INTERVAL 7 DAY);
+    WHERE DATE(data_waznosci) > DATE(NOW() + INTERVAL 3 DAY) AND DATE(data_waznosci) <= DATE(NOW() + INTERVAL 7 DAY);
+
+    -- Flagowanie produktów z ponad 7 dni do końca ważności ale mniej niż miesiąc
+    UPDATE Icer
+    SET trzecia_wartosc = 4
+    WHERE DATE(data_waznosci) > DATE(NOW() + INTERVAL 7 DAY) ;
 END //
 DELIMITER ;
