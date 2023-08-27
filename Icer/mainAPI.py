@@ -28,9 +28,6 @@ db_connector.connect()
 # Tworzenie instancji ProductManager
 product_manager = ProductManager(db_connector)
 
-TESTING = True
-
-
 @app.route('/api/subtract_product', methods=['POST'])
 def subtract_product():
     # Tworzenie instancji klasy DatabaseConnector (jeśli go nie masz wcześniej zdefiniowanego w tym miejscu, dodaj odpowiednio)
@@ -103,7 +100,79 @@ def subtract_product():
             connection.close()
 
 
+@app.route('/api/add_product', methods=['POST'])
+def add_product():
 
+    # Tworzenie instancji klasy DatabaseConnector
+    db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+
+    # Łączenie z bazą danych
+    db_connector.connect()
+
+    # Tworzenie instancji ProductManager
+    product_manager = ProductManager(db_connector)
+    username = session['username']
+    connection = None
+    cursor = None
+    print(session['username'])
+    try:
+
+        # Sprawdzenie, czy użytkownik jest zalogowany
+        if 'username' not in session:
+            return jsonify({"error": "User not logged in"}), 401
+
+        connection = db_connector.get_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        username = session['username']
+
+        # Pobranie ID użytkownika na podstawie nazwy użytkownika
+        user_query = "SELECT id FROM Users WHERE username = %s"
+        cursor.execute(user_query, (username,))
+        user_result = cursor.fetchone()
+
+        if not user_result:
+            return jsonify({"error": "User not found"}), 401
+
+        data = request.json
+        user_id = user_result['id']
+
+        # Sprawdzenie, czy produkt już istnieje
+        check_product_query = "SELECT id FROM Produkty WHERE nazwa = %s AND cena = %s"
+        cursor.execute(check_product_query, (data['nazwa'], data['cena']))
+        product_exists = cursor.fetchone()
+
+        if product_exists:
+            product_id = product_exists['id']
+        else:
+            product_id = product_manager.dodaj_produkt(
+                data['nazwa'],
+                data['cena'],
+                data['kalorie'],
+                data['tluszcze'],
+                data['weglowodany'],
+                data['bialko'],
+                data['kategoria']
+            )
+
+            if product_id is None:
+                return jsonify({"error": "Failed to add product to Produkty table."})
+
+        # Dodawanie produktu do tabeli Icer
+        icer_query = "INSERT INTO Icer (UserID, produktID, ilosc, data_waznosci) VALUES (%s, %s, %s, %s)"
+        cursor.execute(icer_query, (user_id, product_id, data['ilosc'], data['data_waznosci']))
+
+        connection.commit()
+
+        return jsonify({"message": "Produkt został dodany!"})
+
+    except Exception as error:
+        return jsonify({"error": str(error)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
 
 
 @app.route('/api/edit_product/<int:product_id>', methods=['PUT'])
@@ -437,6 +506,8 @@ def edit_user():
 
         # Jeśli użytkownik dostarczył nowe hasło, aktualizuj hasło
         if new_password:
+            # Szyfrowanie nowego hasła
+            hashed_new_pw = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
             query = "UPDATE Users SET password = %s WHERE username = %s"
             values = (new_password, session['username'])
             cursor.execute(query, values)
