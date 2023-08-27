@@ -304,6 +304,79 @@ def get_icer_shopping():
             cursor.close()
 
 
+@app.route('/api/productsRedFlag', methods=['POST', 'GET'])
+def get_products_with_red_flag():
+    print("test?")
+    # Tworzenie instancji klasy DatabaseConnector
+    db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+
+    # Łączenie z bazą danych
+    db_connector.connect()
+
+    try:
+        # Uzyskanie połączenia z bazą danych
+        connection = db_connector.get_connection()
+        if not connection:
+            raise ConnectionError("Failed to establish a connection with the database.")
+
+        cursor = connection.cursor(dictionary=True)
+        if not cursor:
+            raise Exception("Failed to create a cursor for the database.")
+
+        data = request.get_json()
+
+        # Upewnienie się co do sesji
+        received_session_id = data.get('sessionId', None)
+        if not received_session_id:
+            raise ValueError("Session ID not provided")
+
+        # Jeśli użytkownik nie jest zalogowany
+        if 'username' not in session:
+            raise PermissionError("User not logged in")
+
+        # Pobranie ID aktualnie zalogowanego użytkownika
+        username = session['username']
+
+        user_query = "SELECT id FROM Users WHERE username = %s"
+        cursor.execute(user_query, (username,))
+        user_result = cursor.fetchone()
+        if not user_result:
+            raise LookupError("User not found")
+
+        # Modyfikacja zapytania SQL, aby pokazywać tylko te produkty z flagą 1
+        user_id = user_result['id']
+        query = """
+            SELECT Icer.id, Icer.UserID, Icer.produktID, Icer.ilosc, 
+                   Icer.data_waznosci, Icer.trzecia_wartosc,
+                   Produkty.nazwa, Produkty.cena, Produkty.kalorie,
+                   Produkty.tluszcze, Produkty.weglowodany, Produkty.bialko,
+                   Produkty.kategoria
+            FROM Icer
+            INNER JOIN Produkty ON Icer.produktID = Produkty.id
+            WHERE Icer.UserID = %s AND Icer.trzecia_wartosc = 1
+        """
+        cursor.execute(query, (user_id,))
+        results = cursor.fetchall()
+
+        return jsonify(results)
+
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except PermissionError as pe:
+        return jsonify({"error": str(pe)}), 401
+    except LookupError as le:
+        return jsonify({"error": str(le)}), 404
+    except ConnectionError as ce:
+        return jsonify({"error": str(ce)}), 500
+    except Exception as error:
+        # Tutaj możemy logować błąd w bardziej szczegółowy sposób
+        current_app.logger.error(f"Unexpected error: {error}")
+        return jsonify({"error": "Unexpected server error"}), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+
 @app.route('/api/Icer', methods=['POST'])
 def get_icer():
     # Tworzenie instancji klasy DatabaseConnector
