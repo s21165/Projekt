@@ -146,16 +146,8 @@ def subtract_product():
         # Pobieranie informacji o produkcie
         id_produktu = data['id_produktu']
 
-        # Sprawdzenie, czy produkt należy do aktualnie zalogowanego użytkownika
-        ownership_check_query = "SELECT id FROM Icer WHERE UserID = %s AND produktID = %s"
-        cursor.execute(ownership_check_query, (user_id, id_produktu))
-        ownership_result = cursor.fetchone()
-
-        if not ownership_result:
-            raise PermissionError("This product does not belong to the user.")
-
         # Użycie klasy ProductManager do odejmowania ilości produktu w bazie danych
-        product_manager.odejmij_jednostke_produktu(id_produktu)
+        product_manager.odejmij_jednostke_produktu(id_produktu, user_id)
 
         return jsonify({"message": "Ilość produktu została zaktualizowana!"})
 
@@ -172,6 +164,7 @@ def subtract_product():
             cursor.close()
         if connection:
             connection.close()
+
 
 
 
