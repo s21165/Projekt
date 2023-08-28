@@ -27,23 +27,27 @@ CREATE TABLE Produkty (
 
 
 
-DELIMITER //
 
-CREATE PROCEDURE ModifyProductQuantity(IN p_produktID INT, IN p_action ENUM('add', 'subtract'))
+
+
+DELIMITER //
+CREATE PROCEDURE ModifyProductQuantity(IN p_icerID INT, IN p_userID INT, IN p_action ENUM('add', 'subtract'))
 BEGIN
     DECLARE current_quantity INT;
 
-    SELECT ilosc INTO current_quantity FROM Icer WHERE produktID = p_produktID;
+    -- Pobieranie aktualnej ilości produktu dla danego wpisu (bazując na ID z tabeli Icer)
+    SELECT ilosc INTO current_quantity FROM Icer WHERE id = p_icerID AND UserID = p_userID;
 
+    -- Zaktualizowanie ilości w zależności od wybranej akcji
     IF p_action = 'add' THEN
         SET current_quantity = current_quantity + 1;
     ELSEIF p_action = 'subtract' AND current_quantity > 0 THEN
         SET current_quantity = current_quantity - 1;
     END IF;
 
-    UPDATE Icer SET ilosc = current_quantity WHERE produktID = p_produktID;
+    -- Aktualizacja ilości produktu dla danego wpisu w tabeli Icer
+    UPDATE Icer SET ilosc = current_quantity WHERE id = p_icerID AND UserID = p_userID;
 END //
-
 DELIMITER ;
 
 
