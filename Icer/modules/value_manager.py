@@ -1,5 +1,4 @@
 class ProductManager:
-    # ... (inne funkcje niezmienione)
 
     def dodaj_jednostke_produktu(self, id_produktu, user_id):
         self.__modify_product_quantity(id_produktu, user_id, 'add')
@@ -9,6 +8,9 @@ class ProductManager:
 
     def zeruj_ilosc_produktu(self, id_produktu, user_id):
         self.__modify_product_quantity(id_produktu, user_id, 'zero')
+
+    def usun_produkt(self, id_produktu, user_id):
+        self.__modify_product_quantity(id_produktu, user_id, 'remove')
 
     def __modify_product_quantity(self, id_produktu, user_id, action):
         try:

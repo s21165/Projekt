@@ -318,23 +318,15 @@ def remove_product_for_user():
         user_id = data['UserID']
         product_id = data['produktID']
 
-        cursor = db_connector.get_connection().cursor()
+        # Użycie klasy ProductManager do usunięcia produktu
+        product_manager = ProductManager(db_connector)
+        product_manager.usun_produkt(product_id, user_id)
 
-        # Usunięcie powiązania użytkownika z produktem
-        query = "DELETE FROM Icer WHERE UserID = %s AND produktID = %s"
-        values = (user_id, product_id)
-        cursor.execute(query, values)
-
-        # Zatwierdzenie zmian
-        db_connector.get_connection().commit()
-
-        # Zamknięcie kursora
-        cursor.close()
-
-        return jsonify({"message": "Powiązanie zostało usunięte pomyślnie!"})
+        return jsonify({"message": "Produkt został usunięty pomyślnie!"})
 
     except Exception as error:
         return jsonify({"error": str(error)})
+
 
 
 @app.route('/api/edit_product/<int:product_id>', methods=['PUT'])
