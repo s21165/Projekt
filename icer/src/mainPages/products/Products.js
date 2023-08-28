@@ -69,6 +69,22 @@ function Products() {
             });
     };
 
+    const handleZero = (productId) => {
+        // Znajdź produkt o danym ID i zwiększ jego ilość
+        axios.post(`${API_URL}/api/reset_product_quantity`,
+            {sessionId:sessionId,
+                id_produktu: productId
+            } )
+            .then((response) => {
+                setData(response.data);
+                setRefresh(!refresh);
+                console.log("zerowanie : " + data.nazwa)
+            })
+            .catch((error) => {
+                console.error(`There was an error retrieving the data: ${error}`);
+            });
+    };
+
 
     const handleDecrease = (productId) => {
         // Znajdź produkt o danym ID i zmniejsz jego ilość
@@ -106,8 +122,8 @@ function Products() {
     const handleRemove = (id) => {
 
         axios
-            .delete(`${API_URL}/api/remove_product_for_user`,{
-                'SessionId': sessionId,
+            .post(`${API_URL}/remove_product_for_user`,{
+                SessionId: sessionId,
                 produktID:id
             },)
             .then((response) => {
@@ -158,6 +174,7 @@ function Products() {
                     // handleEditClick={handleEditClick}
                     handleIncrease={handleIncrease}
                     handleDecrease={handleDecrease}
+                    handleZero={handleZero}
                     filter={filter}
                 />
             )}

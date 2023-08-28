@@ -3,7 +3,7 @@ import './ProductItem.css';
 import {Icon} from "@iconify/react";
 import {GetBorderStyle} from "./GetBorderStyle";
 
-function ProductItem({index, data, handleRemove, handleEditClick, handleIncrease, handleDecrease, filter}) {
+function ProductItem({index, data, handleRemove, handleEditClick, handleIncrease, handleDecrease, filter, handleZero}) {
     const [showRemovalConfirmation, setShowRemovalConfirmation] = useState(false);
     const style = GetBorderStyle(data, filter, 2);
     const handleDecreaseWithCheck = () => {
@@ -51,10 +51,10 @@ function ProductItem({index, data, handleRemove, handleEditClick, handleIncrease
                             </button>
                         </div>
                     </div>
-                    <div><h3>Data: {new Date(data.data_waznosci).toISOString().split('T')[0]}</h3></div>
+                    {/*<div><h3>Data: {new Date(data.data_waznosci).toISOString().split('T')[0]}</h3></div>*/}
                     <div className="iconContainer">
                         {filter === 'current' ?
-                            <button className="removeButton" onClick={() => handleDecrease(data.id)}>
+                            <button className="removeButton" onClick={() => handleZero(data.id)}>
                                 <h2><Icon className="iconifyIcon" icon="ph:trash-bold"/></h2></button>
                             :
 
