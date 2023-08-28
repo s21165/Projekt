@@ -2,34 +2,28 @@ class ProductManager:
     # ... (inne funkcje niezmienione)
 
     def dodaj_jednostke_produktu(self, id_produktu, user_id):
-        try:
-            connection = self.db_connector.get_connection()
-
-            with connection.cursor() as cursor:
-                # Wypisanie wywołania procedury przed jej wykonaniem
-                print(f"CALL ModifyProductQuantity({id_produktu}, {user_id}, 'add');")
-
-                cursor.callproc('ModifyProductQuantity', (id_produktu, user_id, 'add'))
-                connection.commit()
-                print("Ilość produktu została zaktualizowana.")
-
-        except Exception as error:
-            print("Błąd podczas dodawania jednostki produktu do bazy danych: ", error)
+        self.__modify_product_quantity(id_produktu, user_id, 'add')
 
     def odejmij_jednostke_produktu(self, id_produktu, user_id):
+        self.__modify_product_quantity(id_produktu, user_id, 'subtract')
+
+    def zeruj_ilosc_produktu(self, id_produktu, user_id):
+        self.__modify_product_quantity(id_produktu, user_id, 'zero')
+
+    def __modify_product_quantity(self, id_produktu, user_id, action):
         try:
             connection = self.db_connector.get_connection()
 
             with connection.cursor() as cursor:
                 # Wypisanie wywołania procedury przed jej wykonaniem
-                print(f"CALL ModifyProductQuantity({id_produktu}, {user_id}, 'subtract');")
+                print(f"CALL ModifyProductQuantity({id_produktu}, {user_id}, '{action}');")
 
-                cursor.callproc('ModifyProductQuantity', (id_produktu, user_id, 'subtract'))
+                cursor.callproc('ModifyProductQuantity', (id_produktu, user_id, action))
                 connection.commit()
-                print("Ilość produktu została zaktualizowana.")
+                print(f"Ilość produktu została zaktualizowana ({action}).")
 
         except Exception as error:
-            print("Błąd podczas odejmowania jednostki produktu z bazy danych: ", error)
+            print(f"Błąd podczas {action} jednostki produktu w bazie danych: ", error)
 
     def __init__(self, database_connector):
         self.db_connector = database_connector

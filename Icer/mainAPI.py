@@ -104,6 +104,74 @@ def add_to_product():
         if connection:
             connection.close()
 
+
+@app.route('/api/reset_product_quantity', methods=['POST'])
+def reset_product_quantity():
+    print("dochp?")
+
+    # Tworzenie instancji klasy DatabaseConnector
+    db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+
+    # Łączenie z bazą danych
+    db_connector.connect()
+
+    # Tworzenie instancji ProductManager
+    product_manager = ProductManager(db_connector)
+
+    connection = None
+    cursor = None
+
+    try:
+        # Upewnienie się co do sesji
+        data = request.get_json()
+        received_session_id = data.get('sessionId', None)
+        if not received_session_id:
+            raise ValueError("Session ID not provided")
+
+        # Sprawdzenie, czy użytkownik jest zalogowany
+        if 'username' not in session:
+            raise PermissionError("User not logged in")
+
+        connection = db_connector.get_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        username = session['username']
+
+        # Pobranie ID użytkownika na podstawie nazwy użytkownika
+        user_query = "SELECT id FROM Users WHERE username = %s"
+        cursor.execute(user_query, (username,))
+        user_result = cursor.fetchone()
+
+        if not user_result:
+            raise LookupError("User not found")
+
+        user_id = user_result['id']
+
+        # Pobieranie informacji o produkcie
+        id_produktu = data['id_produktu']
+
+        # Użycie klasy ProductManager do zerowania ilości produktu w bazie danych
+        product_manager.zeruj_ilosc_produktu(id_produktu, user_id)
+        print("zeruje?")
+
+        return jsonify({"message": "Ilość produktu została zresetowana!"})
+
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except PermissionError as pe:
+        return jsonify({"error": str(pe)}), 401
+    except LookupError as le:
+        return jsonify({"error": str(le)}), 404
+    except Exception as error:
+        return jsonify({"error": str(error)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
+
+
+
 @app.route('/api/subtract_product', methods=['POST'])
 def subtract_product():
     db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
