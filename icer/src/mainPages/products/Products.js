@@ -15,6 +15,7 @@ function Products() {
     const [data, setData] = useState(null);
     const [filter, setFilter] = useState('current');
     const [decrease,setDecrease] = useState(1)
+    const [filteredProducts,setFilteredProducts] = useState(null)
 
     const [refresh, setRefresh] = useState(false); // Dodajemy stan do odświeżania ekranu
     const [editingProduct, setEditingProduct] = useState(null);
@@ -108,17 +109,27 @@ function Products() {
     useEffect(() => {
         setEditingProduct(null);
 
-
-
-        axios.post(`${API_URL}/api/Icer`,{sessionId:sessionId} )
+        axios.post(`${API_URL}/api/Icer`, {sessionId: sessionId})
             .then((response) => {
-                setData(response.data);
-
+                const newData = response.data;
+                setData(newData);  // aktualizujesz stan 'data'
+                console.log(response.data);
+                // Teraz filtrujesz bezpośrednio 'newData'
+                const newFilteredProducts = newData.filter(product => {
+                    if (filter === 'current') {
+                        return product.ilosc > 0;
+                    } else if (filter === 'old') {
+                        return product.ilosc === 0;
+                    } else {
+                        return true; // domyślnie zwraca wszystkie produkty
+                    }
+                });
+                setFilteredProducts(newFilteredProducts);  // aktualizujesz stan 'filteredProducts'
             })
             .catch((error) => {
                 console.error(`There was an error retrieving the data: ${error}`);
             });
-    }, [refresh]);
+    }, [refresh, filter, sessionId, setEditingProduct, setData, setFilteredProducts]);
     const handleRemove = (id) => {
 
         axios
@@ -135,15 +146,7 @@ function Products() {
             });
     };
 
-    const filteredProducts = data && data.filter(product => {
-        if (filter === 'current') {
-            return product.ilosc > 0;
-        } else if (filter === 'old') {
-            return product.ilosc === 0;
-        } else {
-            return true; // domyślnie zwraca wszystkie produkty
-        }
-    });
+
 
     return (
         <>
