@@ -85,7 +85,7 @@ def add_to_product():
         ilosc_do_dodania = data.get('ilosc_do_dodania', 1)  # Jeśli ilość nie zostanie podana, domyślnie dodaje 1
 
         # Użycie klasy ProductManager do dodawania ilości produktu w bazie danych
-        product_manager.dodaj_jednostke_produktu(id_produktu)
+        product_manager.dodaj_jednostke_produktu(id_produktu, user_id)
         print("dodaje?")
 
         return jsonify({"message": "Ilość produktu została dodana!"})
