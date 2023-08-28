@@ -234,6 +234,66 @@ def subtract_product():
             connection.close()
 
 
+@app.route('/remove_product_for_user', methods=['POST'])
+def remove_product_for_user():
+    db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+    db_connector.connect()
+    connection = None
+    cursor = None
+
+    try:
+        # Sprawdzenie, czy użytkownik jest zalogowany
+        if 'username' not in session:
+            raise PermissionError("User not logged in")
+
+        username = session['username']
+
+        connection = db_connector.get_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        # Pobranie ID użytkownika na podstawie nazwy użytkownika
+        user_query = "SELECT id FROM Users WHERE username = %s"
+        cursor.execute(user_query, (username,))
+        user_result = cursor.fetchone()
+
+        if not user_result:
+            raise LookupError("User not found")
+
+        user_id = user_result['id']
+
+        # Pobranie informacji o produkcie z żądania
+        data = request.get_json()
+
+        # Obsługa błędu dla braku klucza 'produktID' w żądaniu
+        try:
+            product_id = data['produktID']
+        except KeyError:
+            return jsonify({"error": "produktID is required"}), 400
+
+        # Wydrukowanie zapytania do bazy danych
+        query_to_execute = f"CALL ModifyProductQuantity({product_id}, {user_id}, 'remove');"
+        print(query_to_execute)
+
+        # Użycie klasy ProductManager do usunięcia produktu
+        product_manager = ProductManager(db_connector)
+        product_manager.usun_produkt(product_id, user_id)
+
+        return jsonify({"message": "Produkt został usunięty pomyślnie!"})
+
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except PermissionError as pe:
+        return jsonify({"error": str(pe)}), 401
+    except LookupError as le:
+        return jsonify({"error": str(le)}), 404
+    except Exception as error:
+        return jsonify({"error": str(error)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
+        db_connector.disconnect()  # Zamknięcie połączenia z bazą danych
 
 
 @app.route('/api/add_product', methods=['POST'])
@@ -310,22 +370,7 @@ def add_product():
             connection.close()
 
 
-@app.route('/remove_product_for_user', methods=['POST'])
-def remove_product_for_user():
-    try:
-        # Pobranie danych z żądania
-        data = request.get_json()
-        user_id = data['UserID']
-        product_id = data['produktID']
 
-        # Użycie klasy ProductManager do usunięcia produktu
-        product_manager = ProductManager(db_connector)
-        product_manager.usun_produkt(product_id, user_id)
-
-        return jsonify({"message": "Produkt został usunięty pomyślnie!"})
-
-    except Exception as error:
-        return jsonify({"error": str(error)})
 
 
 
