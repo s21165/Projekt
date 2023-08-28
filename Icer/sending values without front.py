@@ -1,5 +1,22 @@
 import requests
 
+url = "http://localhost:5000/api/add_to_product"  # Zmienić adres jeśli serwer działa na innym porcie lub hostie
+
+headers = {
+    "Content-Type": "application/json",
+}
+
+data = {
+    "sessionId": "70f854fd-b33f-430c-ac13-ac764828f189",
+    "id_produktu": 123,
+    "ilosc_do_dodania": 2
+}
+
+response = requests.post(url, headers=headers, json=data)
+
+print(response.status_code)
+print(response.json())
+
 url = "http://localhost:5000/api/add_product"
 
 products = [
@@ -63,9 +80,9 @@ products = [
     # ... dodaj kolejne produkty do osiągnięcia 10 produktów
 ]
 
-for product in products:
-    response = requests.post(url, json=product)
-    print(f"Response for {product['nazwa']}: {response.text}")
+#for product in products:
+#    response = requests.post(url, json=product)
+#    print(f"Response for {product['nazwa']}: {response.text}")
 
 url2 = "http://localhost:5000/api/subtract_product"
 

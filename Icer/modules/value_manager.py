@@ -1,4 +1,37 @@
 class ProductManager:
+    # ... (inne funkcje niezmienione)
+
+    def dodaj_jednostke_produktu(self, id_produktu):
+        try:
+            connection = self.db_connector.get_connection()
+
+            with connection.cursor() as cursor:
+                # Wypisanie wywołania procedury przed jej wykonaniem
+                print(f"CALL ModifyProductQuantity({id_produktu}, 'add');")
+
+                cursor.callproc('ModifyProductQuantity', (id_produktu, 'add'))
+                connection.commit()
+                print("Ilość produktu została zaktualizowana.")
+
+        except Exception as error:
+            print("Błąd podczas dodawania jednostki produktu do bazy danych: ", error)
+
+
+        except Exception as error:
+            print("Błąd podczas dodawania jednostki produktu do bazy danych: ", error)
+
+    def odejmij_jednostke_produktu(self, id_produktu):
+        try:
+            connection = self.db_connector.get_connection()
+
+            with connection.cursor() as cursor:
+                cursor.callproc('ModifyProductQuantity', (id_produktu, 'subtract'))
+                connection.commit()
+                print("Ilość produktu została zaktualizowana.")
+
+        except Exception as error:
+            print("Błąd podczas odejmowania jednostki produktu z bazy danych: ", error)
+
     def __init__(self, database_connector):
         self.db_connector = database_connector
 
@@ -19,7 +52,6 @@ class ProductManager:
         except Exception as error:
             print("Błąd podczas dodawania produktu do bazy danych: ", error)
             return None
-
 
     def odejmij_produkt(self, id_produktu, ilosc_do_odejscia):
         try:

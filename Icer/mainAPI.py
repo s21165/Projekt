@@ -30,7 +30,6 @@ db_connector.connect()
 product_manager = ProductManager(db_connector)
 
 
-
 def run_daily_procedure():
     local_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
     local_connector.connect()
@@ -39,8 +38,10 @@ def run_daily_procedure():
     cursor.close()
     local_connector.get_connection().commit()
 
+
 @app.route('/api/add_to_product', methods=['POST'])
 def add_to_product():
+    print("dochp?")
     # Tworzenie instancji klasy DatabaseConnector
     db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 
@@ -84,7 +85,8 @@ def add_to_product():
         ilosc_do_dodania = data.get('ilosc_do_dodania', 1)  # Jeśli ilość nie zostanie podana, domyślnie dodaje 1
 
         # Użycie klasy ProductManager do dodawania ilości produktu w bazie danych
-        product_manager.dodaj_produkt(id_produktu, ilosc_do_dodania)
+        product_manager.dodaj_jednostke_produktu(id_produktu)
+        print("dodaje?")
 
         return jsonify({"message": "Ilość produktu została dodana!"})
 
@@ -102,11 +104,8 @@ def add_to_product():
         if connection:
             connection.close()
 
-
-
 @app.route('/api/subtract_product', methods=['POST'])
 def subtract_product():
-    # Tworzenie instancji klasy DatabaseConnector (jeśli go nie masz wcześniej zdefiniowanego w tym miejscu, dodaj odpowiednio)
     db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 
     # Łączenie z bazą danych
@@ -146,7 +145,6 @@ def subtract_product():
 
         # Pobieranie informacji o produkcie
         id_produktu = data['id_produktu']
-        ilosc_do_odejscia = data.get('ilosc_do_odejscia', 1)  # Używam metody get() dla słownika, żeby ustawić domyślną wartość
 
         # Sprawdzenie, czy produkt należy do aktualnie zalogowanego użytkownika
         ownership_check_query = "SELECT id FROM Icer WHERE UserID = %s AND produktID = %s"
@@ -157,7 +155,7 @@ def subtract_product():
             raise PermissionError("This product does not belong to the user.")
 
         # Użycie klasy ProductManager do odejmowania ilości produktu w bazie danych
-        product_manager.odejmij_produkt(id_produktu, ilosc_do_odejscia)
+        product_manager.odejmij_jednostke_produktu(id_produktu)
 
         return jsonify({"message": "Ilość produktu została zaktualizowana!"})
 
@@ -179,7 +177,6 @@ def subtract_product():
 
 @app.route('/api/add_product', methods=['POST'])
 def add_product():
-
     # Tworzenie instancji klasy DatabaseConnector
     db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 
@@ -441,6 +438,7 @@ def get_products_with_red_flag():
     finally:
         if cursor:
             cursor.close()
+
 
 @app.route('/api/Icer', methods=['POST'])
 def get_icer():
