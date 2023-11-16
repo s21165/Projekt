@@ -28,3 +28,5 @@ class ProductData:
             print("Kategoria: ", row[7])
             print("Ilość: ", row[8])
             print("-----------------------")
+
+

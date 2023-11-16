@@ -5,7 +5,7 @@ use sklep;
 SET SQL_SAFE_UPDATES = 0;
 
 CREATE TABLE Users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,q
     username VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL
 );
@@ -55,8 +55,6 @@ DELIMITER ;
 
 
 
-
-
 CREATE TABLE Icer (
     id INT AUTO_INCREMENT PRIMARY KEY,
     UserID INT,
@@ -66,7 +64,7 @@ CREATE TABLE Icer (
     data_waznosci DATE,
     FOREIGN KEY (UserID) REFERENCES Users (id),
     FOREIGN KEY (produktID) REFERENCES Produkty (id)
-)
+    )
 
 
 

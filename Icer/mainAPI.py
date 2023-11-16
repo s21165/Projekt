@@ -1,3 +1,6 @@
+import base64
+from json import JSONEncoder
+
 from flask import Flask, request, jsonify, session, redirect, current_app
 from flask_cors import CORS
 import requests
@@ -13,9 +16,23 @@ from datetime import datetime, timedelta
 from modules.value_manager import ProductManager
 import time
 
+class BinaryJSONEncoder(JSONEncoder):
+    def default(self, obj):
+        try:
+            if isinstance(obj, bytes):
+                # Convert bytes to base64 string
+                return base64.b64encode(obj).decode('utf-8')
+            iterable = iter(obj)
+        except TypeError:
+            pass
+        else:
+            return list(iterable)
+        return JSONEncoder.default(self, obj)
+
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 app.secret_key = 'secret_key'  # Klucz sesji
+app.json_encoder = BinaryJSONEncoder
 
 # Ładuj zmienne środowiskowe z pliku .env
 load_dotenv()
@@ -169,7 +186,6 @@ def reset_product_quantity():
             cursor.close()
         if connection:
             connection.close()
-
 
 
 @app.route('/api/subtract_product', methods=['POST'])
@@ -368,10 +384,6 @@ def add_product():
             cursor.close()
         if connection:
             connection.close()
-
-
-
-
 
 
 @app.route('/api/edit_product/<int:product_id>', methods=['PUT'])
@@ -581,12 +593,19 @@ def get_icer():
         user_result = cursor.fetchone()
         if not user_result:
             raise LookupError("User not found")
+        if user_result and 'zdjecie' in user_result:
+            blob_data = user_result['zdjecie']
+
+            # Convert blob data to base64
+            base64_data = base64.b64encode(blob_data).decode('utf-8')
+
+            print("Base64 data:", base64_data)
 
         # Modyfikacja zapytania SQL, aby pokazywać wszystkie informacje o produkcie
         user_id = user_result['id']
         query = """
             SELECT Icer.id, Icer.UserID, Icer.produktID, Icer.ilosc, 
-                   Icer.data_waznosci, Icer.trzecia_wartosc,
+                   Icer.data_waznosci, Icer.trzecia_wartosc,Produkty.zdjecie,
                    Produkty.nazwa, Produkty.cena, Produkty.kalorie,
                    Produkty.tluszcze, Produkty.weglowodany, Produkty.bialko,
                    Produkty.kategoria
@@ -596,6 +615,12 @@ def get_icer():
         """
         cursor.execute(query, (user_id,))
         results = cursor.fetchall()
+
+        for result in results:
+            if 'zdjecie' in result and result['zdjecie'] is not None:
+                result['zdjecie'] = base64.b64encode(result['zdjecie']).decode('utf-8')
+
+        return jsonify(results)
 
         return jsonify(results)
 
@@ -616,6 +641,8 @@ def get_icer():
         if cursor:
             cursor.close()
 
+
+# ... Your other code ...
 
 # Wyświetlanie produktów z informacjami o obrazach produktów
 @app.route('/api/products/image', methods=['GET', 'POST'])
@@ -642,6 +669,20 @@ def get_images():
             return jsonify({"message": "POST request received"})
     except Exception as error:
         return jsonify({"error": str(error)})
+
+
+def get_image(image_id):
+    # Replace 'icer' with your actual table name and 'zdjecie' with your actual BLOB column name
+    query = f"SELECT zdjecie FROM icer WHERE id = {image_id}"
+    cursor = db_connector.get_connection().cursor()
+
+    cursor.execute(query)
+    image_data = cursor.fetchone()[0]
+
+    # Convert binary data to Base64 encoding
+    base64_image = base64.b64encode(image_data).decode('utf-8')
+
+    return jsonify({'image_data': base64_image})
 
 
 # Funkcja wyszukująca obraz dla danej nazwy produktu
@@ -823,4 +864,4 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')

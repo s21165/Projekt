@@ -35,8 +35,14 @@ class ProductManager:
             connection = self.db_connector.get_connection()
             cursor = connection.cursor()
 
-            query = "INSERT INTO Produkty (nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-            values = (nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria)
+            png_file_path = 'image1.png'
+
+            # Read the PNG file
+            with open(png_file_path, 'rb') as file:
+                image_data = file.read()
+
+            query = "INSERT INTO Produkty (nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria,zdjecie) VALUES (%s, %s, %s, %s, %s, %s, %s,%s)"
+            values = (nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria, image_data)
 
             with connection.cursor() as cursor:
                 cursor.execute(query, values)
