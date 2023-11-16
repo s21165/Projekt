@@ -6,6 +6,7 @@ import {GetBorderStyle} from "./GetBorderStyle";
 function ProductItem({index, data, handleRemove, handleEditClick, handleIncrease, handleDecrease, filter, handleZero}) {
     const [showRemovalConfirmation, setShowRemovalConfirmation] = useState(false);
     const style = GetBorderStyle(data, filter, 2);
+
     const handleDecreaseWithCheck = () => {
         if (data.ilosc === 1) {
             setShowRemovalConfirmation(true);
@@ -14,10 +15,24 @@ function ProductItem({index, data, handleRemove, handleEditClick, handleIncrease
         }
     }
 
+
     const confirmRemoval = () => {
         handleDecrease(data.id);
         setShowRemovalConfirmation(false);
     }
+
+    const encodeImageToBase64 = () => {
+        const image = new Image();
+        image.src = data.zdjecie;
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = image.width;
+        canvas.height = image.height;
+        ctx.drawImage(image, 0, 0, image.width, image.height);
+        const base64String = canvas.toDataURL('image/png').split(',')[1];
+        return base64String;
+    }
+
 
     const declineRemoval = () => {
 
@@ -41,6 +56,8 @@ function ProductItem({index, data, handleRemove, handleEditClick, handleIncrease
                     <div><h3>Białko: {data.bialko}</h3></div>
                     <div><h3>Kategoria: {data.kategoria}</h3></div>
                     <div><h3>trzecia wartosc: {data.trzecia_wartosc}</h3></div>
+                    <div><h3>zdjecie: </h3>{data.zdjecie && <img className="productImage" src={`data:image/png;base64,${data.zdjecie}`} alt={data.nazwa} />}
+                    </div>
                     <div className="productItemQuantityDiv">
 
                         <div className="quantityControl">

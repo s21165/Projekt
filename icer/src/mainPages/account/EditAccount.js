@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Link } from "react-router-dom";
-import './Account.css';
+
 import './editAccount.css';
 import face from "../../data/face.jpg";
 import { AuthContext } from "./auth-context";
@@ -47,28 +47,30 @@ function EditAccount(props) {
                 <div className="accountPhoto">
                     <img src={face} alt="Your Image" className="accountPhotoImage" />
                 </div>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} >
                     <div className="accountName">
                         <h3>
                             Username:
+                        </h3>
                             <input
                                 type="text"
                                 name="username"
                                 value={formData.username}
                                 onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                             />
-                        </h3>
+
                     </div>
                     <div className="accountPassword">
                         <h3>
                             New Password:
+                        </h3>
                             <input
                                 type="password" // użyj typu password, aby ukryć wpisywane hasło
                                 name="new_password"
                                 value={formData.new_password}
                                 onChange={(e) => setFormData({ ...formData, new_password: e.target.value })}
                             />
-                        </h3>
+
                     </div>
                     {/*<div className="accountPhone">*/}
                     {/*    <h3>*/}

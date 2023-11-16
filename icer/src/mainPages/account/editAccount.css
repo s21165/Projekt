@@ -1,32 +1,33 @@
 /* Dla etykiet */
-h3 {
-
-    color: #333;
+.accountContainer {
+    display: grid;
+    place-items: center; /* Wyśrodkowanie w obu osiach */
+    height: 100vh;
 }
 
-.editAccount button {
-    background-color: #7fb0d5;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
-    color: white;
-    transition: background-color 0.3s;
-}
 
 .editAccount button:hover {
     background-color: #0056b3;
 }
+.accountName H3 , .accountPassword H3{
 
-/* Styl dla inputów */
+    margin-bottom:0;
+
+}
+
 .accountInfo input {
     width: 80%;
-    padding: 10px 15px;
     border-radius: 5px;
     border: 1px solid #ccc;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.3s, border-color 0.3s;
     margin-bottom: 10px;
+    padding: 10px 0 10px 0;
+
+
     font-size: 16px;
+    justify-content: center;
+    align-items: center;
 }
 
 input:focus {
@@ -35,25 +36,29 @@ input:focus {
     border-color: #7fb0d5;
 }
 
+
 /* Styl dla przycisków */
 .editAccount button {
     cursor: pointer;
-    width: 100%;
+    width: 80%;
     padding: 10px 15px;
     border-radius: 5px;
-    border: none;
+    border: 1px solid #ccc;
     background-color: #7fb0d5;
     color: white;
     transition: background-color 0.3s;
     font-size: 15px;
     margin-top: 10px;
-    display: flex;
+
     justify-content: center;
     align-items: center;
 
 }
 
+.editAccount h3 {
 
+    color: #333;
+}
 .editAccount button:hover {
     background-color: #0056b3;
 }
@@ -65,7 +70,7 @@ input:focus {
 
 
 }
-    @media only screen and (max-width: 600px) {
+@media only screen and (max-width: 600px) {
     .editAccount button {
         font-size: 10px;
 

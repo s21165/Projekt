@@ -8,6 +8,11 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
+.productImage{
+    width:100px;
+    height:100px;
+}
+
 .productItem h2 {
     font-size: calc(1vw + 1vh);
     margin-bottom: 0.7vh;

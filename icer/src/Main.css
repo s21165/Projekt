@@ -58,7 +58,7 @@ button {  /* resetting button styles */
     height: 100vh;
     position: relative;
     display: grid;
-
+    
     transition: grid 0.5s ease-out 0.1s;
     grid:
     "all menu" 1fr

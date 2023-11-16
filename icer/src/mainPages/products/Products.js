@@ -19,20 +19,20 @@ function Products() {
 
     const [refresh, setRefresh] = useState(false); // Dodajemy stan do odświeżania ekranu
     const [editingProduct, setEditingProduct] = useState(null);
-    // const handleEditClick = (product) => {
-    //     setEditingProduct({
-    //         id: product[0],
-    //         nazwa: product[1],
-    //         cena: product[2],
-    //         kalorie: product[3],
-    //         tluszcze: product[4],
-    //         weglowodany: product[5],
-    //         bialko: product[6],
-    //         kategoria: product[7],
-    //         ilosc: product[8],
-    //         data_waznosci: new Date(product[9]).toISOString().split('T')[0]
-    //     });
-    // };
+    const handleEditClick = (product) => {
+        setEditingProduct({
+            id: product.id,
+            nazwa: product.nazwa,
+            cena: product.cena,
+            kalorie: product.kalorie,
+            tluszcze: product.tluszcze,
+            weglowodany: product.weglowodany,
+            bialko: product.bialko,
+            kategoria: product.kategoria,
+            ilosc: product.ilosc,
+            data_waznosci: new Date(product.data_waznosci).toISOString().split('T')[0]
+        });
+    };
     const handleEdit = () => {
         const id = editingProduct.id;
         const config = {
@@ -174,11 +174,12 @@ function Products() {
                     key={index}
                     data={data}
                     handleRemove={handleRemove}
-                    // handleEditClick={handleEditClick}
+                    handleEditClick={handleEditClick}
                     handleIncrease={handleIncrease}
                     handleDecrease={handleDecrease}
                     handleZero={handleZero}
                     filter={filter}
+
                 />
             )}
             </div>
