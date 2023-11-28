@@ -22,11 +22,50 @@ CREATE TABLE Produkty (
   weglowodany DECIMAL(4,2),
   bialko DECIMAL(4,2),
   kategoria VARCHAR(50),
-  zdjecie MEDIUMBLOB
+);
+
+CREATE TABLE Photos (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  produktID INT,
+  lokalizacja VARCHAR(255),
+  FOREIGN KEY (produktID) REFERENCES Produkty (id)
 );
 
 
+CREATE TABLE UserPhotos (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  produktID INT,
+  userID INT,
+  lokalizacja VARCHAR(255),
+  FOREIGN KEY (produktID) REFERENCES Produkty (id),
+  FOREIGN KEY (userID) REFERENCES Users (id)
+);
 
+
+DELIMITER $$
+
+CREATE FUNCTION PobierzLokalizacjeZdjecia(icID INT) RETURNS VARCHAR(255)
+BEGIN
+    DECLARE zdjDomyslne BOOLEAN;
+    DECLARE zdjecieLokalizacja VARCHAR(255);
+
+    SELECT zdjecie_domyslne INTO zdjDomyslne FROM Icer WHERE id = icID;
+
+    IF zdjDomyslne THEN
+        SELECT lokalizacja INTO zdjecieLokalizacja
+        FROM Photos
+        JOIN Icer ON Photos.produktID = Icer.produktID
+        WHERE Icer.id = icID;
+    ELSE
+        SELECT lokalizacja INTO zdjecieLokalizacja
+        FROM UserPhotos
+        WHERE produktID = (SELECT produktID FROM Icer WHERE id = icID);
+    END IF;
+
+    RETURN zdjecieLokalizacja;
+END$$
+
+DELIMITER ;
 
 
 DELIMITER //

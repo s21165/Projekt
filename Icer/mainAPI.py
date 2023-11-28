@@ -552,7 +552,6 @@ def get_icer():
     print("wjaaat?")
 
     try:
-
         # Uzyskanie połączenia z bazą danych
         connection = db_connector.get_connection()
         if not connection:
@@ -564,17 +563,12 @@ def get_icer():
 
         data = request.get_json()
 
-        # Upewnienie się co do sesji
+        # Walidacja sesji i upewnienie się, że użytkownik jest zalogowany
         received_session_id = data.get('sessionId', None)
-        if not received_session_id:
-            raise ValueError("Session ID not provided")
+        if not received_session_id or 'username' not in current_app.session:
+            raise PermissionError("Invalid session or user not logged in")
 
-        # Jeśli użytkownik nie jest zalogowany
-        if 'username' not in session:
-            raise PermissionError("User not logged in")
-
-        # Pobranie ID aktualnie zalogowanego użytkownika
-        username = session['username']
+        username = current_app.session['username']
 
         user_query = "SELECT id FROM Users WHERE username = %s"
         cursor.execute(user_query, (username,))
@@ -582,20 +576,24 @@ def get_icer():
         if not user_result:
             raise LookupError("User not found")
 
-        # Modyfikacja zapytania SQL, aby pokazywać wszystkie informacje o produkcie
         user_id = user_result['id']
+
         query = """
-            SELECT Icer.id, Icer.UserID, Icer.produktID, Icer.ilosc, 
-                   Icer.data_waznosci, Icer.trzecia_wartosc,
-                   Produkty.nazwa, Produkty.cena, Produkty.kalorie,
-                   Produkty.tluszcze, Produkty.weglowodany, Produkty.bialko,
-                   Produkty.kategoria
-            FROM Icer
-            INNER JOIN Produkty ON Icer.produktID = Produkty.id
-            WHERE Icer.UserID = %s
-        """
+                SELECT Icer.id, Icer.UserID, Icer.produktID, Icer.ilosc, 
+                       Icer.data_waznosci, Icer.trzecia_wartosc,
+                       Produkty.nazwa, Produkty.cena, Produkty.kalorie,
+                       Produkty.tluszcze, Produkty.weglowodany, Produkty.bialko,
+                       Produkty.kategoria
+                FROM Icer
+                INNER JOIN Produkty ON Icer.produktID = Produkty.id
+                WHERE Icer.UserID = %s
+            """
         cursor.execute(query, (user_id,))
         results = cursor.fetchall()
+
+        # Pobranie lokalizacji zdjęć z użyciem funkcji get_photos
+        for result in results:
+            result['zdjecie_lokalizacja'] = get_photos(result['produktID'], connection)
 
         return jsonify(results)
 
@@ -608,40 +606,60 @@ def get_icer():
     except ConnectionError as ce:
         return jsonify({"error": str(ce)}), 500
     except Exception as error:
-        # Tutaj możemy logować błąd w bardziej szczegółowy sposób
         current_app.logger.error(f"Unexpected error: {error}")
         return jsonify({"error": "Unexpected server error"}), 500
-
     finally:
         if cursor:
             cursor.close()
+        if connection:
+            connection.close()
 
 
-# Wyświetlanie produktów z informacjami o obrazach produktów
-@app.route('/api/products/image', methods=['GET', 'POST'])
-def get_images():
+def get_photos(ic_id, db_connector):
+    connection = db_connector.get_connection()
+    cursor = connection.cursor(dictionary=True)
     try:
-        if request.method == 'GET':
-            query = "SELECT nazwa FROM Produkty"
+        query = "SELECT PobierzLokalizacjeZdjecia(%s) AS zdjecie_lokalizacja"
+        cursor.execute(query, (ic_id,))
+        result = cursor.fetchone()
+        return result['zdjecie_lokalizacja']
+    finally:
+        cursor.close()
 
-            cursor = db_connector.get_connection().cursor()
-            cursor.execute(query)
-            results = cursor.fetchall()
-            cursor.close()
+# Funkcja do pobierania zdjęć tylko
+def get_photos_only():
+    try:
+        # Inicjalizacja DatabaseConnector
+        db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+        db_connector.connect()
 
-            product_list = []
-            for row in results:
-                product_name = row[0]
-                image_url = search_image(product_name)
-                product_list.append({"nazwa_produktu": product_name, "obraz": image_url})
+        # Uzyskanie połączenia z bazą danych
+        connection = db_connector.get_connection()
+        if not connection:
+            raise ConnectionError("Failed to establish a connection with the database.")
 
-            return jsonify(product_list)
-        elif request.method == 'POST':
-            # Obsługa żądania POST
-            # Tu dodaj odpowiednią logikę dla żądania POST
-            return jsonify({"message": "POST request received"})
+        cursor = connection.cursor(dictionary=True)
+        if not cursor:
+            raise Exception("Failed to create a cursor for the database.")
+
+        # Zapytanie SQL do pobrania lokalizacji zdjęć
+        query = "SELECT zdjecie_lokalizacja FROM Photos"
+
+        cursor.execute(query)
+        results = cursor.fetchall()
+
+        return jsonify(results)
+
+    except ConnectionError as ce:
+        return jsonify({"error": str(ce)}), 500
     except Exception as error:
-        return jsonify({"error": str(error)})
+        current_app.logger.error(f"Unexpected error: {error}")
+        return jsonify({"error": "Unexpected server error"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
 
 
 # Funkcja wyszukująca obraz dla danej nazwy produktu
