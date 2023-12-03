@@ -1,0 +1,16 @@
+1. Odpal CMD
+2. Przejdz do folderu/dysku z programem np (path\to\your\project\directory)
+3. Tworzysz srodowisko wirtualne: python -m venv nazwa_srodowiska
+4. Odpalasz środowisko (bedąc w folderze z programem) : nazwa_środowiska\Scripts\activate
+4.5 Instalujesz flask : pip install flask
+5. Żeby je zatrzymać deactivate
+6. Żeby znowu uruchomić - nazwa_środowiska\Scripts\activate
+7. Odpalasz aplikacje flask np. app.py u mnie
+8. Błędy kody pokazują się w cmd.
+9. Port wybierasz sam, domyślny : http://127.0.0.1:5000/
+
+Żeby zrzucić plik z zainstalowanymi importami (potrzebne do postwaniena nowego środowiska):
+pip freeze > requirements.txt
+
+Żeby zainstalować:
+pip install -r requirements.txt

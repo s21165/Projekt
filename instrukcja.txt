@@ -1,0 +1,7 @@
+1. Odpalam na czystym profilu
+2. Tworze srodowisko
+3. Instaluje flask
+4. Instaluje req
+5. Odpalam app.py
+6. Testuje na porcie
+7. Działa
