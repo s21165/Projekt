@@ -1,4 +1,8 @@
+
 .productItem {
+
+    position: relative;
+
     flex: 1 0 35%;
     margin: 0.4vh 0.2vw;
     background-color: #f5f5f5;
@@ -6,12 +10,30 @@
     border-radius: 4px;
     padding: calc(1vw + 1vh);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    font-weight: bold;
+    background-size: 100% 100%;
+    background-position: center;  /* Ustala, że obraz ma być wyśrodkowany */
+    backdrop-filter:blur();
 }
 
-.productImage{
-    width:100px;
-    height:100px;
+.productItem.hidden:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    backdrop-filter: blur(5px); /* Dostosuj wartość blura według potrzeb */
+    z-index: -1; /* Umieść pod elementem .productItem */
+} {
+
+
 }
+
+.card.hidden{
+    visibility: hidden;
+}
+
 
 .productItem h2 {
     font-size: calc(1vw + 1vh);
@@ -116,6 +138,9 @@
 }
 
 
+
+
+
 @media only screen and (max-width: 600px) {
     .productItem {
         flex: 1 0 90%;  /* Zajmij całą dostępną szerokość kontenera */
@@ -131,3 +156,4 @@
         padding: 1vh 2vh;
     }
 }
+
