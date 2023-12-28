@@ -25,9 +25,6 @@
     left: 0;
     backdrop-filter: blur(5px); /* Dostosuj wartość blura według potrzeb */
     z-index: -1; /* Umieść pod elementem .productItem */
-} {
-
-
 }
 
 .card.hidden{
@@ -54,6 +51,8 @@
     text-align: center;
     border-radius: 4px;
     padding: calc(0.2vw + 0.2vh) calc(0.4vw + 0.4vh);
+    transition: transform 0.3s ease;
+
 }
 
 .increaseProduct {
@@ -61,6 +60,7 @@
     text-align: center;
     border-radius: 4px;
     padding: calc(0.2vw + 0.2vh) calc(0.4vw + 0.4vh);
+    transition: transform 0.3s ease;
 }
 
 .productItemQuantityDiv {
@@ -87,10 +87,20 @@
 
 .decreaseProduct:hover {
     background-color: #D9214CFF;
-
+    transform: scale(1.1);
 }
 .increaseProduct:hover{
     background-color: #45a049;
+    transform: scale(1.1);
+}
+.decreaseProduct .iconifyIcon, .increaseProduct .iconifyIcon {
+    /* Dodaj przejście dla płynnego efektu */
+    transition: transform 0.3s ease;
+}
+
+.decreaseProduct:hover .iconifyIcon, .increaseProduct:hover .iconifyIcon {
+    /* Zastosuj transformację skalowania podczas najechania */
+    transform: scale(1.4); /* Przykład: powiększa ikonę do 120% jej pierwotnego rozmiaru */
 }
 .iconContainer {
     display: flex;
@@ -137,7 +147,9 @@
     filter: brightness(0.8); /* Lekkie przyciemnienie ikony podczas najechania */
 }
 
-
+.iconifyIcon {
+    vertical-align: middle;  /* wyśrodkowuje ikony w przyciskach */
+}
 
 
 

@@ -4,40 +4,37 @@ import {Icon} from "@iconify/react";
 import {GetBorderStyle} from "./GetBorderStyle";
 import products from "./Products";
 import image2 from '../../data/image6.png'
+import {infoProducts} from "../../config";
 
 function ProductItem({index, data, handleRemove, handleEditClick, handleIncrease, handleDecrease, filter, handleZero}) {
     const [showRemovalConfirmation, setShowRemovalConfirmation] = useState(false);
-    const style = GetBorderStyle(data, filter, 1);
-    const [info, setInfo] = useState(true);
+    const style = GetBorderStyle(data, filter, 2);
+    const [info, setInfo] = useState(infoProducts);
 
-    const handleDecreaseWithCheck = () => {
+    const handleDecreaseWithCheck = (event) => {
+
+        event.stopPropagation();
+
         if (data.ilosc === 1) {
             setShowRemovalConfirmation(true);
         } else {
             handleDecrease(data.id);
         }
     }
+    const handleIncreaseItem = (event) => {
+        event.stopPropagation();
+        handleIncrease(data.id);
+    };
 
+    const confirmRemoval = ( event ) => {
+        event.stopPropagation();
 
-    const confirmRemoval = () => {
         handleDecrease(data.id);
         setShowRemovalConfirmation(false);
     }
 
-    const encodeImageToBase64 = () => {
-        const image = new Image();
-        image.src = data.zdjecie;
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = image.width;
-        canvas.height = image.height;
-        ctx.drawImage(image, 0, 0, image.width, image.height);
-        const base64String = canvas.toDataURL('image/png').split(',')[1];
-        return base64String;
-    }
-
-    const declineRemoval = () => {
-
+    const declineRemoval = ( event ) => {
+        event.stopPropagation();
         setShowRemovalConfirmation(false);
     }
     return (
@@ -74,13 +71,15 @@ function ProductItem({index, data, handleRemove, handleEditClick, handleIncrease
                             <div className="productItemQuantityDiv">
 
                                 <div className="quantityControl">
-                                    <button className="decreaseProduct" onClick={handleDecreaseWithCheck}><h2>-</h2>
+                                    <button className="decreaseProduct" onClick={handleDecreaseWithCheck}>
+                                        <h2><Icon className="iconifyIcon" icon="tdesign:minus" /></h2>
                                     </button>
 
                                     <span><h3>Ilość: {data.ilosc}</h3></span>
-                                    <button className="increaseProduct" onClick={() => handleIncrease(data.id)}>
-                                        <h2>+</h2>
+                                    <button className="increaseProduct" onClick={handleIncreaseItem }>
+                                        <h2><Icon className="iconifyIcon" icon="pepicons-pencil:plus" /></h2>
                                     </button>
+
                                 </div>
                             </div>
 
