@@ -1,8 +1,11 @@
-import { useState, useEffect } from 'react';
+import {useState, useEffect, useContext} from 'react';
 import axios from 'axios';
 import { API_URL } from "../../config";
+import {AuthContext} from "../account/auth-context";
 
-export const useProductsData = (sessionId, filter) => {
+export const useProductsData = ( filter) => {
+    const { user } = useContext(AuthContext);
+    const sessionId = user ? user.sessionId : null;
     const [data, setData] = useState(null);
     const [filteredProducts, setFilteredProducts] = useState(null);
     const [refresh, setRefresh] = useState(false);
@@ -25,7 +28,7 @@ export const useProductsData = (sessionId, filter) => {
             .catch((error) => {
                 console.error(`There was an error retrieving the data: ${error}`);
             });
-    }, [refresh, filter, sessionId]);
+    }, [refresh, filter, sessionId, setData, setFilteredProducts]);
 
-    return { data,filter, filteredProducts, refresh, setRefresh };
+    return { data, setData, sessionId, filteredProducts, refresh, setRefresh };
 };

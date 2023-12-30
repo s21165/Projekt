@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { API_URL } from "../../config";
 
-export const useProductActions = (refresh,data,sessionId, setData, setRefresh) => {
+export const useProductActions = (refresh,data,sessionId, setData, setRefresh,editingProduct,setEditingProduct) => {
     const handleIncrease = (productId) => {
         // logika zwiększania ilości produktu
         axios.post(`${API_URL}/api/add_to_product`,
@@ -17,7 +17,41 @@ export const useProductActions = (refresh,data,sessionId, setData, setRefresh) =
                 console.error(`There was an error retrieving the data: ${error}`);
             });
     };
+    const handleEditClick = (product) => {
+        setEditingProduct({
+            id: product.id,
+            nazwa: product.nazwa,
+            cena: product.cena,
+            kalorie: product.kalorie,
+            tluszcze: product.tluszcze,
+            weglowodany: product.weglowodany,
+            bialko: product.bialko,
+            kategoria: product.kategoria,
+            ilosc: product.ilosc,
+            data_waznosci: new Date(product.data_waznosci).toISOString().split('T')[0]
+        });
+    };
+    const handleEdit = () => {
+        const id = editingProduct.id;
+        const config = {
+            headers: {
+                'Content-Type': 'application/json', // informuje serwer, że dane wysyłane w żądaniu są w formacie JSON.
+                'session_id': sessionId
 
+            },
+        };
+
+        axios
+            .put(`${API_URL}/api/edit_product/${id}`, editingProduct, config)
+            .then((response) => {
+                console.log(response.data);
+                setEditingProduct(null);
+                setRefresh(!refresh);
+            })
+            .catch((error) => {
+                console.error(`There was an error updating the product: ${error}`);
+            });
+    };
     const handleDecrease = (productId) => {
         // Znajdź produkt o danym ID i zmniejsz jego ilość
         axios.post(`${API_URL}/api/subtract_product`,
@@ -68,5 +102,5 @@ export const useProductActions = (refresh,data,sessionId, setData, setRefresh) =
     };
 
 
-    return { handleIncrease, handleDecrease, handleZero, handleRemove };
+    return { handleIncrease, handleDecrease, handleZero, handleRemove, handleEdit, handleEditClick };
 };
