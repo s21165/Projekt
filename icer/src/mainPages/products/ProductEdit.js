@@ -22,8 +22,10 @@ function ProductEdit({product, handleEdit, setEditingProduct}) {
     });
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-        setImage(file);
-        setImagePreview(URL.createObjectURL(file));
+        if (file) {
+            setImage(file);
+            setImagePreview(URL.createObjectURL(file));
+        }
     };
 
 
@@ -33,6 +35,12 @@ function ProductEdit({product, handleEdit, setEditingProduct}) {
         setEditingProduct(null);
     };
     const handleChange = (e) => {
+
+        if (image) { //jeśli jest już jakieś zdjęcie to je usuń przed próbą wybrania kolejnego
+            URL.revokeObjectURL(image);
+            setImage(null);
+            setImagePreview(null);
+        }
         const {name, value} = e.target;
         setEditProduct((prevState) => ({
             ...prevState,

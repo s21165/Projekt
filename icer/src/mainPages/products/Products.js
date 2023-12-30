@@ -7,6 +7,8 @@ import ProductItem from "./ProductItem";
 import { useContext } from 'react';
 import { AuthContext } from '../account/auth-context';
 import {API_URL} from "../../config";
+import { useProductActions } from './useProductActions';
+
 
 function Products() {
 
@@ -20,6 +22,9 @@ function Products() {
 
     const [refresh, setRefresh] = useState(false); // Dodajemy stan do odświeżania ekranu
     const [editingProduct, setEditingProduct] = useState(null);
+    const productActions = useProductActions(refresh,data,sessionId, setData, setRefresh);
+
+
     const handleEditClick = (product) => {
         setEditingProduct({
             id: product.id,
@@ -55,57 +60,6 @@ function Products() {
                 console.error(`There was an error updating the product: ${error}`);
             });
     };
-    const handleIncrease = (productId) => {
-        // Znajdź produkt o danym ID i zwiększ jego ilość
-        axios.post(`${API_URL}/api/add_to_product`,
-            {sessionId:sessionId,
-                id_produktu: productId
-            } )
-            .then((response) => {
-                setData(response.data);
-                setRefresh(!refresh);
-                console.log("dodano 1 do produktu: " + data.nazwa)
-            })
-            .catch((error) => {
-                console.error(`There was an error retrieving the data: ${error}`);
-            });
-    };
-
-    const handleZero = (productId) => {
-        // Znajdź produkt o danym ID i zwiększ jego ilość
-        axios.post(`${API_URL}/api/reset_product_quantity`,
-            {sessionId:sessionId,
-                id_produktu: productId
-            } )
-            .then((response) => {
-                setData(response.data);
-                setRefresh(!refresh);
-                console.log("zerowanie : " + data.nazwa)
-            })
-            .catch((error) => {
-                console.error(`There was an error retrieving the data: ${error}`);
-            });
-    };
-
-
-    const handleDecrease = (productId) => {
-        // Znajdź produkt o danym ID i zmniejsz jego ilość
-        axios.post(`${API_URL}/api/subtract_product`,
-            {sessionId:sessionId,
-                id_produktu: productId
-        } )
-            .then((response) => {
-                setData(response.data);
-                console.log("odjęto produkt: " + data.nazwa)
-                setRefresh(!refresh);
-            })
-            .catch((error) => {
-                console.error(`There was an error retrieving the data: ${error}`);
-            });
-    };
-
-
-
 
     useEffect(() => {
         setEditingProduct(null);
@@ -131,22 +85,6 @@ function Products() {
                 console.error(`There was an error retrieving the data: ${error}`);
             });
     }, [refresh, filter, sessionId, setEditingProduct, setData, setFilteredProducts]);
-    const handleRemove = (id) => {
-
-        axios
-            .post(`${API_URL}/remove_product_for_user`,{
-                SessionId: sessionId,
-                produktID:id
-            },)
-            .then((response) => {
-                console.log(response.data);
-                setRefresh(!refresh); // Refresh the product list after deletion
-            })
-            .catch((error) => {
-                console.error(`There was an error removing the product: ${error}`);
-            });
-    };
-
 
 
     return (
@@ -176,11 +114,11 @@ function Products() {
                 <ProductItem
                     key={index}
                     data={data}
-                    handleRemove={handleRemove}
+                    handleRemove={productActions.handleRemove}
                     handleEditClick={handleEditClick}
-                    handleIncrease={handleIncrease}
-                    handleDecrease={handleDecrease}
-                    handleZero={handleZero}
+                    handleIncrease={productActions.handleIncrease}
+                    handleDecrease={productActions.handleDecrease}
+                    handleZero={productActions.handleZero}
                     filter={filter}
 
                 />
@@ -190,5 +128,5 @@ function Products() {
             }
         </>
     );
-};
+}
 export default Products;
