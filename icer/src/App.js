@@ -5,7 +5,7 @@ import Main from "./Main";
 import LoginForm from "./mainPages/account/LoginForm";
 import RegisterForm from "./mainPages/account/RegisterForm";
 import Login from "./mainPages/account/Login";
-
+import { BrowserRouter as Router } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect } from 'react';
 
@@ -15,9 +15,9 @@ function App() {
 
 
     return(
-        <>
+        <Router>
             {user ? <Main /> : <Login />}
-        </>
+        </Router>
     );
 }
 

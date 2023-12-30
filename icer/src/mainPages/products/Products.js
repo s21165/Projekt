@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import './Products.css';
+
 import ProductEdit from "./ProductEdit";
 import ProductItem from "./ProductItem";
 import { useContext } from 'react';
@@ -150,6 +151,14 @@ function Products() {
 
     return (
         <>
+            {editingProduct ? (
+                <ProductEdit
+                    product={editingProduct}
+                    handleEdit={handleEdit}
+                    setEditingProduct={setEditingProduct}
+                />
+            ):
+                <>
             <div className="listButtons">
                 <div className="leftButtonDiv">
                     {/* Dodaj warunkową klasę "active" dla przycisku Aktualne */}
@@ -162,13 +171,7 @@ function Products() {
             </div>
             <div className="productList">
 
-                {editingProduct && (
-                    <ProductEdit
-                        product={editingProduct}
-                        handleEdit={handleEdit}
-                        setEditingProduct={setEditingProduct}
-                    />
-                )}{filteredProducts  && !editingProduct && filteredProducts.map((data, index) =>
+                {filteredProducts  && !editingProduct && filteredProducts.map((data, index) =>
 
                 <ProductItem
                     key={index}
@@ -183,9 +186,8 @@ function Products() {
                 />
             )}
             </div>
-            <div>
-
-            </div>
+                </>
+            }
         </>
     );
 };

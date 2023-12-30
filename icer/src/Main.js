@@ -12,7 +12,7 @@ import {Shops} from "./mainPages/Shops";
 import {Account} from "./mainPages/account/Account";
 import {Notifications} from "./mainPages/Notifications";
 import {Icon} from '@iconify/react';
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 
 import Logout from "./mainPages/account/Logout";
 import EditAccount from "./mainPages/account/EditAccount";
@@ -20,8 +20,10 @@ import Products from "./mainPages/products/Products";
 import AddProduct from "./mainPages/products/AddProduct";
 import LoginForm from "./mainPages/account/LoginForm";
 import Login from "./mainPages/account/Login";
+
 import Help from "./mainPages/Help";
 import ChatContainer from "./mainPages/chatBot/ChatContainer";
+import {AuthContext} from "./mainPages/account/auth-context";
 
 
 function Main() {
@@ -29,10 +31,23 @@ function Main() {
     const [secoundMenu, setSecoundMenu] = useState(false);
     const [isOpen, setIsOpen] = useState(true);
     const [isIcon, setIsIcon] = useState(true);
-
+    const [lowResolution, setLowResolution] = useState(window.innerWidth);
+    const { logout } = useContext(AuthContext);
+    const  handleLogout = () => {
+        logout();
+    };
     useEffect(() => {
+        const handleResize = () => {
+            setLowResolution(window.innerWidth);
+        };
 
-    }, [isOpen]);
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+
+    }, [isOpen, lowResolution]);
 
 
     const handleClick = () => {
@@ -54,7 +69,7 @@ function Main() {
 
 
     return (
-        <Router>
+        <>
             <div className="full">
                 <div className={isOpen ? "body" : "body-slimMenu"}>
 
@@ -73,7 +88,7 @@ function Main() {
                             <Route path="/Ustawienia" element={<Shopping/>}/>
                             <Route path="/Pomoc" element={<Help/>}/>
                             <Route path="/Wyloguj" element={<Logout/>}/>
-                            <Route path="/Zaloguj" element={<Fridge/>}/>
+                            <Route path="/Zaloguj" element={<Login/>}/>
                             <Route path="/Chatbot" element={<ChatContainer/>}/>
 
 
@@ -84,16 +99,24 @@ function Main() {
                     <div className="space">
 
                         <nav className={isOpen ? "menu" : "slimMenu"}>
-                            <div className="navExpandButton">
+                            {lowResolution >= 1200 && <div className="navExpandButton">
                                 <button onClick={handleClick}>{isIcon ?
                                     <Icon icon="material-symbols:arrow-forward-ios"/> :
                                     <Icon icon="material-symbols:arrow-back-ios-new"/>} </button>
-                            </div>
-                            <Link to="/">
-                                <div className="logoContainer">
-                                    <img src={logo} alt="Your Image" className={isIcon ? "logo" : "smallLogo"}/>
-                                </div>
-                            </Link>
+                            </div>}
+                            {lowResolution >= 1200 ?
+                                <Link to="/">
+                                    <div className="logoContainer">
+                                        <img src={logo} alt="Your Image" className={isIcon ? "logo" : "smallLogo"}/>
+                                    </div>
+                                </Link>
+                                :
+                                <button onClick={handleClick}>
+                                    <div className="logoContainer">
+                                        <img src={logo} alt="Your Image" className={isIcon ? "logo" : "smallLogo"}/>
+                                    </div>
+                                </button>
+                            }
 
                             {secoundMenu && (
                                 <div className={secoundMenu ? "visible" : "invisible"}>
@@ -112,6 +135,7 @@ function Main() {
                                                           icon="fa6-solid:screwdriver-wrench"/>}
                                             </div>
                                         </Link>
+
                                         <Link to="/Pomoc">
                                             <div className="navDivMain">
                                                 {isIcon ? <h3>pomoc</h3> :
@@ -144,12 +168,12 @@ function Main() {
                                             </div>
                                         </button>
 
-                                        <Link to="/Wyloguj">
-                                            <div className="navDivMain">
-                                                {isIcon ? <h3>wyloguj</h3> :
+
+                                            <div className="navDivMain" onClick={handleLogout}>
+                                                {isIcon ? <h3><Logout/></h3> :
                                                     <Icon className="menuIcons" icon="grommet-icons:logout"/>}
                                             </div>
-                                        </Link>
+
                                     </div>
                                 </div>
                             )}
@@ -210,7 +234,7 @@ function Main() {
                     </div>
                 </div>
             </div>
-        </Router>
+        </>
     )
 }
 

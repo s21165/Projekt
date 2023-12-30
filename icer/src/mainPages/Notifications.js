@@ -12,7 +12,7 @@ import {API_URL} from "../config";
 
 
 
-export function Notifications( { small }) {
+export function Notifications( { small,left }) {
     const [data, setData] = useState(null);
     const { user } = useContext(AuthContext);
     const sessionId = user ? user.sessionId : null;
@@ -34,7 +34,8 @@ export function Notifications( { small }) {
 
     return (
         <>
-            {small ?  <NotificationsList data={data} small={true}/> : <NotificationsList data={data} />}
+            {small && !left ?  <NotificationsList data={data} small={true} left={true}/>  :
+                small && left ? <NotificationsList data={data} small={true}/> : <NotificationsList data={data} />}
         </>
     );
-};
+}

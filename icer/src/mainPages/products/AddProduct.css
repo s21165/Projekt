@@ -1,10 +1,19 @@
+.productContainerDiv {
+    position:relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Viewport height */
+    width: 100%; /* Viewport width */
+    border-radius: 4px;
 
+}
 .addProductForm {
-    position: relative;
+
     display: flex;
     flex-direction: column;
-    max-width: 30%;
-    margin: 10vh auto;
+    min-width: 40%;
+    max-height: 90vh;
     padding:2vh 1vw 2vh 1vw;
     font-size: calc(0.7vw + 0.7vh);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
@@ -13,22 +22,72 @@
 .addProductForm label {
     display: flex;
     flex-direction: column;
-    margin-bottom: 1vh;
+    align-items: center;
+    margin:0;
+}
+.addProductForm label h5 {
+    margin:0 ;
+
 }
 
 .addProductForm input {
-    padding: 8px;
+
+    padding: 0.5vh 2vw;
     border: 1px solid #ccc;
     border-radius: 4px;
+    width:80%;
 }
-
+.AddProductButtonDiv{
+    align-items: center;
+}
 .addProductButton {
-    padding: 1vh 2vw;
+    padding: 0;
     background-color: #4caf50;
     color: white;
     border: none;
     border-radius: 4px;
+    margin:0;
+    width:90%;
 
+}
+.addProductButton h4{
+    margin:1vh;
+}
+
+.addPhotoDiv{
+    text-align: center;
+    margin-bottom:1vh;
+}
+
+
+.image-options{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.image-options label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+/* Stylowanie ikon */
+.addPhotoDiv .iconify, .scanners .iconify {
+    font-size: 48px; /* Dostosuj rozmiar ikon do swoich potrzeb */
+
+}
+
+.addPhotoFromDir,.addPhotoByCamera , .scannerLabel{
+    width:50%;
+}
+.scanners label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
 }
 
 .scanners{
@@ -40,30 +99,50 @@
     background-color: #45a049;
 }
 
+
 @media only screen and (max-width: 1200px) {
     .addProductForm {
         /* Pozwala formularzowi zajmować większą część ekranu na tabletach */
         font-size: calc(1vw + 1vh);
-        max-width: 60%;
-        margin: 5vh auto;
+        min-width: 60%;
+
+    }
+    .scanners {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
     }
 }
 @media only screen and (max-width: 768px) {
     .addProductForm {
-         /* Pozwala formularzowi zajmować większą część ekranu na tabletach */
+        /* Pozwala formularzowi zajmować większą część ekranu na tabletach */
         font-size: calc(1.1vw + 1.1vh); /* Możesz dostosować rozmiar czcionki */
-        max-width: 75%;
-        margin: 2vh auto;
+        min-width: 75%;
+
     }
+    .scanners {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+    }
+
 }
 
 @media only screen and (max-width: 480px) {
     .addProductForm {
         max-width: 90%;; /* Pozwala formularzowi zajmować całą szerokość ekranu na telefonach */
         font-size: 4vw;
-        margin: 0.2vh auto;
         padding:1vh 0.5vw 1vh 0.5vw;
     }
+    .scanners {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+    }
+
 }
 
 @media (pointer: coarse){
@@ -71,26 +150,21 @@
     .scanners {
         display: flex;
         justify-content: center;
-        height: 10vh;
-
-        margin-left: 2vw;
-        margin-right: 2vw;
-    }
-    .scanners div {
-        flex: 1;
-
-    }
-    .qrDiv{
-
-    }
-    .qrIcon{
-        width: 10vw;
-        height: 10vh;
+        align-items: center;
 
     }
 
-    .barcodeIcon {
+    .barcodeIcon, .qrIcon, .addPhotoFromDirIcon,.addPhotoByCameraIcon {
         width: 10vw;
         height: 10vh;
     }
+
+}
+@media only screen and (max-height: 800px) {
+
+    .barcodeIcon, .qrIcon, .addPhotoFromDirIcon,.addPhotoByCameraIcon {
+        width: 7vw;
+        height: 7vh;
+    }
+
 }

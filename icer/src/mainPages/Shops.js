@@ -1,11 +1,12 @@
 import {useEffect} from "react";
 import axios from "axios";
+import {API_URL} from "../config";
 
 export function Shops(){
     useEffect(() => {
 
             // Jeśli użytkownik jest zalogowany, wywołaj funkcję start_camera_monitoring_route
-            axios.post('http://192.168.0.130:5000/start_camera_monitoring')
+        axios.post(`${API_URL}/start_camera_monitoring`)
                 .then((response) => {
                     console.log('Kamera rozpoczęła monitoring');
                 })

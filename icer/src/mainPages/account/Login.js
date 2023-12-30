@@ -4,37 +4,16 @@ import LoginForm from './LoginForm';
 import { AuthContext } from "./auth-context";
 import RegisterForm from "./RegisterForm";
 import {API_URL} from "../../config";
-
+import { useNavigate } from 'react-router-dom';
+import { useLogin } from './hooks/useLogin';
+import useRegister from "./hooks/useRegister";
 const backendUrl = 'http://localhost:5000';
 
 function Login() {
     const authContext = useContext(AuthContext);
     const [mode, setMode] = useState('login');
-
-    const handlePostLogin = async (credentials) => {
-        try {
-            const response = await axios.post(`${API_URL}/login`, credentials);
-            const { data } = response;
-            if (data && data.session_id) {
-                // Aktualizacja kontekstu z danymi użytkownika i sessionId
-                authContext.login({
-                    username: credentials.username,
-                    sessionId: data.session_id
-                });
-            }
-        } catch (error) {
-            console.error('Error during POST login', error);
-        }
-    };
-
-    const handlePostRegister = async (data) => {
-        try {
-            await axios.post(`${API_URL}/register`, data);
-            // Możesz również dodać automatyczne logowanie po udanej rejestracji lub komunikat o sukcesie
-        } catch (error) {
-            console.error('Error during POST register', error);
-        }
-    };
+    const handleLogin = useLogin();
+    const handleRegister = useRegister();
 
     return authContext.user ? (
         <div>
@@ -43,9 +22,9 @@ function Login() {
     ) : (
         <div>
             {mode === 'login' ?
-                <LoginForm onSwitchToRegister={() => setMode('register')} onLogin={handlePostLogin} />
+                <LoginForm onSwitchToRegister={() => setMode('register')} onLogin={handleLogin} />
                 :
-                <RegisterForm onSwitchToLogin={() => setMode('login')} onRegister={handlePostRegister} />
+                <RegisterForm onSwitchToLogin={() => setMode('login')} onRegister={handleRegister} />
             }
         </div>
     );

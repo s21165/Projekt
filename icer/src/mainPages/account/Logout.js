@@ -4,7 +4,7 @@ import {AuthContext} from "./auth-context";
 function Logout() {
 
     const { logout } = useContext(AuthContext);
-    const handleLogout = () => {
+     const  handleLogout = () => {
         logout();
     };
     return (

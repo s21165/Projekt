@@ -1,7 +1,7 @@
 import {useState} from "react";
 import {GetBorderStyle} from "./products/GetBorderStyle";
 
-export function NotificationsList({ data, small = false, onProductClick }) {
+export function NotificationsList({ data, small = false, onProductClick, left = false}) {
 
     const [expandedProduct, setExpandedProduct] = useState(null);
     const style = GetBorderStyle(data);
@@ -15,7 +15,7 @@ export function NotificationsList({ data, small = false, onProductClick }) {
     }
 
     return (
-        <div className={`notificationsList ${small ? "small" : ""}`}>
+        <div className={`notificationsList ${small ? "small" : ""} ${left ? "left" : ""}`}>
             {data && data.map(product => (
                 <div className={"notificationProductDiv"} key={product.id} style={GetBorderStyle(product,1,1)}>
 

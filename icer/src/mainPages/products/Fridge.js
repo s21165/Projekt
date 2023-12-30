@@ -6,63 +6,36 @@ import {Notifications} from "../Notifications";
 import {useLocation} from "react-router-dom";
 import '../Notifications.css'
 
-import image1 from  '../../data/image1.png'
-import image2 from  '../../data/image2.png'
-import image3 from  '../../data/image3.png'
-import image4 from  '../../data/image4.png'
-import image5 from  '../../data/image5.png'
-import image6 from  '../../data/image6.png'
-import image7 from  '../../data/image7.png'
-import image8 from  '../../data/image8.png'
-import image9 from  '../../data/image9.png'
-import image10 from  '../../data/image10.png'
 
 export function Fridge(){
     const [bulbIsOn, setbulbIsOn] = useState(true);
-    const location = useLocation();
+    const [lowWidth, setLowWidth] = useState(window.innerWidth);
+    const [lowHeight, setLowHeight] = useState(window.innerHeight);
     function handleClick() {
         setbulbIsOn(!bulbIsOn);
 
     }
-    // const imagePaths = [
-    //     image1,
-    //     image2,
-    //     image3,
-    //     image4,
-    //     image5,
-    //     image6,
-    //     image7,
-    //     image8,
-    //     image9,
-    //     image10,
-    //     image1,
-    //     image2,
-    //     image3,
-    //     image4,
-    //     image5,
-    //     image6,
-    //     image7,
-    //     image8,
-    //     image9,
-    //     image10,
-    //     image5,
-    //     image3,
-    //     image7,
-    //     image6,
-    //     image8,
-    //     image4,
-    //     image10,
-    //     image2,
-    //     image9,
-    //     image1,
-    //     image7,
-    //     image6,
-    //     image8,
-    //     image9,
-    //     image10,
-    //     image1,
-    //
-    // ];
+
+    useEffect(() => {
+        const handleResize = () => {
+            setLowWidth(window.innerWidth);
+            setLowHeight(window.innerHeight);
+
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            bulbPosition(lowWidth, lowHeight)
+        };
+
+    }, [lowHeight, lowWidth]);
+
+    const bulbPosition =( lowWidth, lowHeight) =>{
+        console.log(lowWidth, lowHeight)
+        return !(lowWidth < 1000 || lowHeight < 800);
+    }
 
     return(
         <div className="fridgeContainer">
@@ -73,14 +46,16 @@ export function Fridge(){
                 {/*))}*/}
 
 
-                <div onClick={handleClick} className={`light-bulb ${bulbIsOn ? 'on' : 'off'}`}>
+                <div onClick={handleClick} className={`light-bulb ${bulbIsOn ? 'on' : 'off'} ${bulbPosition(lowWidth, lowHeight) ? '' : 'left'}`}>
+
                     <Icon className="bulb" icon="mdi:lightbulb-on-outline" />
                     <div className="light">
                     </div>
 
                 </div>
 
-                {!bulbIsOn && <Notifications small/>}
+                {!bulbIsOn &&  bulbPosition(lowWidth, lowHeight) && <Notifications small left/>}
+                { !bulbIsOn &&  !bulbPosition(lowWidth, lowHeight) && <Notifications small />}
                 <div/>
 
 
