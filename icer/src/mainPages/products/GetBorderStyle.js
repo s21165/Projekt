@@ -7,24 +7,24 @@ export function GetBorderStyle(data, filter, int) {
 
             switch (data.trzecia_wartosc) {
                 case 1:
-                    borderStyle = {border: `${int}px solid pink`};
+                    borderStyle = `${int}px solid pink`;
                     break;
                 case 2:
-                    borderStyle = {border: `${int}px solid blue`};
+                    borderStyle = `${int}px solid blue`;
                     break;
                 case 3:
-                    borderStyle = {border: `${int}px solid green`};
+                    borderStyle = `${int}px solid green`;
                     break;
                 case 4:
-                    borderStyle = {border: `${int}px solid red`};
+                    borderStyle = `${int}px solid red`;
                     break;
                 default:
 
             }
             if (filter === 'old') {
-                borderStyle = {border: `${int}px solid black`};
+                borderStyle = `${int}px solid black`;
             }
-
+            console.log(borderStyle)
             return borderStyle;
         }
 

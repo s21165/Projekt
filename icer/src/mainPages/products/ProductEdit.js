@@ -1,66 +1,24 @@
 import React, {useEffect, useRef, useState} from 'react';
 import './AddProduct.css'
-import {ScanBr} from "./scanBr";
-import {ScanQr} from "./ScanQr";
+
 import {Icon} from "@iconify/react";
+import {useOutsideClick} from "./useOutsideClick";
+import {useEditProduct} from "./useEditProduct";
 
 function ProductEdit({product, handleEdit, setEditingProduct}) {
 
     const myDivRef = useRef(null);
-    const [image, setImage] = useState(null);
-    const [imagePreview, setImagePreview] = useState(null);
-    const [editProduct, setEditProduct] = useState({
-        nazwa: product.nazwa,
-        cena: product.cena,
-        kalorie: product.kalorie,
-        tluszcze: product.tluszcze,
-        weglowodany: product.weglowodany,
-        bialko: product.bialko,
-        kategoria: product.kategoria,
-        ilosc: product.ilosc,
-        data_waznosci: product.data_waznosci,
-    });
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setImage(file);
-            setImagePreview(URL.createObjectURL(file));
-        }
-    };
+    const {
+        editProduct, setEditProduct, image, imagePreview, handleImageChange, handleChange
+    } = useEditProduct(product);
 
+    useOutsideClick(myDivRef, () => setEditingProduct(null));
 
 
     const handleUpdate = () => {
         handleEdit({...editProduct, image});
         setEditingProduct(null);
     };
-    const handleChange = (e) => {
-
-        if (image) { //jeśli jest już jakieś zdjęcie to je usuń przed próbą wybrania kolejnego
-            URL.revokeObjectURL(image);
-            setImage(null);
-            setImagePreview(null);
-        }
-        const {name, value} = e.target;
-        setEditProduct((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
-    };
-    useEffect(() => {
-        function handleClickOutside(event) {
-            if (myDivRef.current && !myDivRef.current.contains(event.target)) {
-                setEditingProduct(false) // Ustawienie stanu na true, gdy kliknięto poza divem
-            }
-        }
-
-        // Dodanie nasłuchiwania zdarzeń
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            // Usunięcie nasłuchiwania zdarzeń
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [myDivRef]);
 
 
     return (

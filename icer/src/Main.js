@@ -14,11 +14,11 @@ import {Notifications} from "./mainPages/Notifications";
 import {Icon} from '@iconify/react';
 import React, {useContext, useEffect, useState} from "react";
 
-import Logout from "./mainPages/account/Logout";
+
 import EditAccount from "./mainPages/account/EditAccount";
 import Products from "./mainPages/products/Products";
 import AddProduct from "./mainPages/products/AddProduct";
-import LoginForm from "./mainPages/account/LoginForm";
+
 import Login from "./mainPages/account/Login";
 
 import Help from "./mainPages/Help";
@@ -87,7 +87,6 @@ function Main() {
                             <Route path="/Sklepy" element={<Fridge/>}/>
                             <Route path="/Ustawienia" element={<Shopping/>}/>
                             <Route path="/Pomoc" element={<Help/>}/>
-                            <Route path="/Wyloguj" element={<Logout/>}/>
                             <Route path="/Zaloguj" element={<Login/>}/>
                             <Route path="/Chatbot" element={<ChatContainer/>}/>
 
@@ -170,7 +169,7 @@ function Main() {
 
 
                                             <div className="navDivMain" onClick={handleLogout}>
-                                                {isIcon ? <h3><Logout/></h3> :
+                                                {isIcon ? <h3>Wyloguj</h3> :
                                                     <Icon className="menuIcons" icon="grommet-icons:logout"/>}
                                             </div>
 

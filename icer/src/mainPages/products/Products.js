@@ -1,13 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import axios from 'axios';
 import './Products.css';
-
 import ProductEdit from "./ProductEdit";
 import ProductItem from "./ProductItem";
-import { useContext } from 'react';
-import { AuthContext } from '../account/auth-context';
-import {API_URL} from "../../config";
-import { useProductActions } from './useProductActions';
+import {useProductActions} from './useProductActions';
 import {useProductsData} from "./useProductsData";
 
 
@@ -23,7 +18,7 @@ function Products() {
         productData.sessionId,
         productData.setData,
         productData.setRefresh,
-        editingProduct ,
+        editingProduct,
         setEditingProduct
     );
 
@@ -31,43 +26,46 @@ function Products() {
     return (
         <>
             {editingProduct ? (
-                <ProductEdit
-                    product={editingProduct}
-                    handleEdit={productActions.handleEdit}
-                    setEditingProduct={setEditingProduct}
-                />
-            ):
+                    <ProductEdit
+                        product={editingProduct}
+                        handleEdit={productActions.handleEdit}
+                        setEditingProduct={setEditingProduct}
+                    />
+                ) :
                 <>
-            <div className="listButtons">
-                <div className="leftButtonDiv">
-                    {/* Dodaj warunkową klasę "active" dla przycisku Aktualne */}
-                    <button className={`leftButton ${filter === 'current' ? 'active' : ''}`} onClick={() => setFilter('current')}><h2>Aktualne</h2></button>
-                </div>
-                <div className="rightButtonDiv">
-                    {/* Dodaj warunkową klasę "active" dla przycisku Stare */}
-                    <button className={`rightButton ${filter === 'old' ? 'active' : ''}`} onClick={() => setFilter('old')}><h2>Kosz</h2></button>
-                </div>
-            </div>
-            <div className="productList">
+                    <div className="listButtons">
+                        <div className="leftButtonDiv">
+                            {/* Dodaj warunkową klasę "active" dla przycisku Aktualne */}
+                            <button className={`leftButton ${filter === 'current' ? 'active' : ''}`}
+                                    onClick={() => setFilter('current')}><h2>Aktualne</h2></button>
+                        </div>
+                        <div className="rightButtonDiv">
+                            {/* Dodaj warunkową klasę "active" dla przycisku Stare */}
+                            <button className={`rightButton ${filter === 'old' ? 'active' : ''}`}
+                                    onClick={() => setFilter('old')}><h2>Kosz</h2></button>
+                        </div>
+                    </div>
+                    <div className="productList">
 
-                {productData.filteredProducts  && !editingProduct && productData.filteredProducts.map((data, index) =>
+                        {productData.filteredProducts && !editingProduct && productData.filteredProducts.map((data, index) =>
 
-                <ProductItem
-                    key={index}
-                    data={data}
-                    handleRemove={productActions.handleRemove}
-                    handleEditClick={productActions.handleEditClick}
-                    handleIncrease={productActions.handleIncrease}
-                    handleDecrease={productActions.handleDecrease}
-                    handleZero={productActions.handleZero}
-                    filter={filter}
-
-                />
-            )}
-            </div>
+                            <ProductItem
+                                key={index}
+                                data={data}
+                                handleRemove={productActions.handleRemove}
+                                handleEditClick={productActions.handleEditClick}
+                                handleIncrease={productActions.handleIncrease}
+                                handleDecrease={productActions.handleDecrease}
+                                handleZero={productActions.handleZero}
+                                filter={filter}
+                                size='medium'
+                            />
+                        )}
+                    </div>
                 </>
             }
         </>
     );
 }
+
 export default Products;

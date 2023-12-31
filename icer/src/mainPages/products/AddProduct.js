@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import "./AddProduct.css";
-import {ScanQr} from "./ScanQr";
-import {ScanBr} from "./scanBr";
+
 import {useContext} from 'react';
 import {AuthContext} from '../account/auth-context';
 import {API_URL} from "../../config";
