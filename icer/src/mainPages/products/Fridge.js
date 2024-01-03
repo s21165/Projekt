@@ -10,13 +10,15 @@ import {useProductsData, useProductsDataNoFilter} from "./useProductsData";
 import {useProductActions} from "./useProductActions";
 import image2 from "../../data/image6.png";
 import ProductItem from "./ProductItem";
+import Products from "./Products";
+import ProductManager from "./ProductManager";
 
 
 export function Fridge(){
     const [bulbIsOn, setbulbIsOn] = useState(true);
     const [lowWidth, setLowWidth] = useState(window.innerWidth);
     const [lowHeight, setLowHeight] = useState(window.innerHeight);
-    const productData = useProductsDataNoFilter()
+    const productData = useProductsData();
     const [editingProduct, setEditingProduct] = useState(null);
     const productActions = useProductActions(
         productData.refresh,
@@ -62,20 +64,15 @@ export function Fridge(){
 
                 <div className="fridgeList">
 
-                    {productData.data && !editingProduct && productData.data.map((data, index) =>
-
-                        <ProductItem
-                            key={index}
-                            data={data}
-                            handleRemove={productActions.handleRemove}
-                            handleEditClick={productActions.handleEditClick}
-                            handleIncrease={productActions.handleIncrease}
-                            handleDecrease={productActions.handleDecrease}
-                            handleZero={productActions.handleZero}
-                            size = 'big'
-
+                        <ProductManager
+                            editingProduct={editingProduct}
+                            productActions={productActions}
+                            productData={productData}
+                            filter={"current"}
+                            setEditingProduct={setEditingProduct}
+                            setFilter={"current"}
+                            size={"small"}
                         />
-                    )}
                 </div>
 
                 <div onClick={handleClick} className={`light-bulb ${bulbIsOn ? 'on' : 'off'} ${bulbPosition(lowWidth, lowHeight) ? '' : 'left'}`}>

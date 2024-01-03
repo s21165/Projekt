@@ -31,6 +31,7 @@ export const useProductActions = (refresh,data,sessionId, setData, setRefresh,ed
             data_waznosci: new Date(product.data_waznosci).toISOString().split('T')[0]
         });
     };
+
     const handleEdit = () => {
         const id = editingProduct.id;
         const config = {

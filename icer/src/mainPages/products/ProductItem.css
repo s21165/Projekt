@@ -15,11 +15,22 @@
     background-position: center;  /* Ustala, że obraz ma być wyśrodkowany */
     backdrop-filter:blur();
 }
-.productItem {
+.productItemSmall.selected {
+    flex: 1 0 80%; /* Zajmuj całą szerokość dla powiększonego produktu */
+    /* Pozostałe style dla powiększonego produktu */
+
+
+    transition: all 0.3s ease; /* Płynna animacja */
+}
+
+.productItemSmall.hidden {
+    display: none; /* Ukryj produkt */
+}
+.productItemSmall {
 
     position: relative;
 
-    flex: 1 0 35%;
+    flex: 0 1 5%;
     margin: 0.4vh 0.2vw;
     background-color: #f5f5f5;
     border: 1px solid #ddd;
@@ -31,6 +42,16 @@
     background-position: center;  /* Ustala, że obraz ma być wyśrodkowany */
     backdrop-filter:blur();
 }
+.productItemSmall.big {
+    /* Style dla powiększonego produktu */
+    flex: 1 0 100%; /* Zajmuj całą szerokość */
+    transition: all 0.3s ease; /* Płynna animacja */
+    /* Pozostałe style */
+}
+.productItemSmall.big {
+    display: block; /* Ukryj pozostałe produkty tylko gdy inny produkt jest powiększony */
+}
+
 
 .productItem.hidden:after {
     content: "";
@@ -42,6 +63,29 @@
     backdrop-filter: blur(5px); /* Dostosuj wartość blura według potrzeb */
     z-index: -1; /* Umieść pod elementem .productItem */
 }
+
+.productItemSmall.hidden:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    backdrop-filter: blur(5px); /* Dostosuj wartość blura według potrzeb */
+    z-index: -1; /* Umieść pod elementem .productItem */
+}
+
+.productItemBig.hidden:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    backdrop-filter: blur(5px); /* Dostosuj wartość blura według potrzeb */
+    z-index: -1; /* Umieść pod elementem .productItem */
+}
+
 
 .card.hidden{
     visibility: hidden;
@@ -90,8 +134,14 @@
     align-items: center;
     margin-left: 0.5vw;
 }
+.quantityControlLarge {
+    display: flex;
+    align-items: center;
+    margin-left: 0.5vw;
+    margin-bottom: 1vh;
+}
 
-.quantityControl span {
+.quantityControl span, .quantityControlLarge span {
     margin: 0 2.5vw;
 }
 

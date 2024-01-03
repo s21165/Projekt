@@ -5,6 +5,17 @@
 
 
 }
+.fridge{
+    height:100%;
+    position: relative;
+
+}
+.fridgeList{
+    height:100%;
+    position: relative;
+
+}
+
 .light-bulb{
     position: absolute;
     top:0;
