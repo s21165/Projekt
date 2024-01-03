@@ -18,7 +18,8 @@ function ProductItem({index, data, handleRemove, handleEditClick, handleIncrease
     const styl = GetBorderStyle(data, filter, 2);
     const [info, setInfo] = useState(infoProducts);
 
-    const useProduct = useProductItem(data, handleDecrease, handleIncrease)
+    const useProduct = useProductItem(data, handleDecrease, handleIncrease,setIsSelected)
+
 
     try {
         if (data) {
@@ -27,8 +28,7 @@ function ProductItem({index, data, handleRemove, handleEditClick, handleIncrease
             switch (size) {
                 case 'small':
                     return (
-                        <>
-                        {data.ilosc > 0 &&
+
                         <div key={index}
                              className={`productItemSmall ${isSelected ? 'selected' : ''} ${isHidden ? 'hidden' : ''}`}
                              style={{backgroundImage: `url(${image2})`, border: styl}}
@@ -57,8 +57,7 @@ function ProductItem({index, data, handleRemove, handleEditClick, handleIncrease
                                 />
                             }
                                 </div>
-                            }
-                        </>
+
                     );
 
                 case 'medium':

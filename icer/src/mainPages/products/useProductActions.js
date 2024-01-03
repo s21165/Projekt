@@ -1,7 +1,9 @@
 import axios from 'axios';
 import { API_URL } from "../../config";
 
-export const useProductActions = (refresh,data,sessionId, setData, setRefresh,editingProduct,setEditingProduct) => {
+export const useProductActions = (refresh,data,sessionId, setData, setRefresh,editingProduct,setEditingProduct
+
+) => {
     const handleIncrease = (productId) => {
         // logika zwiększania ilości produktu
         axios.post(`${API_URL}/api/add_to_product`,
@@ -63,6 +65,7 @@ export const useProductActions = (refresh,data,sessionId, setData, setRefresh,ed
                 setData(response.data);
                 console.log("odjęto produkt: " + data.nazwa)
                 setRefresh(!refresh);
+
             })
             .catch((error) => {
                 console.error(`There was an error retrieving the data: ${error}`);
@@ -96,6 +99,7 @@ export const useProductActions = (refresh,data,sessionId, setData, setRefresh,ed
             .then((response) => {
                 console.log(response.data);
                 setRefresh(!refresh); // Refresh the product list after deletion
+
             })
             .catch((error) => {
                 console.error(`There was an error removing the product: ${error}`);

@@ -18,7 +18,7 @@ export function Fridge(){
     const [bulbIsOn, setbulbIsOn] = useState(true);
     const [lowWidth, setLowWidth] = useState(window.innerWidth);
     const [lowHeight, setLowHeight] = useState(window.innerHeight);
-    const productData = useProductsData();
+    const productData = useProductsData("current");
     const [editingProduct, setEditingProduct] = useState(null);
     const productActions = useProductActions(
         productData.refresh,
@@ -50,7 +50,7 @@ export function Fridge(){
             bulbPosition(lowWidth, lowHeight)
         };
 
-    }, [lowHeight, lowWidth]);
+    }, [lowHeight, lowWidth,productActions]);
 
     const bulbPosition =( lowWidth, lowHeight) =>{
 

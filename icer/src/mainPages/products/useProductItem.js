@@ -3,7 +3,7 @@ import {AuthContext} from "../account/auth-context";
 import axios from "axios";
 import {API_URL} from "../../config";
 
-export const useProductItem = (data, handleDecrease, handleIncrease) => {
+export const useProductItem = (data, handleDecrease, handleIncrease,setIsSelected) => {
     const [showRemovalConfirmation, setShowRemovalConfirmation] = useState(false);
     const [info, setInfo] = useState(false);
 
@@ -25,6 +25,8 @@ export const useProductItem = (data, handleDecrease, handleIncrease) => {
         event.stopPropagation();
         handleDecrease(data.id);
         setShowRemovalConfirmation(false);
+        setIsSelected(null)
+
     };
 
     const declineRemoval = (event) => {

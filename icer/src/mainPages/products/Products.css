@@ -58,8 +58,12 @@
 
 
 .productList {
-    display: flex;       /* Ustawienie rodzica jako flex container */
-    flex-wrap: wrap;     /* Pozwala na zawijanie elementów do nowych linii */
+    position:relative;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;       /* Zajmowanie całej dostępnej szerokości */
+    justify-content: center; /* Wyśrodkowanie zawartości */
+    margin:auto;
 }
 
 @media only screen and (max-width: 1600px) {

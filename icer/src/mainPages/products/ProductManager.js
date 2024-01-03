@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import ProductEdit from "./ProductEdit";
 import ProductItem from "./ProductItem";
 
@@ -9,12 +9,12 @@ function ProductManager({
                             filter,
                             setEditingProduct,
                             setFilter,
-                            size,
+                            size
 
                         }) {
-
-
     const [selectedProductId, setSelectedProductId] = useState(null);
+
+
     const handleProductClick = (productId) => {
         setSelectedProductId(selectedProductId === productId ? null : productId);
     };
