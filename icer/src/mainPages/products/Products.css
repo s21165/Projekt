@@ -61,7 +61,9 @@
     position:relative;
     display: flex;
     flex-wrap: wrap;
-    width: 100%;       /* Zajmowanie całej dostępnej szerokości */
+    width: 100%; /* Zajmowanie całej dostępnej szerokości */
+
+
     justify-content: center; /* Wyśrodkowanie zawartości */
     margin:auto;
 }

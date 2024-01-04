@@ -11,14 +11,26 @@ import ProductItemMedium from "./ProductItemMedium";
 import ProductItemLarge from "./ProductItemLarge";
 import {useOutsideClick} from "./useOutsideClick";
 
-function ProductItem({index, data, handleRemove, handleEditClick, handleIncrease, handleDecrease, filter, handleZero, size, isSelected,setIsSelected, // Dodano nowy prop isSelected
-                         isHidden,onProductClick })
-                          {
+function ProductItem({
+                         index,
+                         data,
+                         handleRemove,
+                         handleEditClick,
+                         handleIncrease,
+                         handleDecrease,
+                         filter,
+                         handleZero,
+                         size,
+                         isSelected,
+                         setIsSelected, // Dodano nowy prop isSelected
+                         isHidden,
+                         onProductClick
+                     }) {
 
     const styl = GetBorderStyle(data, filter, 2);
     const [info, setInfo] = useState(infoProducts);
 
-    const useProduct = useProductItem(data, handleDecrease, handleIncrease,setIsSelected)
+    const useProduct = useProductItem(data, handleDecrease, handleIncrease, setIsSelected)
 
 
     try {
@@ -35,28 +47,29 @@ function ProductItem({index, data, handleRemove, handleEditClick, handleIncrease
                              onClick={() => onProductClick(data.id)}>
 
 
-                            {isSelected   ?
-                                <ProductItemLarge
-                                    data={data}
-                                    useProduct={useProduct}
-                                    handleZero={handleZero}
-                                    handleRemove={handleRemove}
-                                    handleEditClick={handleEditClick}
-                                    filter={filter}
-                                    info={info}
-                                    setIsSelected={setIsSelected}
-                                />
-                                :
-                                <ProductItemSmall
-                                    data={data}
-                                    useProduct={useProduct}
-                                    handleZero={handleZero}
-                                    handleRemove={handleRemove}
-                                    handleEditClick={handleEditClick}
-                                    filter={filter}
-                                />
-                            }
-                                </div>
+                                {isSelected ?
+                                    <ProductItemLarge
+                                        data={data}
+                                        useProduct={useProduct}
+                                        handleZero={handleZero}
+                                        handleRemove={handleRemove}
+                                        handleEditClick={handleEditClick}
+                                        filter={filter}
+                                        info={info}
+                                        setIsSelected={setIsSelected}
+                                    />
+                                    :
+                                    <ProductItemSmall
+                                        data={data}
+                                        useProduct={useProduct}
+                                        handleZero={handleZero}
+                                        handleRemove={handleRemove}
+                                        handleEditClick={handleEditClick}
+                                        filter={filter}
+                                    />
+                                }
+
+                        </div>
 
                     );
 
@@ -91,8 +104,8 @@ function ProductItem({index, data, handleRemove, handleEditClick, handleIncrease
 
 
     } catch (error) {
-    console.error("Error in productItem:", error);
-}
+        console.error("Error in productItem:", error);
+    }
 }
 
 export default ProductItem;

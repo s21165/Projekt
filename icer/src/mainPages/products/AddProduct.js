@@ -6,7 +6,8 @@ import {useContext} from 'react';
 import {AuthContext} from '../account/auth-context';
 import {API_URL} from "../../config";
 import {Icon} from "@iconify/react";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function AddProduct() {
     const {user} = useContext(AuthContext);
@@ -70,6 +71,7 @@ function AddProduct() {
                 URL.revokeObjectURL(image); //zwolnij pamięć zdjęcia po jego zapisaniu
                 setImage(null);
                 setImagePreview(null);
+                toast.success(`Produkt ${product.nazwa} został dodany!`);
             })
             .catch((error) => {
                 console.error(`There was an error adding the product: ${error}`);
@@ -92,6 +94,7 @@ function AddProduct() {
 
     return (
         <div className="productContainerDiv">
+            <ToastContainer />
             <form onSubmit={handleSubmit} className="addProductForm">
                 <label>
                     <h5>Nazwa:</h5>

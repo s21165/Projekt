@@ -1,19 +1,22 @@
 import React from 'react';
-import { Icon } from "@iconify/react";
+import {Icon} from "@iconify/react";
 
-function ProductItemMedium({ data, useProduct,handleZero, handleRemove, handleEditClick, info, filter}) {
+function ProductItemMedium({data, useProduct, handleZero, handleRemove, handleEditClick, info, filter}) {
     return (
-        <div>
+        <>
             {useProduct.showRemovalConfirmation ? (
-                <>
-                    <p>Produkt {data.nazwa} zostanie usunięty, kontynuować?</p>
-                    <button onClick={useProduct.confirmRemoval}>DO KOSZA</button>
-                    <button onClick={useProduct.declineRemoval}>ZOSTAW</button>
-                </>
+                <div className="moveToBinConfirmationDiv">
+                    <h1 className="moveToBinConfirmationInfoHeader">Produkt {data.nazwa} zostanie przeniesiony do kosza,
+                        kontynuować?</h1>
+                    <div className="moveToBinConfirmationButtons">
+                        <button onClick={useProduct.confirmRemoval} className="moveToBinConfirmationButton"><h2>DO KOSZA</h2></button>
+                        <button onClick={useProduct.declineRemoval} className="moveToBinDeclineButton"><h2>ZOSTAW</h2></button>
+                    </div>
+                </div>
             ) : (
-                <div className={`card ${!info ? 'hidden' : ''}`} >
+                <div className={`card ${!info ? 'hidden' : ''}`}>
 
-                    <div ><h2>{data.nazwa}</h2></div>
+                    <div><h2>{data.nazwa}</h2></div>
                     <div><h3>Cena: {data.cena}</h3></div>
                     <div><h3>Kalorie: {data.kalorie}</h3></div>
                     <div><h3>Tłuszcze: {data.tluszcze}</h3></div>
@@ -26,12 +29,12 @@ function ProductItemMedium({ data, useProduct,handleZero, handleRemove, handleEd
 
                         <div className="quantityControl">
                             <button className="decreaseProduct" onClick={useProduct.handleDecreaseWithCheck}>
-                                <h2><Icon className="iconifyIcon" icon="tdesign:minus" /></h2>
+                                <h2><Icon className="iconifyIcon" icon="tdesign:minus"/></h2>
                             </button>
 
                             <span><h3>Ilość: {data.ilosc}</h3></span>
-                            <button className="increaseProduct" onClick={useProduct.handleIncreaseItem }>
-                                <h2><Icon className="iconifyIcon" icon="pepicons-pencil:plus" /></h2>
+                            <button className="increaseProduct" onClick={useProduct.handleIncreaseItem}>
+                                <h2><Icon className="iconifyIcon" icon="pepicons-pencil:plus"/></h2>
                             </button>
 
                         </div>
@@ -55,7 +58,7 @@ function ProductItemMedium({ data, useProduct,handleZero, handleRemove, handleEd
 
                 </div>
             )}
-        </div>
+        </>
     );
 }
 

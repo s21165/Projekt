@@ -28,7 +28,7 @@ export const useProductsData = ( filter) => {
             .catch((error) => {
                 console.error(`There was an error retrieving the data: ${error}`);
             });
-    }, [refresh, filter, sessionId, setData, setFilteredProducts]);
+    }, [data,refresh, filter, sessionId, setData, setFilteredProducts]);
 
     return { data, setData, sessionId, filteredProducts, refresh, setRefresh };
 };

@@ -5,6 +5,7 @@ import ProductItem from "./ProductItem";
 import {useProductActions} from './useProductActions';
 import {useProductsData} from "./useProductsData";
 import ProductManager from "./ProductManager";
+import {ToastContainer} from "react-toastify";
 
 
 function Products() {
@@ -26,7 +27,8 @@ function Products() {
 
 
 
-    return (
+    return (<>
+        <ToastContainer />
         <ProductManager
             editingProduct={editingProduct}
             productActions={productActions}
@@ -36,6 +38,7 @@ function Products() {
             setFilter={setFilter}
             size={"medium"}
         />
+        </>
     );
 
 }

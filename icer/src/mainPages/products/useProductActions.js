@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { API_URL } from "../../config";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export const useProductActions = (refresh,data,sessionId, setData, setRefresh,editingProduct,setEditingProduct
 
 ) => {
@@ -81,8 +82,9 @@ export const useProductActions = (refresh,data,sessionId, setData, setRefresh,ed
             } )
             .then((response) => {
                 setData(response.data);
+                toast.success(`Produkt ${data.nazwa} został przeniesiony do kosza!`);
                 setRefresh(!refresh);
-                console.log("zerowanie : " + data.nazwa)
+
             })
             .catch((error) => {
                 console.error(`There was an error retrieving the data: ${error}`);
@@ -98,11 +100,13 @@ export const useProductActions = (refresh,data,sessionId, setData, setRefresh,ed
             },)
             .then((response) => {
                 console.log(response.data);
+                toast.success(`Produkt ${data.nazwa} został usunięty!`);
                 setRefresh(!refresh); // Refresh the product list after deletion
 
             })
             .catch((error) => {
                 console.error(`There was an error removing the product: ${error}`);
+                toast.error(`Nie udało się usunąć produktu ${data.nazwa}!`)
             });
     };
 

@@ -3,7 +3,7 @@ import { Icon } from "@iconify/react";
 
 function ProductItemSmall({ data, useProduct,handleZero, handleRemove, handleEditClick, info, filter}) {
     return (
-        <div>
+        <div className="productItemSmallContainer">
 
         </div>
     );

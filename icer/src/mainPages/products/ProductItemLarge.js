@@ -8,15 +8,18 @@ function ProductItemLarge({ data, useProduct,handleZero, handleRemove, handleEdi
 
 
     return (
-        <div ref={myDivRef}>
+        <div ref={myDivRef} className="LargeProductItemContainer">
             {useProduct.showRemovalConfirmation ? (
-                <>
-                    <p>Produkt {data.nazwa} zostanie usunięty, kontynuować?</p>
-                    <button onClick={useProduct.confirmRemoval}>DO KOSZA</button>
-                    <button onClick={useProduct.declineRemoval}>ZOSTAW</button>
-                </>
+                <div className="moveToBinConfirmationDiv">
+                    <h1 className="moveToBinConfirmationInfoHeader">Produkt {data.nazwa} zostanie przeniesiony do kosza,
+                        kontynuować?</h1>
+                    <div className="moveToBinConfirmationButtons">
+                        <button onClick={useProduct.confirmRemoval} className="moveToBinConfirmationButton"><h2>DO KOSZA</h2></button>
+                        <button onClick={useProduct.declineRemoval} className="moveToBinDeclineButton"><h2>ZOSTAW</h2></button>
+                    </div>
+                </div>
             ) : (
-                <div className={`card ${!info ? 'hidden' : ''}`} >
+                <div className={`card`} >
 
                     <div ><h2>{data.nazwa}</h2></div>
                     <div><h3>Cena: {data.cena}</h3></div>

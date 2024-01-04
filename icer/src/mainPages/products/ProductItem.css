@@ -4,52 +4,63 @@
     position: relative;
 
     flex: 1 0 35%;
+
     margin: 0.4vh 0.2vw;
     background-color: #f5f5f5;
     border: 1px solid #ddd;
     border-radius: 4px;
     padding: calc(1vw + 1vh);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    font-weight: bold;
+
     background-size: 100% 100%;
-    background-position: center;  /* Ustala, że obraz ma być wyśrodkowany */
-    backdrop-filter:blur();
+    background-position: center; /* Ustala, że obraz ma być wyśrodkowany */
+    backdrop-filter: blur();
 }
-.productItemSmall.selected {
-    flex: 1 0 80%; /* Zajmuj całą szerokość dla powiększonego produktu */
-    /* Pozostałe style dla powiększonego produktu */
 
 
-    transition: all 0.3s ease; /* Płynna animacja */
+.LargeProductItemContainer {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
 }
 
 .productItemSmall.hidden {
     display: none; /* Ukryj produkt */
 }
+
+.productItemSmallContainer {
+
+
+}
+
 .productItemSmall {
 
     position: relative;
 
-    flex: 0 1 5%;
+    flex: 0 1 8vw;
+    height: 20%;
     margin: 0.4vh 0.2vw;
     background-color: #f5f5f5;
     border: 1px solid #ddd;
     border-radius: 4px;
     padding: calc(1vw + 1vh);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    font-weight: bold;
+
     background-size: 100% 100%;
-    background-position: center;  /* Ustala, że obraz ma być wyśrodkowany */
-    backdrop-filter:blur();
+    background-position: center; /* Ustala, że obraz ma być wyśrodkowany */
+    backdrop-filter: blur();
 }
-.productItemSmall.big {
-    /* Style dla powiększonego produktu */
-    flex: 1 0 100%; /* Zajmuj całą szerokość */
+
+.productItemSmall.selected {
+    display: flex;
+    flex: 1 0 80%; /* Zajmuj całą szerokość dla powiększonego produktu */
+    /* Pozostałe style dla powiększonego produktu */
+    position: relative;
+
+    height: 100%;
     transition: all 0.3s ease; /* Płynna animacja */
-    /* Pozostałe style */
-}
-.productItemSmall.big {
-    display: block; /* Ukryj pozostałe produkty tylko gdy inny produkt jest powiększony */
 }
 
 
@@ -63,6 +74,7 @@
     backdrop-filter: blur(5px); /* Dostosuj wartość blura według potrzeb */
     z-index: -1; /* Umieść pod elementem .productItem */
 }
+
 
 .productItemSmall.hidden:after {
     content: "";
@@ -86,8 +98,69 @@
     z-index: -1; /* Umieść pod elementem .productItem */
 }
 
+.moveToBinConfirmationDiv {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 
-.card.hidden{
+
+}
+
+.moveToBinConfirmationInfoHeader {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 85%;
+    width: 100%;
+
+
+}
+
+.moveToBinConfirmationButtons {
+    position: relative;
+    display: flex;
+    justify-content: space-evenly;
+    height: 15%;
+    width: 100%;
+}
+
+.moveToBinConfirmationButton, .moveToBinDeclineButton {
+    width: 50%;
+    height: 100%;
+}
+
+.moveToBinConfirmationButton {
+    background-color: red;
+    text-align: center;
+    border-radius: 4px;
+
+    margin-right: 1vw;
+}
+
+.moveToBinDeclineButton {
+    background-color: #4caf50;
+    text-align: center;
+    border-radius: 4px;
+
+}
+
+.moveToBinConfirmationButton:hover {
+    background-color: #D9214CFF;
+
+}
+
+.moveToBinDeclineButton:hover {
+    background-color: #45a049;
+
+}
+
+.card {
+
+
+}
+
+.card.hidden {
     visibility: hidden;
 }
 
@@ -126,7 +199,7 @@
 .productItemQuantityDiv {
     display: flex;
     align-items: center;
-    justify-content:center;
+    justify-content: center;
 }
 
 .quantityControl {
@@ -134,6 +207,7 @@
     align-items: center;
     margin-left: 0.5vw;
 }
+
 .quantityControlLarge {
     display: flex;
     align-items: center;
@@ -155,10 +229,12 @@
     background-color: #D9214CFF;
     transform: scale(1.1);
 }
-.increaseProduct:hover{
+
+.increaseProduct:hover {
     background-color: #45a049;
     transform: scale(1.1);
 }
+
 .decreaseProduct .iconifyIcon, .increaseProduct .iconifyIcon {
     /* Dodaj przejście dla płynnego efektu */
     transition: transform 0.3s ease;
@@ -168,10 +244,11 @@
     /* Zastosuj transformację skalowania podczas najechania */
     transform: scale(1.4); /* Przykład: powiększa ikonę do 120% jej pierwotnego rozmiaru */
 }
+
 .iconContainer {
     display: flex;
 
-     gap: 0.5vw;
+    gap: 0.5vw;
 }
 
 .removeButton, .editButton {
@@ -183,6 +260,7 @@
     padding: calc(0.2vw + 0.2vh) calc(0.4vw + 0.4vh);
     border-radius: 4px;
 }
+
 .removeButton {
     background-color: red;
 
@@ -201,10 +279,12 @@
     width: 100%; /* Ustawić szerokość ikony na 100% */
     height: 100%; /* Ustawić wysokość ikony na 100% */
 }
-.removeButton:hover{
+
+.removeButton:hover {
     background-color: #D9214CFF;
 
 }
+
 .editButton:hover {
     background-color: #45a049; /* Kolor tła podczas najechania */
 }
@@ -214,22 +294,24 @@
 }
 
 .iconifyIcon {
-    vertical-align: middle;  /* wyśrodkowuje ikony w przyciskach */
+    vertical-align: middle; /* wyśrodkowuje ikony w przyciskach */
 }
-
 
 
 @media only screen and (max-width: 600px) {
     .productItem {
-        flex: 1 0 90%;  /* Zajmij całą dostępną szerokość kontenera */
+        flex: 1 0 90%; /* Zajmij całą dostępną szerokość kontenera */
     }
+
     .productItem h2 {
         font-size: calc(1.2vw + 1.2vh);
         margin-bottom: 1vh;
     }
+
     .productItem div {
         margin: 0.8vh 0;
     }
+
     .productItem button {
         padding: 1vh 2vh;
     }

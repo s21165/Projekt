@@ -39,33 +39,136 @@
     width:3vw;
 
 }
-
-
-.light {
-    position: absolute;
-    top:35%;
-    left: 25%;
-    width: 35%;
-    height: 42%;
-    background-color: #fff;
-    border-radius: 66%;
-    opacity: 0;
-    transition: opacity 1.5s;
-    box-shadow: 0 0 1em #f1c40f;
+.bulb::before{
+    content: '';
+    position:absolute;
+    top:-50px;
+    left:23px;
+    width:35px;
+    height:80px;
+    background:#444;
+    border-top:30px solid #000;
+    border-radius: 10px;
+    z-index: 100;
 }
+/*.light {*/
+/*    position: absolute;*/
+/*    top:35%;*/
+/*    left: 25%;*/
+/*    width: 35%;*/
+/*    height: 42%;*/
+/*    background-color: #fff;*/
+/*    border-radius: 66%;*/
+/*    opacity: 0;*/
+/*    transition: opacity 1.5s;*/
+/*    box-shadow: 0 0 1em #f1c40f;*/
+/*}*/
 
 .bulb{
     height: 100%;
     width: 100%;
-
+    border-radius:50%;
 
 }
 .light-bulb.on .light {
     opacity: 0.8;
-    background-color: #fac87b;
-    box-shadow: 0 0 1em #f1c40f;
+    width:1vw;
+    height:1vh;
+    box-shadow: 0 0 1vw #f1c40f,
+    0 0 2vw #f1c40f,
+    0 0 3vw #f1c40f,
+    0 0 4vw #f1c40f,
+    0 0 5vw #f1c40f,
+    0 0 6vw #f1c40f;
+
 }
 .light-bulb.on .bulb {
-    box-shadow: 0 0 3em #f1c40f;
-    background-color: #fdf2d7;
+    background-color: #f1c40f;
+
+    box-shadow:
+    -1vh 0 2vw #f1c40f,
+    -2vh 0 3vw #f1c40f,
+    -3vh 0 4vw #f1c40f,
+    -4vh 0 5vw #f1c40f,
+    -5vh 0 6vw #f1c40f,
+    -3vh -1vh 7vw #f1c40f,
+    -2vh -2vh 8vw #f1c40f,
+    0 0 1vw #f1c40f,
+    0 0 2vw #f1c40f,
+    0 0 3vw #f1c40f,
+    0 0 4vw #f1c40f,
+    0 0 5vw #f1c40f,
+    0 0 6vw #f1c40f,
+    0 0 7vw #f1c40f,
+    0 0 8vw #f1c40f,
+    0 1vw 2vw #f1c40f,
+    0 2vw 3vw #f1c40f,
+    0 3vw 4vw #f1c40f,
+    0 4vw 5vw #f1c40f,
+    1vw 0 7vw #f1c40f,
+    2vw 0 9vw #f1c40f,
+    -1vw 0 9vw #f1c40f,
+    -2vw 0 13vw #f1c40f,
+    -3vw 0 16vw #f1c40f,
+    -1vw 1vh 2vw #f1c40f,
+    -5vw 2vh 5vw #f1c40f,
+    -7vw 4vh 7vw #f1c40f;
+
+
+
+}
+
+
+@media only screen and (max-width: 1200px) {
+
+    .bulb{
+        height: 125%;
+        width: 125%;
+        border-radius:50%;
+
+    }
+    .light-bulb{
+
+        right:1vw;
+
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+
+    .bulb{
+        height: 130%;
+        width: 130%;
+        border-radius:50%;
+
+    }
+    .light-bulb{
+
+        right:1vw;
+
+    }
+    .light-bulb.left{
+
+        left:1vw;
+
+    }
+}
+@media only screen and (max-width: 600px) {
+
+    .bulb{
+        height: 150%;
+        width: 150%;
+        border-radius:50%;
+
+    }
+    .light-bulb{
+
+        right:1vw;
+
+    }
+    .light-bulb.left{
+
+        left:1vw;
+
+    }
 }

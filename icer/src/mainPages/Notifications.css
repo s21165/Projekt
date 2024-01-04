@@ -1,26 +1,32 @@
 
 .notificationsList {
-    position:absolute;
+    position:relative;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    max-height:89vh; /* Przykładowa maksymalna wysokość */
+    overflow-y: auto; /* Umożliwienie przewijania */
 }
 .notificationsList.small {
     position:absolute;
     top:4vh;
     right:1vw;
-    width: 20%;
+    width: 25%;
     border-radius:5px ;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.3);
+
     padding: 2px;
 
+}
+.notificationListForBig{
+    position:relative;
+    height:89vh;
 }
 
 
@@ -30,53 +36,108 @@
     position:absolute;
     top:4vh;
     left:1vw;
-    width: 20%;
+    width: 30%;
     border-radius:5px ;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.3);
+
 
 }
 .notificationProductDiv {
     width: 100%;
     margin-bottom: 1px;
+    background-color: rgba(255, 255, 255, 0.5); /* Przeźroczystość */
+
 }
 
 .notificationsNameDiv {
     width: 100%;
+    display: flex; /* Użycie Flexbox */
+    justify-content: space-between;
     background-color: #7fb0d5;
     cursor: pointer;
     padding: 10px 0 10px 0;
     border-bottom: 1px solid gray;
     text-align: center;
+    border-radius: 10px;
+    align-items: center;
+}
+.notificationText {
+    flex-grow: 1; /* Powoduje, że tekst zajmuje dostępną przestrzeń, wyśrodkowując go */
+    text-align: center;
 }
 
 .notificationsList p {
-    background-color: #deeffc;
+
     margin: 5px 0;
 
     text-align: center;
     width: 100%;
-
+    border-radius: 10px;
     overflow: hidden;
     transition: max-height 3s ease-in-out; /* Dodanie animacji */
+
 }
 
 /* Styl dla rozwiniętego produktu */
 .notificationProductDiv.expanded p {
     max-height: 500px; /* Przykładowa wartość, można dostosować */
+
+
 }
 .notificationsProductInfo {
+
     max-height: 0;
     overflow: hidden;
     opacity: 0;
     transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+
 }
+
 
 .notificationsProductInfo.expanded {
     max-height: 500px; /* Możesz dostosować tę wartość w zależności od potrzeb */
     opacity: 1;
     transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+
+}
+
+.notificationIcons{
+    display: flex;
+
+    justify-content:flex-end;
+
+}
+.notificationAlertIcon, .notificationDeleteIcon{
+    height:3vh;
+    display:flex;
+    justify-content: space-between;
+    width:3vw;
+}
+.notificationAlertIcon{
+    color:red;
+
+}
+
+.manageButtons {
+    position: sticky;
+    bottom: 0; /* Przyklejenie do dołu kontenera */
+    display: flex;
+    height:10vh;
+    justify-content: space-around;
+    width: 100%;
+
+}
+.handleReadAllButton,.handleDeleteAllButton{
+
+    width:100%;
+    height:100%;
+
+}
+
+.handleReadAllButton:hover,.handleDeleteAllButton:hover{
+
+    background-color: #ADD8E6;
 }

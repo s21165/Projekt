@@ -24,7 +24,7 @@ export function GetBorderStyle(data, filter, int) {
             if (filter === 'old') {
                 borderStyle = `${int}px solid black`;
             }
-            console.log(borderStyle)
+
             return borderStyle;
         }
 
