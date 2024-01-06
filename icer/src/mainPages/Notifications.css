@@ -26,7 +26,14 @@
 }
 .notificationListForBig{
     position:relative;
-    height:89vh;
+    display:flex;
+    height:88vh;
+
+    margin: 1vh 1vw 0 1vh;
+    justify-content: center;
+
+
+
 }
 
 
@@ -120,24 +127,36 @@
     color:red;
 
 }
+.spaceBetweenButtonsAndNotifications{
+    position:sticky;
+    bottom:1vh;
+    height:0.5vh;
 
+}
 .manageButtons {
     position: sticky;
     bottom: 0; /* Przyklejenie do dołu kontenera */
     display: flex;
     height:10vh;
     justify-content: space-around;
-    width: 100%;
+
+    margin: 0 1vw 0.5vh 1vh;
+
+    align-items: center;
 
 }
 .handleReadAllButton,.handleDeleteAllButton{
+    position: relative;
 
+    background-color: #deeffc;
     width:100%;
     height:100%;
-
+    border-radius: 10px;
 }
-
+.handleReadAllButton{
+    margin-right:1vw;
+}
 .handleReadAllButton:hover,.handleDeleteAllButton:hover{
 
-    background-color: #ADD8E6;
+    background-color: #38729d;
 }

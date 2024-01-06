@@ -55,7 +55,7 @@ button {  /* resetting button styles */
 .body {
     margin:auto;
     width: 100vw;
-    height: 100vh;
+    height: 99vh;
     position: relative;
     display: grid;
     
@@ -67,7 +67,7 @@ button {  /* resetting button styles */
 .body-slimMenu {
     margin:auto;
     width: 100vw;
-    height: 100vh;
+    height: 99vh;
     position: relative;
     display: grid;
 
@@ -81,6 +81,8 @@ button {  /* resetting button styles */
     grid-area: all;
     text-align: center;
     background-color: white;
+    width:100%;
+    height:100%;
 }
 .slimMenu{
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);

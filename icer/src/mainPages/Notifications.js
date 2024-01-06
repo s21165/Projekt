@@ -34,6 +34,7 @@ export function Notifications({small, left}) {
                         <div className="notificationListForBig">
                             <NotificationsList data={productDataNoFilter.data}/>
                         </div>
+                        <div className="spaceBetweenButtonsAndNotifications"></div>
                         <div className="manageButtons">
                             <button onClick={handleReadAll} className="handleReadAllButton"><h2>Odczytaj wszystkie</h2></button>
                             <button onClick={handleDeleteAll} className="handleDeleteAllButton"><h2>Usuń wszystkie</h2></button>

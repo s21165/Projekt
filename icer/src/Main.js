@@ -24,6 +24,7 @@ import Login from "./mainPages/account/Login";
 import Help from "./mainPages/Help";
 import ChatContainer from "./mainPages/chatBot/ChatContainer";
 import {AuthContext} from "./mainPages/account/auth-context";
+import {ShoppingCart} from "./mainPages/products/ShoppingCart";
 
 
 function Main() {
@@ -80,7 +81,7 @@ function Main() {
                             <Route path="/Produkty" element={<Products/>}/>
                             <Route path="/edycjaKonta" element={<EditAccount/>}/>
                             <Route path="/" element={<Fridge/>}/>
-                            <Route path="/ListaZakupow" element={<Shopping/>}/>
+                            <Route path="/ListaZakupow" element={<ShoppingCart/>}/>
                             <Route path="/Sklepy" element={<Shops/>}/>
                             <Route path="/Konto" element={<Account/>}/>
                             <Route path="/Powiadomienia" element={<Notifications/>}/>
@@ -121,12 +122,15 @@ function Main() {
                                 <div className={secoundMenu ? "visible" : "invisible"}>
 
                                     <div className="menuNav">
-                                        <Link to="/Sklepy">
-                                            <div className="navDivMain">
-                                                {isIcon ? <h3>sklepy</h3> :
-                                                    <Icon className="menuIcons" icon="mdi:shop-find"/>}
+
+                                        <Link to="/Powiadomienia">
+                                            <div className="navDiv">
+                                                {isIcon ? <h3> powiadomienia</h3> :
+                                                    <Icon className="menuIcons"
+                                                          icon="ic:baseline-notifications"/>}
                                             </div>
                                         </Link>
+
                                         <Link to="/Ustawienia">
                                             <div className="navDivMain">
                                                 {isIcon ? <h3>ustawienia</h3> :
@@ -135,23 +139,17 @@ function Main() {
                                             </div>
                                         </Link>
 
+                                        <Link to="/Konto">
+                                            <div className="navDiv">
+                                                {isIcon ? <h3>konto</h3> : <Icon className="menuIcons"
+                                                                                 icon="material-symbols:account-circle-outline"/>}
+                                            </div>
+                                        </Link>
+
                                         <Link to="/Pomoc">
                                             <div className="navDivMain">
                                                 {isIcon ? <h3>pomoc</h3> :
                                                     <Icon className="menuIcons" icon="solar:help-linear"/>}
-                                            </div>
-                                        </Link>
-                                        <Link to="/Produkty">
-                                            <div className="navDivMain">
-                                                {isIcon ? <h3>produkty</h3> :
-                                                    <Icon className="menuIcons"
-                                                          icon="streamline:shopping-bag-hand-bag-1-shopping-bag-purse-goods-item-products"/>}
-                                            </div>
-                                        </Link>
-                                        <Link to="/dodajProdukt">
-                                            <div className="navDivMain">
-                                                {isIcon ? <h3>dodaj produkt</h3> :
-                                                    <Icon className="menuIcons" icon="fluent:add-28-filled"/>}
                                             </div>
                                         </Link>
 
@@ -166,12 +164,6 @@ function Main() {
                                                     <Icon className="menuIcons" icon="mdi:menu-up-outline"/>}
                                             </div>
                                         </button>
-
-
-                                            <div className="navDivMain" onClick={handleLogout}>
-                                                {isIcon ? <h3>Wyloguj</h3> :
-                                                    <Icon className="menuIcons" icon="grommet-icons:logout"/>}
-                                            </div>
 
                                     </div>
                                 </div>
@@ -192,25 +184,20 @@ function Main() {
                                                           icon="material-symbols:history-rounded"/>}
                                             </div>
                                         </Link>
-                                        <Link to="/Sklepy">
-                                            <div className="navDiv">
-                                                {isIcon ? <h3>sklepy</h3> :
-                                                    <Icon className="menuIcons" icon="mdi:shop-find"/>}
+                                        <Link to="/dodajProdukt">
+                                            <div className="navDivMain">
+                                                {isIcon ? <h3>dodaj produkt</h3> :
+                                                    <Icon className="menuIcons" icon="fluent:add-28-filled"/>}
                                             </div>
                                         </Link>
-                                        <Link to="/Konto">
-                                            <div className="navDiv">
-                                                {isIcon ? <h3>konto</h3> : <Icon className="menuIcons"
-                                                                                 icon="material-symbols:account-circle-outline"/>}
-                                            </div>
-                                        </Link>
-                                        <Link to="/Powiadomienia">
-                                            <div className="navDiv">
-                                                {isIcon ? <h3> powiadomienia</h3> :
+                                        <Link to="/Produkty">
+                                            <div className="navDivMain">
+                                                {isIcon ? <h3>produkty</h3> :
                                                     <Icon className="menuIcons"
-                                                          icon="ic:baseline-notifications"/>}
+                                                          icon="streamline:shopping-bag-hand-bag-1-shopping-bag-purse-goods-item-products"/>}
                                             </div>
                                         </Link>
+
                                         <button className="menuNavButton"
                                                 onClick={() => {
                                                     setSecoundMenu(!secoundMenu)
@@ -222,6 +209,11 @@ function Main() {
 
                                             </div>
                                         </button>
+                                        <div className="navDivMain" onClick={handleLogout}>
+                                            {isIcon ? <h3>Wyloguj</h3> :
+                                                <Icon className="menuIcons" icon="grommet-icons:logout"/>}
+                                        </div>
+
 
                                     </div>
 
