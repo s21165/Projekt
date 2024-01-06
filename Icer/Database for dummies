@@ -24,6 +24,22 @@ CREATE TABLE Produkty (
   kategoria VARCHAR(50),
 );
 
+CREATE TABLE Icer (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT,
+    produktID INT,
+    ilosc INT,
+    trzecia_wartosc TINYINT CHECK (trzecia_wartosc >= 0 AND trzecia_wartosc <= 4),
+    data_waznosci DATE,
+    data_otwarcia DATE,
+    default_photo TINYINT(1) DEFAULT 1,
+    powiadomienie TINYINT,
+    FOREIGN KEY (UserID) REFERENCES Users (id),
+    FOREIGN KEY (produktID) REFERENCES Produkty (id)
+);
+
+
+
 CREATE TABLE Photos (
   id INT PRIMARY KEY AUTO_INCREMENT,
   produktID INT,
@@ -41,31 +57,6 @@ CREATE TABLE UserPhotos (
   FOREIGN KEY (userID) REFERENCES Users (id)
 );
 
-
-DELIMITER $$
-
-CREATE FUNCTION PobierzLokalizacjeZdjecia(icID INT) RETURNS VARCHAR(255)
-BEGIN
-    DECLARE zdjDomyslne BOOLEAN;
-    DECLARE zdjecieLokalizacja VARCHAR(255);
-
-    SELECT zdjecie_domyslne INTO zdjDomyslne FROM Icer WHERE id = icID;
-
-    IF zdjDomyslne THEN
-        SELECT lokalizacja INTO zdjecieLokalizacja
-        FROM Photos
-        JOIN Icer ON Photos.produktID = Icer.produktID
-        WHERE Icer.id = icID;
-    ELSE
-        SELECT lokalizacja INTO zdjecieLokalizacja
-        FROM UserPhotos
-        WHERE produktID = (SELECT produktID FROM Icer WHERE id = icID);
-    END IF;
-
-    RETURN zdjecieLokalizacja;
-END$$
-
-DELIMITER ;
 
 
 DELIMITER //
@@ -96,17 +87,7 @@ DELIMITER ;
 
 
 
-CREATE TABLE Icer (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    UserID INT,
-    produktID INT,
-    ilosc INT,
-    trzecia_wartosc TINYINT CHECK (trzecia_wartosc >= 1 AND trzecia_wartosc <= 4),
-    data_waznosci DATE,
-    zdjecie_domyslne BOOLEAN DEFAULT true,
-    FOREIGN KEY (UserID) REFERENCES Users (id),
-    FOREIGN KEY (produktID) REFERENCES Produkty (id)
-);
+
 
 
 DELIMITER //
@@ -114,7 +95,7 @@ CREATE PROCEDURE UpdateTrzeciaWartosc()
 BEGIN
     -- Flagowanie produktów, które już wygasły
     UPDATE Icer
-    SET trzecia_wartosc = 1
+    SET trzecia_wartosc = 0
     WHERE DATE(data_waznosci) < DATE(NOW());
 
     -- Flagowanie produktów z 1 dniem do końca ważności
@@ -137,4 +118,33 @@ BEGIN
     SET trzecia_wartosc = 4
     WHERE DATE(data_waznosci) > DATE(NOW() + INTERVAL 7 DAY) ;
 END //
+DELIMITER ;
+
+
+
+
+-- not used
+DELIMITER $$
+
+CREATE FUNCTION PobierzLokalizacjeZdjecia(icID INT) RETURNS VARCHAR(255)
+BEGIN
+    DECLARE zdjDomyslne BOOLEAN;
+    DECLARE zdjecieLokalizacja VARCHAR(255);
+
+    SELECT zdjecie_domyslne INTO zdjDomyslne FROM Icer WHERE id = icID;
+
+    IF zdjDomyslne THEN
+        SELECT lokalizacja INTO zdjecieLokalizacja
+        FROM Photos
+        JOIN Icer ON Photos.produktID = Icer.produktID
+        WHERE Icer.id = icID;
+    ELSE
+        SELECT lokalizacja INTO zdjecieLokalizacja
+        FROM UserPhotos
+        WHERE produktID = (SELECT produktID FROM Icer WHERE id = icID);
+    END IF;
+
+    RETURN zdjecieLokalizacja;
+END$$
+
 DELIMITER ;

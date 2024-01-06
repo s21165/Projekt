@@ -4,6 +4,8 @@ import requests
 from dotenv import load_dotenv
 import bcrypt
 from apscheduler.schedulers.background import BackgroundScheduler
+import base64
+from json import JSONEncoder
 
 from modules import value_manager
 from node_modules.database_connector import DatabaseConnector
@@ -169,7 +171,6 @@ def reset_product_quantity():
             cursor.close()
         if connection:
             connection.close()
-
 
 
 @app.route('/api/subtract_product', methods=['POST'])
@@ -370,10 +371,6 @@ def add_product():
             connection.close()
 
 
-
-
-
-
 @app.route('/api/edit_product/<int:product_id>', methods=['PUT'])
 def edit_product(product_id):
     try:
@@ -464,6 +461,77 @@ def get_icer_shopping():
             cursor.close()
 
 
+@app.route('/api/Icer/get_filtered_products', methods=['POST'])
+def get_filtered_products():
+    try:
+        db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+        db_connector.connect()
+
+        scheduler = BackgroundScheduler()
+        scheduler.add_job(run_daily_procedure, 'interval', seconds=60)
+        scheduler.start()
+
+        connection = db_connector.get_connection()
+        if not connection:
+            raise ConnectionError("Failed to establish a connection with the database.")
+
+        cursor = connection.cursor(dictionary=True)
+        if not cursor:
+            raise Exception("Failed to create a cursor for the database.")
+
+        data = request.get_json()
+        received_session_id = data.get('sessionId', None)
+        if not received_session_id:
+            raise ValueError("Session ID not provided")
+
+        if 'username' not in session:
+            raise PermissionError("User not logged in")
+
+        username = session['username']
+        user_query = "SELECT id FROM Users WHERE username = %s"
+        cursor.execute(user_query, (username,))
+        user_result = cursor.fetchone()
+        if not user_result:
+            raise LookupError("User not found")
+
+        user_id = user_result['id']
+
+        query = """
+            SELECT Icer.id, Icer.UserID, Icer.produktID, Icer.ilosc, 
+            Icer.data_waznosci, Icer.trzecia_wartosc, Icer.default_photo,
+            IF(Icer.default_photo = 1, Photos.lokalizacja, UserPhotos.lokalizacja) AS zdjecie_lokalizacja,
+            Produkty.nazwa, Produkty.cena, Produkty.kalorie,
+            Produkty.tluszcze, Produkty.weglowodany, Produkty.bialko,
+            Produkty.kategoria
+            FROM Icer
+            INNER JOIN Produkty ON Icer.produktID = Produkty.id
+            LEFT JOIN Photos ON Icer.produktID = Photos.produktID
+            LEFT JOIN UserPhotos ON Icer.produktID = UserPhotos.produktID AND UserPhotos.userID = %s
+            WHERE Icer.UserID = %s AND Icer.trzecia_wartosc <= 2
+        """
+        cursor.execute(query, (user_id, user_id))
+        results = cursor.fetchall()
+
+        filtered_results = [result for result in results]
+
+        return jsonify(filtered_results)
+
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except PermissionError as pe:
+        return jsonify({"error": str(pe)}), 401
+    except LookupError as le:
+        return jsonify({"error": str(le)}), 404
+    except ConnectionError as ce:
+        return jsonify({"error": str(ce)}), 500
+    except Exception as error:
+        current_app.logger.error(f"Unexpected error: {error}")
+        return jsonify({"error": "Unexpected server error"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+
+
 @app.route('/api/productsRedFlag', methods=['POST', 'GET'])
 def get_products_with_red_flag():
     print("test?")
@@ -549,9 +617,9 @@ def get_icer():
     scheduler = BackgroundScheduler()
     scheduler.add_job(run_daily_procedure, 'interval', seconds=60)
     scheduler.start()
-    print("wjaaat?")
 
     try:
+
         # Uzyskanie połączenia z bazą danych
         connection = db_connector.get_connection()
         if not connection:
@@ -563,12 +631,17 @@ def get_icer():
 
         data = request.get_json()
 
-        # Walidacja sesji i upewnienie się, że użytkownik jest zalogowany
+        # Upewnienie się co do sesji
         received_session_id = data.get('sessionId', None)
-        if not received_session_id or 'username' not in current_app.session:
-            raise PermissionError("Invalid session or user not logged in")
+        if not received_session_id:
+            raise ValueError("Session ID not provided")
 
-        username = current_app.session['username']
+        # Jeśli użytkownik nie jest zalogowany
+        if 'username' not in session:
+            raise PermissionError("User not logged in")
+
+        # Pobranie ID aktualnie zalogowanego użytkownika
+        username = session['username']
 
         user_query = "SELECT id FROM Users WHERE username = %s"
         cursor.execute(user_query, (username,))
@@ -576,24 +649,32 @@ def get_icer():
         if not user_result:
             raise LookupError("User not found")
 
+        # Modyfikacja zapytania SQL, aby pokazywać wszystkie informacje o produkcie
         user_id = user_result['id']
-
         query = """
-                SELECT Icer.id, Icer.UserID, Icer.produktID, Icer.ilosc, 
-                       Icer.data_waznosci, Icer.trzecia_wartosc,
-                       Produkty.nazwa, Produkty.cena, Produkty.kalorie,
-                       Produkty.tluszcze, Produkty.weglowodany, Produkty.bialko,
-                       Produkty.kategoria
-                FROM Icer
-                INNER JOIN Produkty ON Icer.produktID = Produkty.id
-                WHERE Icer.UserID = %s
-            """
-        cursor.execute(query, (user_id,))
+            SELECT Icer.id, Icer.UserID, Icer.produktID, Icer.ilosc, 
+            Icer.data_waznosci, Icer.trzecia_wartosc, Icer.default_photo,
+            IF(Icer.default_photo = 1, Photos.lokalizacja, UserPhotos.lokalizacja) AS zdjecie_lokalizacja,
+            Produkty.nazwa, Produkty.cena, Produkty.kalorie,
+            Produkty.tluszcze, Produkty.weglowodany, Produkty.bialko,
+            Produkty.kategoria
+            FROM Icer
+            INNER JOIN Produkty ON Icer.produktID = Produkty.id
+            LEFT JOIN Photos ON Icer.produktID = Photos.produktID
+            LEFT JOIN UserPhotos ON Icer.produktID = UserPhotos.produktID AND UserPhotos.userID = %s
+            WHERE Icer.UserID = %s
+        """
+        cursor.execute(query, (user_id, user_id))
         results = cursor.fetchall()
 
-        # Pobranie lokalizacji zdjęć z użyciem funkcji get_photos
         for result in results:
-            result['zdjecie_lokalizacja'] = get_photos(result['produktID'], connection)
+            zdjecie_lokalizacja = result['zdjecie_lokalizacja']
+            if zdjecie_lokalizacja:
+                # Tutaj zdjecie_lokalizacja będzie zawierać lokalizację zdjęcia z odpowiedniej tabeli
+                print(zdjecie_lokalizacja)
+            else:
+                # Obsługa, gdy lokalizacja zdjęcia nie została znaleziona
+                print("Brak lokalizacji zdjęcia")
 
         return jsonify(results)
 
@@ -606,8 +687,132 @@ def get_icer():
     except ConnectionError as ce:
         return jsonify({"error": str(ce)}), 500
     except Exception as error:
+        # Tutaj możemy logować błąd w bardziej szczegółowy sposób
         current_app.logger.error(f"Unexpected error: {error}")
         return jsonify({"error": "Unexpected server error"}), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+
+
+@app.route('/api/Icer/delete_user_notifications', methods=['POST'])
+def delete_user_notifications():
+    try:
+        # Tworzenie instancji klasy DatabaseConnector
+        db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+
+        # Łączenie z bazą danych
+        db_connector.connect()
+
+        data = request.get_json()
+
+        # Upewnienie się co do sesji
+        received_session_id = data.get('sessionId', None)
+        if not received_session_id:
+            raise ValueError("Session ID not provided")
+
+        # Jeśli użytkownik nie jest zalogowany
+        if 'username' not in session:
+            raise PermissionError("User not logged in")
+
+        # Pobranie ID aktualnie zalogowanego użytkownika
+        username = session['username']
+
+        # Pobranie ID użytkownika z bazy danych na podstawie nazwy użytkownika
+        connection = db_connector.get_connection()
+        cursor = connection.cursor(dictionary=True)
+        user_query = "SELECT id FROM Users WHERE username = %s"
+        cursor.execute(user_query, (username,))
+        user_result = cursor.fetchone()
+
+        if not user_result:
+            raise LookupError("User not found")
+
+        user_id = user_result['id']
+
+        # Usunięcie powiadomień danego użytkownika
+        delete_notifications_query = "DELETE FROM Powiadomienia WHERE UserID = %s"
+        cursor.execute(delete_notifications_query, (user_id,))
+        connection.commit()
+
+        return jsonify({"message": "User notifications deleted successfully"})
+
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except PermissionError as pe:
+        return jsonify({"error": str(pe)}), 401
+    except LookupError as le:
+        return jsonify({"error": str(le)}), 404
+    except ConnectionError as ce:
+        return jsonify({"error": str(ce)}), 500
+    except Exception as error:
+        # Tutaj możemy logować błąd w bardziej szczegółowy sposób
+        current_app.logger.error(f"Unexpected error: {error}")
+        return jsonify({"error": "Unexpected server error"}), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
+
+
+@app.route('/api/Icer/delete_notification/<notification_id>', methods=['DELETE'])
+def delete_notification(notification_id):
+    try:
+        # Tworzenie instancji klasy DatabaseConnector
+        db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+
+        # Łączenie z bazą danych
+        db_connector.connect()
+
+        data = request.get_json()
+
+        # Upewnienie się co do sesji
+        received_session_id = data.get('sessionId', None)
+        if not received_session_id:
+            raise ValueError("Session ID not provided")
+
+        # Jeśli użytkownik nie jest zalogowany
+        if 'username' not in session:
+            raise PermissionError("User not logged in")
+
+        # Pobranie ID aktualnie zalogowanego użytkownika
+        username = session['username']
+
+        # Pobranie ID użytkownika z bazy danych na podstawie nazwy użytkownika
+        connection = db_connector.get_connection()
+        cursor = connection.cursor(dictionary=True)
+        user_query = "SELECT id FROM Users WHERE username = %s"
+        cursor.execute(user_query, (username,))
+        user_result = cursor.fetchone()
+
+        if not user_result:
+            raise LookupError("User not found")
+
+        user_id = user_result['id']
+
+        # Usunięcie powiadomienia o danym ID dla danego użytkownika
+        delete_notification_query = "DELETE FROM Powiadomienia WHERE UserID = %s AND id = %s"
+        cursor.execute(delete_notification_query, (user_id, notification_id))
+        connection.commit()
+
+        return jsonify({"message": f"Notification with ID {notification_id} deleted successfully"})
+
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except PermissionError as pe:
+        return jsonify({"error": str(pe)}), 401
+    except LookupError as le:
+        return jsonify({"error": str(le)}), 404
+    except ConnectionError as ce:
+        return jsonify({"error": str(ce)}), 500
+    except Exception as error:
+        # Tutaj możemy logować błąd w bardziej szczegółowy sposób
+        current_app.logger.error(f"Unexpected error: {error}")
+        return jsonify({"error": "Unexpected server error"}), 500
+
     finally:
         if cursor:
             cursor.close()
@@ -625,6 +830,7 @@ def get_photos(ic_id, db_connector):
         return result['zdjecie_lokalizacja']
     finally:
         cursor.close()
+
 
 # Funkcja do pobierania zdjęć tylko
 def get_photos_only():
