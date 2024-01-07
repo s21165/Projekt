@@ -37,9 +37,9 @@ export function Shopping() {
     }, []);
 
     return (
-        <>
+        <div >
             <ShoppingList data={data} />
 
-        </>
+        </div>
     );
 }

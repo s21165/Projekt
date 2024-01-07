@@ -1,26 +1,32 @@
-import {useState} from "react";
+import React, {useState} from "react";
 import {GetBorderStyle} from "./products/GetBorderStyle";
-import './Notifications.css'
+import './ShoppingList.css'
 import {Icon} from "@iconify/react";
 
-export function ShoppingList({ data}) {
-
-
+export function ShoppingList({data}) {
     return (
-
-    <>
-    {data && data.map(product => (
-        <div className="shoppingList">
+        <>
             <div>
-                {/*<h1>{product.nazwa}</h1>*/}
-                {/*<h2>{product.ilosc}</h2>*/}
-                {/*<h2>{product.cena}</h2>*/}
+                {data?.map((item, index) => (
+                    <div className="shoppingList" key={index}>
 
+
+                        <h2 className="shoppingListName">{item.nazwa}</h2>
+                        <h3 className="shoppingListQuantity">ilość: {item.ilosc}</h3>
+                        <h3 className="shoppingListPrice">cena: {item.cena}zł</h3>
+                        <div className="shoppingListSpace">
+
+                        </div>
+                        <button className="shoppingListDeleteIconButton">
+                            <Icon className="shoppingListDeleteIcon"
+                                  icon="octicon:x-24"
+                            />
+                        </button>
+
+                    </div>
+                ))}
             </div>
 
-
-        </div>
-    ))}
-    </>
+        </>
     );
 }

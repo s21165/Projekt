@@ -13,7 +13,7 @@ function Products() {
 
     const [filter, setFilter] = useState('current');
 
-    const productData = useProductsData(filter)
+    const productData = useProductsData(filter);
     const [editingProduct, setEditingProduct] = useState(null);
     const productActions = useProductActions(
         productData.refresh,

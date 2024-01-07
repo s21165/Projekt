@@ -22,7 +22,7 @@ function ProductItem({
                          handleZero,
                          size,
                          isSelected,
-                         setIsSelected, // Dodano nowy prop isSelected
+                         setIsSelected,
                          isHidden,
                          onProductClick
                      }) {

@@ -8,6 +8,7 @@ import {API_URL} from "../../config";
 import {Icon} from "@iconify/react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {DecodeQrCode} from "./DecodeQrCode";
 
 function AddProduct() {
     const {user} = useContext(AuthContext);
@@ -15,6 +16,69 @@ function AddProduct() {
     const [refresh, setRefresh] = useState(false);
     const [image, setImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
+
+    const [qrDecoderData, setQrDecoderData] = useState(null);
+    const [qrImage, setQrImage] = useState(null);
+    const [qrImagePreview, setQrImagePreview] = useState(null);
+    const [videoStream, setVideoStream] = useState(null);
+    const [isSending, setIsSending] = useState(false);
+
+    useEffect(() => {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    setVideoStream(stream);
+                })
+                .catch(err => console.error("error:", err));
+        } else {
+            console.error("getUserMedia is not supported");
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!videoStream) return;
+
+        const intervalId = setInterval(() => {
+            const video = document.getElementById('videoElement');
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            canvas.toBlob(blob => {
+
+                if (isSending) return; // Nie wysyłaj, jeśli poprzedni request jeszcze trwa
+                    setIsSending(true);
+                const formData = new FormData();
+                formData.append('qr_code_image', blob);
+
+                axios.post(`${API_URL}/decode_qr_code`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    }
+                })
+                    .then(response => {
+                        setQrDecoderData(response.data);
+                    })
+                    .catch(error => {
+                        console.error('Error in QR Scan:', error);
+                    })
+                    .finally(() => {
+                        setIsSending(false); // Resetowanie flagi po zakończeniu requestu
+                    });
+            });
+        }, 1000); // Co sekundę
+
+        return () => {
+            clearInterval(intervalId);
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+            }
+        };
+    }, [videoStream]);
+
+
     const [product, setProduct] = useState({
         nazwa: 'Nowy Produkt',
         cena: 0,
@@ -163,6 +227,9 @@ function AddProduct() {
                 <div className="AddProductButtonDiv">
                     <button type="submit" className="addProductButton"><h4> Dodaj produkt </h4></button>
                 </div>
+                <div className="qrUploadDiv">
+
+                </div>
                 <div className="scanners">
 
                     <label className="scannerLabel">
@@ -171,7 +238,21 @@ function AddProduct() {
                     </label>
 
                     <label className="scannerLabel">
-                        <Icon className="qrIcon" icon="bx:qr-scan"/>
+                        <div className="videoContainer">
+                            {videoStream && (
+                                <video
+                                    id="videoElement"
+                                    ref={video => {
+                                        if (video) video.srcObject = videoStream;
+                                    }}
+                                    autoPlay
+                                    style={{ width: '300px' }} // Możesz dostosować styl
+                                />
+                            )}
+                        </div>
+
+                        {!videoStream &&<Icon className="qrIcon" icon="bx:qr-scan"/>}
+
                         <h5> Skanuj QR </h5>
                     </label>
 

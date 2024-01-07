@@ -16,7 +16,7 @@ export function Notifications({small, left}) {
     const {user} = useContext(AuthContext);
     const sessionId = user ? user.sessionId : null;
     const productDataNoFilter = useProductsDataNoFilter();
-
+    // const notificationsData = useNotificationsData();
     function handleReadAll() {
 
     }
