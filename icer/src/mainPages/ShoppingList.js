@@ -4,11 +4,24 @@ import './ShoppingList.css'
 import {Icon} from "@iconify/react";
 
 export function ShoppingList({data}) {
+    const [selectedItems, setSelectedItems] = useState([]);
+
+    const toggleSelectedItem = (itemId) => {
+        setSelectedItems(prevItems => {
+            if (prevItems.includes(itemId)) {
+                // Usuń produkt, jeśli już jest zaznaczony
+                return prevItems.filter(id => id !== itemId);
+            } else {
+                // Dodaj produkt, jeśli nie jest zaznaczony
+                return [...prevItems, itemId];
+            }
+        });
+    };
     return (
         <>
             <div>
-                {data?.map((item, index) => (
-                    <div className="shoppingList" key={index}>
+                {data?.map((item) => (
+                    <div className="shoppingList" key={item.id} style={{ backgroundColor: selectedItems.includes(item.id) ? "green" : "#dddd" } } onClick={()=>toggleSelectedItem(item.id)}>
 
 
                         <h2 className="shoppingListName">{item.nazwa}</h2>

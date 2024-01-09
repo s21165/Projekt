@@ -4,19 +4,30 @@ import {ShoppingList} from "./ShoppingList";
 import {useProductsDataNoFilter} from "./products/useProductsData";
 import "./ShoppingList.css"
 
-export function ShoppingCart(){
+export function ShoppingCart() {
 
     const productDataNoFilter = useProductsDataNoFilter();
 
-    return(
-        <div  className="shoppingListConainer">
-            <ShoppingList data = {productDataNoFilter.data}/>
-            <div className="deleteAllButtons">
+    return (
 
-                <button className="handleDeleteAllButton"><h2>Usuń wszystkie</h2></button>
+        <>
+            <div className="handleAddToCartButtonDiv">
+
+                <button className="handleAddAllCartButton"><h2>dodaj</h2></button>
+
             </div>
-       </div>
+            <div className="shoppingListConainer">
+                <ShoppingList data={productDataNoFilter.data}/>
 
+
+            </div>
+            <div className="shoppingListSpace">
+
+            </div>
+            <div className="deleteAllButtonDiv">
+            <button className="handleDeleteAllCartButton"><h2>Usuń wszystkie</h2></button>
+            </div>
+            </>
 
 
     )

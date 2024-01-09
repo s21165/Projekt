@@ -1,15 +1,15 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './ProductItem.css';
-import {Icon} from "@iconify/react";
+
 import {GetBorderStyle} from "./GetBorderStyle";
-import products from "./Products";
-import image2 from '../../data/image6.png'
+
+import image2 from '../../data/image6.png';
 import {infoProducts} from "../../config";
 import {useProductItem} from "./useProductItem";
 import ProductItemSmall from "./ProductItemSmall";
 import ProductItemMedium from "./ProductItemMedium";
 import ProductItemLarge from "./ProductItemLarge";
-import {useOutsideClick} from "./useOutsideClick";
+import {PictureGetter} from "./PictureGetter";
 
 function ProductItem({
                          index,
@@ -27,6 +27,10 @@ function ProductItem({
                          onProductClick
                      }) {
 
+    const[image, setImage] = useState();
+
+    const picGetter = PictureGetter(image,setImage,data.zdjecie_lokalizacja)
+
     const styl = GetBorderStyle(data, filter, 2);
     const [info, setInfo] = useState(infoProducts);
 
@@ -37,15 +41,16 @@ function ProductItem({
         if (data) {
 
 
+
             switch (size) {
                 case 'small':
                     return (
 
                         <div key={index}
                              className={`productItemSmall ${isSelected ? 'selected' : ''} ${isHidden ? 'hidden' : ''}`}
-                             style={{backgroundImage: `url(${image2})`, border: styl}}
+                             style={{backgroundImage: `url(${data ? picGetter :  image2})`, border: styl}}
                              onClick={() => onProductClick(data.id)}>
-
+                            {console.log(data.zdjecie_lokalizacja)}
 
                                 {isSelected ?
                                     <ProductItemLarge
@@ -77,7 +82,7 @@ function ProductItem({
                     return (
                         <div key={index}
                              className={`productItem ${!info ? '' : 'hidden'}`}
-                             style={{backgroundImage: `url(${image2})`, border: styl}}
+                             style={{backgroundImage: `url(${picGetter})`, border: styl}}
                              onClick={() => setInfo(!info)}>
                             <ProductItemMedium
                                 data={data}

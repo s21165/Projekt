@@ -1,11 +1,29 @@
 
+.handleAddToCartButtonDiv{
+
+    height:10vh;
+    display: flex;
+    margin: 0.5vh 1vw 0.5vh 1vh;
+    align-items: center;
+
+}
+.handleAddAllCartButton{
+    position: relative;
+
+    background-color: #deeffc;
+    width:100%;
+    height:100%;
+    border-radius: 10px;
+}
+
 
 .shoppingListConainer{
-    margin:1vh 1vw 1vh 1vw;
+    margin: 0 1vw 0.5vh 1vh;
     display: flex;
-    min-height: 98vh;
+    height:78vh;
     flex-direction: column; /* stack children vertically */
     justify-content: space-between;
+    overflow-y: auto;
 }
 
 .shoppingList{
@@ -14,8 +32,11 @@
     justify-content: space-between;
     align-items: center;
     width:100%;
-    padding-bottom: 2vh;
+    height:10vh;
+    border-radius: 10px;
     background-color: #d7d7d7;
+    margin-bottom: 1px;
+
 
 }
 .shoppingList:last-child{
@@ -23,7 +44,7 @@
 }
 
 .shoppingListName{
-    width:20%;
+    min-width:20%;
     margin:0;
 
 }
@@ -48,13 +69,29 @@
 
 .shoppingListDeleteIcon{
 
-    font-size:3vw ;
+    font-size:3vw;
     height: 100%;
 
 }
-.deleteAllButtons{
-    display: flex;
+.deleteAllButtonDiv{
     position: sticky;
+    bottom: 0;
+    display: flex;
+    height:10vh;
+    margin: 0 1vw 0.5vh 1vh;
+    align-items: center;
 
+}
+.handleDeleteAllCartButton{
+    position: relative;
+
+    background-color: #deeffc;
     width:100%;
+    height:100%;
+    border-radius: 10px;
+}
+
+.handleDeleteAllCartButton:hover{
+
+    background-color: #38729d;
 }

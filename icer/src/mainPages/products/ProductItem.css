@@ -24,6 +24,7 @@
     width: 100%;
     justify-content: center;
     align-items: center;
+
 }
 
 .productItemSmall.hidden {
@@ -31,7 +32,7 @@
 }
 
 .productItemSmallContainer {
-
+    position: relative;
     height: 6vw;
 }
 
@@ -58,9 +59,10 @@
     flex: 1 0 80%; /* Zajmuj całą szerokość dla powiększonego produktu */
     /* Pozostałe style dla powiększonego produktu */
     position: relative;
-
+    justify-content: flex-end;
     height: 100%;
     transition: all 0.3s ease; /* Płynna animacja */
+
 }
 
 
@@ -77,22 +79,11 @@
 }
 
 
-.productItemSmall.hidden:after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-
-    backdrop-filter: blur(5px); /* Dostosuj wartość blura według potrzeb */
-    z-index: -1; /* Umieść pod elementem .productItem */
-}
-
 
 .moveToBinConfirmationDiv {
     position: relative;
     display: flex;
+
     flex-direction: column;
     height: 100%;
 
@@ -100,6 +91,7 @@
 }
 
 .moveToBinConfirmationInfoHeader {
+
     position: relative;
     display: flex;
     flex-direction: column;
