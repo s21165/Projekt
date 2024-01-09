@@ -21,7 +21,7 @@ CREATE TABLE Produkty (
   tluszcze DECIMAL(4,2),
   weglowodany DECIMAL(4,2),
   bialko DECIMAL(4,2),
-  kategoria VARCHAR(50),
+  kategoria VARCHAR(50)
 );
 
 CREATE TABLE Icer (

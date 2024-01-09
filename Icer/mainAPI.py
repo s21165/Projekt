@@ -497,18 +497,18 @@ def get_filtered_products():
         user_id = user_result['id']
 
         query = """
-            SELECT Icer.id, Icer.UserID, Icer.produktID, Icer.ilosc, 
-            Icer.data_waznosci, Icer.trzecia_wartosc, Icer.default_photo,
-            IF(Icer.default_photo = 1, Photos.lokalizacja, UserPhotos.lokalizacja) AS zdjecie_lokalizacja,
-            Produkty.nazwa, Produkty.cena, Produkty.kalorie,
-            Produkty.tluszcze, Produkty.weglowodany, Produkty.bialko,
-            Produkty.kategoria
-            FROM Icer
-            INNER JOIN Produkty ON Icer.produktID = Produkty.id
-            LEFT JOIN Photos ON Icer.produktID = Photos.produktID
-            LEFT JOIN UserPhotos ON Icer.produktID = UserPhotos.produktID AND UserPhotos.userID = %s
-            WHERE Icer.UserID = %s AND Icer.trzecia_wartosc <= 2
-        """
+                    SELECT Icer.id, Icer.UserID, Icer.produktID, Icer.ilosc, 
+                    Icer.data_waznosci, Icer.trzecia_wartosc, Icer.default_photo,
+                    IF(Icer.default_photo = 1, Photos.lokalizacja, UserPhotos.lokalizacja) AS zdjecie_lokalizacja,
+                    Produkty.nazwa, Produkty.cena, Produkty.kalorie,
+                    Produkty.tluszcze, Produkty.weglowodany, Produkty.bialko,
+                    Produkty.kategoria
+                    FROM Icer
+                    INNER JOIN Produkty ON Icer.produktID = Produkty.id
+                    LEFT JOIN Photos ON Icer.produktID = Photos.produktID
+                    LEFT JOIN UserPhotos ON Icer.produktID = UserPhotos.produktID AND UserPhotos.userID = %s
+                    WHERE Icer.UserID = %s AND Icer.trzecia_wartosc <= 2 AND Icer.powiadomienie = 1
+                """
         cursor.execute(query, (user_id, user_id))
         results = cursor.fetchall()
 
@@ -516,6 +516,7 @@ def get_filtered_products():
 
         return jsonify(filtered_results)
 
+        # Obsługa błędów
     except ValueError as ve:
         return jsonify({"error": str(ve)}), 400
     except PermissionError as pe:
