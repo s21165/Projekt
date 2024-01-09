@@ -1012,7 +1012,7 @@ def edit_user():
             # Szyfrowanie nowego hasła
             hashed_new_pw = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
             query = "UPDATE Users SET password = %s WHERE username = %s"
-            values = (new_password, session['username'])
+            values = (hashed_new_pw, session['username'])
             cursor.execute(query, values)
 
         # Jeśli użytkownik dostarczył nową nazwę użytkownika, aktualizuj nazwę użytkownika
