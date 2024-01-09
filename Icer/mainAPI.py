@@ -462,7 +462,7 @@ def get_icer_shopping():
 
 
 @app.route('/api/Icer/get_filtered_products', methods=['POST'])
-def get_filtered_products():
+def get_nothifications():
     try:
         db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
         db_connector.connect()
