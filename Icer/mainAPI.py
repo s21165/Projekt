@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, request, jsonify, session, redirect, current_app
 from flask_cors import CORS
 import requests
@@ -607,6 +609,52 @@ def get_products_with_red_flag():
             cursor.close()
 
 
+# Funkcja do obsługi wysyłania zdjęcia do API Icer
+@app.route('/api/Icer/upload_image', methods=['POST'])
+def upload_image():
+    try:
+        data = request.get_json()
+        image_name = data.get('imageName')
+        image_data = data.get('imageData')  # Zakładając, że obraz jest przesłany jako ciąg bajtów
+        user_id = data.get('userId')
+        product_id = data.get('productId')
+
+        if not image_name or not image_data or not user_id or not product_id:
+            raise ValueError("Missing required data for image upload")
+
+        # Tutaj można ustawić lokalizację folderu, gdzie mają być zapisane obrazy
+        images_folder = 'D:/Pobrrane/projekty Adika/Projekt-PWAAdi/icer/src/data/noImage'
+
+        # Tworzenie ścieżki do zapisu obrazu
+        image_path = os.path.join(images_folder, image_name)
+
+        # Zapis obrazu na serwerze
+        with open(image_path, 'wb') as image_file:
+            image_file.write(image_data)
+
+        # Tutaj należy uzyskać połączenie z bazą danych
+        connection = db_connector.connect()
+        cursor = connection.cursor()
+
+        # Zapis informacji o zdjęciu do bazy danych w tabeli UserPhotos
+        insert_query = "INSERT INTO UserPhotos (produktID, userID, lokalizacja) VALUES (%s, %s, %s)"
+        cursor.execute(insert_query, (product_id, user_id, image_name))
+        connection.commit()
+
+        # Aktualizacja flagi default_photo w tabeli Icer dla konkretnego produktu użytkownika na 0
+        update_query = "UPDATE Icer SET default_photo = 0 WHERE UserID = %s AND produktID = %s"
+        cursor.execute(update_query, (user_id, product_id))
+        connection.commit()
+
+        cursor.close()
+
+        return jsonify({"message": "Image uploaded and information saved successfully"})
+
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except Exception as error:
+        return jsonify({"error": str(error)}), 500
+
 @app.route('/api/Icer', methods=['POST'])
 def get_icer():
     # Tworzenie instancji klasy DatabaseConnector
@@ -616,7 +664,7 @@ def get_icer():
     db_connector.connect()
 
     scheduler = BackgroundScheduler()
-    scheduler.add_job(run_daily_procedure, 'interval', seconds=60)
+    scheduler.add_job(run_daily_procedure, 'interval', seconds=600)
     scheduler.start()
 
     try:
@@ -817,71 +865,6 @@ def delete_notification():
             connection.close()
 
 
-def get_photos(ic_id, db_connector):
-    connection = db_connector.get_connection()
-    cursor = connection.cursor(dictionary=True)
-    try:
-        query = "SELECT PobierzLokalizacjeZdjecia(%s) AS zdjecie_lokalizacja"
-        cursor.execute(query, (ic_id,))
-        result = cursor.fetchone()
-        return result['zdjecie_lokalizacja']
-    finally:
-        cursor.close()
-
-
-# Funkcja do pobierania zdjęć tylko
-def get_photos_only():
-    try:
-        # Inicjalizacja DatabaseConnector
-        db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
-        db_connector.connect()
-
-        # Uzyskanie połączenia z bazą danych
-        connection = db_connector.get_connection()
-        if not connection:
-            raise ConnectionError("Failed to establish a connection with the database.")
-
-        cursor = connection.cursor(dictionary=True)
-        if not cursor:
-            raise Exception("Failed to create a cursor for the database.")
-
-        # Zapytanie SQL do pobrania lokalizacji zdjęć
-        query = "SELECT zdjecie_lokalizacja FROM Photos"
-
-        cursor.execute(query)
-        results = cursor.fetchall()
-
-        return jsonify(results)
-
-    except ConnectionError as ce:
-        return jsonify({"error": str(ce)}), 500
-    except Exception as error:
-        current_app.logger.error(f"Unexpected error: {error}")
-        return jsonify({"error": "Unexpected server error"}), 500
-    finally:
-        if cursor:
-            cursor.close()
-        if connection:
-            connection.close()
-
-
-# Funkcja wyszukująca obraz dla danej nazwy produktu
-def search_image(product_name):
-    # Użyj API Google Images lub innego dostępnego API do wyszukiwania obrazów na podstawie nazwy produktu
-    # Tutaj umieść kod żądania do API i przetwarzanie odpowiedzi, aby uzyskać adres URL obrazu
-
-    # Przykładowe zapytanie do API Google Images
-    api_key = "YOUR_API_KEY"
-    search_url = f"https://www.googleapis.com/customsearch/v1?key={api_key}&cx=YOUR_CX&q={product_name}&searchType=image"
-    response = requests.get(search_url)
-    results = response.json()
-
-    if "items" in results:
-        first_result = results["items"][0]
-        image_url = first_result["link"]
-        return image_url
-
-    return ""  # Zwróć pusty ciąg, jeśli nie znaleziono obrazu
 
 
 # Pobieranie danych produktów
