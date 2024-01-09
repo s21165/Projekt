@@ -8,6 +8,7 @@ import Login from "./mainPages/account/Login";
 import { BrowserRouter as Router } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect } from 'react';
+import {ToastContainer} from "react-toastify";
 
 function App() {
     const {user} = useContext(AuthContext);
@@ -16,6 +17,7 @@ function App() {
 
     return(
         <Router>
+
             {user ? <Main /> : <Login />}
         </Router>
     );

@@ -158,7 +158,7 @@ function AddProduct() {
 
     return (
         <div className="productContainerDiv">
-            <ToastContainer />
+
             <form onSubmit={handleSubmit} className="addProductForm">
                 <label>
                     <h5>Nazwa:</h5>

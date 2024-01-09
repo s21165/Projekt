@@ -12,6 +12,7 @@ import image2 from "../../data/image6.png";
 import ProductItem from "./ProductItem";
 import Products from "./Products";
 import ProductManager from "./ProductManager";
+import {ToastContainer} from "react-toastify";
 
 
 export function Fridge(){
@@ -60,6 +61,7 @@ export function Fridge(){
 
     return(
         <div className="fridgeContainer">
+            <ToastContainer />
             <div className="fridge">
 
 

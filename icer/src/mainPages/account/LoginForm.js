@@ -6,6 +6,7 @@ import facebook from "../../data/facebook.png";
 import {Icon} from "@iconify/react";
 import {Link} from "react-router-dom";
 import logo from "../../data/logo.svg";
+import {toast} from "react-toastify";
 
 function LoginForm({ onLogin , onSwitchToRegister  }) {
     const [username, setUsername] = useState('');
@@ -15,6 +16,7 @@ function LoginForm({ onLogin , onSwitchToRegister  }) {
         event.preventDefault();
         if (onLogin) {
             onLogin({ username, password });
+
         }
 
     };

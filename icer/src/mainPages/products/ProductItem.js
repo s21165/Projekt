@@ -34,6 +34,9 @@ function ProductItem({
     const styl = GetBorderStyle(data, filter, 2);
     const [info, setInfo] = useState(infoProducts);
 
+
+
+
     const useProduct = useProductItem(data, handleDecrease, handleIncrease, setIsSelected)
 
 
@@ -50,7 +53,7 @@ function ProductItem({
                              className={`productItemSmall ${isSelected ? 'selected' : ''} ${isHidden ? 'hidden' : ''}`}
                              style={{backgroundImage: `url(${data ? picGetter :  image2})`, border: styl}}
                              onClick={() => onProductClick(data.id)}>
-                            {console.log(data.zdjecie_lokalizacja)}
+
 
                                 {isSelected ?
                                     <ProductItemLarge

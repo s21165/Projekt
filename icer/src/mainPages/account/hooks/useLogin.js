@@ -6,6 +6,7 @@ import { BrowserRouter as Router,
 import axios from 'axios';
 import { AuthContext } from "../auth-context";
 import { API_URL } from "../../../config";
+import {toast} from "react-toastify";
 
 export const useLogin = () => {
     const authContext = useContext(AuthContext);
@@ -21,6 +22,7 @@ export const useLogin = () => {
                     sessionId: data.session_id
                 });
                 navigate('/');
+                toast.success(`Zalogowano!`);
             }
         } catch (error) {
             console.error('Error during POST login', error);

@@ -39,6 +39,22 @@
 
 
 }
+
+.shoppingList Input {
+    border: none;
+    background-color: #f0f0f0; /* jasny szary, dopasowany do koloru tła listy */
+    padding: 0;
+    margin:0;
+
+}
+.shoppingListName input {
+    width:100%;
+
+}
+.shoppingList Input:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* lekki cień podczas fokusowania */
+}
 .shoppingList:last-child{
     padding-bottom: 0;
 }

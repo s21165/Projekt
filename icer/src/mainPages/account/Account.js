@@ -12,18 +12,18 @@ export function Account(props){
         <div className="accountContainer">
         <div className="accountInfo">
             <div className="accountPhoto">
-                <img src={face} alt="Your Image" className="accountPhotoImage" />
+                <img src={face}className="accountPhotoImage" />
 
             </div>
             <div className="accountName">
                 <h3>{user.username} </h3>
             </div>
-            <div className="accountMail">
-                <h3>Email: {props.email}</h3>
-            </div>
-            <div className="accountPhone">
-                <h3>Phone: {props.phone}</h3>
-            </div>
+            {/*<div className="accountMail">*/}
+            {/*    <h3>Email: {props.email}</h3>*/}
+            {/*</div>*/}
+            {/*<div className="accountPhone">*/}
+            {/*    <h3>Phone: {props.phone}</h3>*/}
+            {/*</div>*/}
 
             <div className="editAccount">
                 <Link to="/edycjaKonta"><button><h3 >edytuj konto</h3></button></Link>

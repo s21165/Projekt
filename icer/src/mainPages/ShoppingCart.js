@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import axios from "axios";
 import {ShoppingList} from "./ShoppingList";
 import {useProductsDataNoFilter} from "./products/useProductsData";
@@ -7,17 +7,33 @@ import "./ShoppingList.css"
 export function ShoppingCart() {
 
     const productDataNoFilter = useProductsDataNoFilter();
+    const [showNewFields, setShowNewFields] = useState(false);
+    const [newFields, setNewFields] = useState([]);
+
+
+    const addNewField = () => {
+        if (showNewFields) {
+            setNewFields([]); // Usuń pole, jeśli już istnieje
+        } else {
+            setNewFields([{nazwa: '', ilosc: 0, cena: 0}]); // Dodaj nowe pole
+        }
+        setShowNewFields(!showNewFields);
+    };
+
 
     return (
 
         <>
             <div className="handleAddToCartButtonDiv">
 
-                <button className="handleAddAllCartButton"><h2>dodaj</h2></button>
+                <button className="handleAddAllCartButton" onClick={addNewField}>{showNewFields ?
+                    <h2>cofnij dodawanie</h2> : <h2>dodaj</h2>}</button>
 
             </div>
             <div className="shoppingListConainer">
-                <ShoppingList data={productDataNoFilter.data}/>
+                <ShoppingList data={productDataNoFilter.data} addNewField={addNewField} showNewFields={showNewFields}
+                              newFields={newFields} setNewFields={setNewFields}
+                />
 
 
             </div>
@@ -25,9 +41,9 @@ export function ShoppingCart() {
 
             </div>
             <div className="deleteAllButtonDiv">
-            <button className="handleDeleteAllCartButton"><h2>Usuń wszystkie</h2></button>
+                <button className="handleDeleteAllCartButton"><h2>Usuń wszystkie</h2></button>
             </div>
-            </>
+        </>
 
 
     )

@@ -7,6 +7,7 @@ import {API_URL} from "../../config";
 import { useNavigate } from 'react-router-dom';
 import { useLogin } from './hooks/useLogin';
 import useRegister from "./hooks/useRegister";
+import {ToastContainer} from "react-toastify";
 const backendUrl = 'http://localhost:5000';
 
 function Login() {
@@ -17,7 +18,7 @@ function Login() {
 
     return authContext.user ? (
         <div>
-            Witaj, {authContext.user.username}!
+            <ToastContainer />
         </div>
     ) : (
         <div>
