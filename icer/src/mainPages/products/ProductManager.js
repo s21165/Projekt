@@ -45,7 +45,7 @@ function ProductManager({
                         </div>
                     </div>
                     }
-                    <div className="productList">
+                    <div className="productList" style={size ==='small'? {height:"100%"} : {height: "90vh"}}>
                         {productData.filteredProducts && productData.filteredProducts.map((data, index) =>
                             <ProductItem
                                 key={index}

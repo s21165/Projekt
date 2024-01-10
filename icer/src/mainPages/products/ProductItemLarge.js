@@ -19,16 +19,17 @@ function ProductItemLarge({ data, useProduct,handleZero, handleRemove, handleEdi
                     </div>
                 </div>
             ) : (
-                <div className={`card`} >
+                <div className="card" >
 
-                    <div ><h2>{data.nazwa}</h2></div>
-                    <div><h3>Cena: {data.cena}</h3></div>
-                    <div><h3>Kalorie: {data.kalorie}</h3></div>
-                    <div><h3>Tłuszcze: {data.tluszcze}</h3></div>
-                    <div><h3>Węglowodany: {data.weglowodany}</h3></div>
-                    <div><h3>Białko: {data.bialko}</h3></div>
-                    <div><h3>Kategoria: {data.kategoria}</h3></div>
-                    <div><h3>trzecia wartosc: {data.trzecia_wartosc}</h3></div>
+                    <div className="productCardInfoRow"><h2>{data.nazwa}</h2></div>
+                    <div className="productCardInfoRow"><h3>Cena: {data.cena}</h3></div>
+                    <div className="productCardInfoRow"><h3>Kalorie: {data.kalorie}</h3></div>
+                    <div className="productCardInfoRow"><h3>Tłuszcze: {data.tluszcze}</h3></div>
+                    <div className="productCardInfoRow"><h3>Węglowodany: {data.weglowodany}</h3></div>
+                    <div className="productCardInfoRow"><h3>Białko: {data.bialko}</h3></div>
+                    <div className="productCardInfoRow"><h3>Kategoria: {data.kategoria}</h3></div>
+                    <div className="productCardInfoRow"><h3>trzecia wartosc: {data.trzecia_wartosc}</h3></div>
+
 
                     <div className="productItemQuantityDiv">
 
