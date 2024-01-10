@@ -301,19 +301,19 @@ def remove_product_for_user():
 
 @app.route('/api/add_product', methods=['POST'])
 def add_product():
-    # Tworzenie instancji klasy DatabaseConnector
-    db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
-
-    # Łączenie z bazą danych
-    db_connector.connect()
-
-    # Tworzenie instancji ProductManager
-    product_manager = ProductManager(db_connector)
-    username = session['username']
-    connection = None
-    cursor = None
-    print(session['username'])
     try:
+        # Tworzenie instancji klasy DatabaseConnector
+        db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+
+        # Łączenie z bazą danych
+        db_connector.connect()
+
+        # Tworzenie instancji ProductManager
+        product_manager = ProductManager(db_connector)
+
+        # Pobieranie danych z żądania
+        data = request.json
+        image_data = data.get('imageData')
 
         # Sprawdzenie, czy użytkownik jest zalogowany
         if 'username' not in session:
@@ -321,7 +321,6 @@ def add_product():
 
         connection = db_connector.get_connection()
         cursor = connection.cursor(dictionary=True)
-
         username = session['username']
 
         # Pobranie ID użytkownika na podstawie nazwy użytkownika
@@ -332,7 +331,6 @@ def add_product():
         if not user_result:
             return jsonify({"error": "User not found"}), 401
 
-        data = request.json
         user_id = user_result['id']
 
         # Sprawdzenie, czy produkt już istnieje
@@ -360,17 +358,29 @@ def add_product():
         icer_query = "INSERT INTO Icer (UserID, produktID, ilosc, data_waznosci) VALUES (%s, %s, %s, %s)"
         cursor.execute(icer_query, (user_id, product_id, data['ilosc'], data['data_waznosci']))
 
-        connection.commit()
+        # Jeśli podano dane zdjęcia, dodaj je do UserPhotos
+        if image_data:
+            image_upload_data = {
+                "imageName": data['nazwa'] + "_image",  # Nazwa zdjęcia
+                "imageData": image_data,
+                "userId": user_id,
+                "productId": product_id
+            }
 
-        return jsonify({"message": "Produkt został dodany!"})
+            # Wysłanie żądania do lokalnego endpointu '/api/Icer/upload_image'
+            response = requests.post("/api/Icer/upload_image", json=image_upload_data)
+
+            if response.status_code != 200:
+                return jsonify({"error": "Failed to upload image"}), response.status_code
+
+        connection.commit()
+        cursor.close()
+        connection.close()
+
+        return jsonify({"message": "Product added successfully!"})
 
     except Exception as error:
         return jsonify({"error": str(error)}), 500
-    finally:
-        if cursor:
-            cursor.close()
-        if connection:
-            connection.close()
 
 
 @app.route('/api/edit_product/<int:product_id>', methods=['PUT'])
@@ -655,6 +665,7 @@ def upload_image():
     except Exception as error:
         return jsonify({"error": str(error)}), 500
 
+
 @app.route('/api/Icer', methods=['POST'])
 def get_icer():
     # Tworzenie instancji klasy DatabaseConnector
@@ -863,8 +874,6 @@ def delete_notification():
             cursor.close()
         if connection:
             connection.close()
-
-
 
 
 # Pobieranie danych produktów
