@@ -17,7 +17,7 @@ function App() {
 
     return(
         <Router>
-
+            <ToastContainer />
             {user ? <Main /> : <Login />}
         </Router>
     );
