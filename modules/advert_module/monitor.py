@@ -1,5 +1,6 @@
 import cv2
 import winsound
+import time
 
 # Function to detect faces and eyes in an image
 def detect_faces_and_eyes(image):
@@ -26,78 +27,67 @@ def display_warning_image(image):
     cv2.destroyWindow('ACHTUNG')
 
 # Function to start camera monitoring
-def start_camera_monitoring():
-    # Initialize video captures
+def generate_frames():
+    # Try to initialize the webcam
     cap1 = cv2.VideoCapture(0)  # Webcam
-    cap2 = cv2.VideoCapture('modules/advert_module/videoplayback.mp4')  # Default video file
-    alt_cap = cv2.VideoCapture('modules/advert_module/videoplaybackalt.mp4')  # Alternate video file
-    img2 = cv2.imread('modules/advert_module/image.jpg')  # Warning image
 
     # Check if the webcam is accessible
-    if not cap1.isOpened():
-        print("Webcam not detected. Playing alternate video without monitoring.")
-        while alt_cap.isOpened():
-            ret_alt, frame_alt = alt_cap.read()
-            if ret_alt:
-                cv2.imshow("Alternate Video Playback", frame_alt)
-                if cv2.waitKey(int(1000 / alt_cap.get(cv2.CAP_PROP_FPS))) & 0xFF == ord('q'):
-                    break
-            else:
-                break
+    if cap1.isOpened():
+        # Use the default video file if the webcam is available
+        cap2 = cv2.VideoCapture('modules/advert_module/videoplayback.mp4')
     else:
-        count = 0
-        beep = 0
-        frm2 = None
+        # Use the alternate video file if the webcam is not available
+        cap2 = cv2.VideoCapture('modules/advert_module/videoplaybackalt.mp4')
 
-        while cap2.isOpened():
-            ret1, frm1 = cap2.read()
-            if ret1:
-                if count > 5:
-                    _, frm2 = cap2.read()
+    img2 = cv2.imread('modules/advert_module/image.jpg')  # Warning image
+    beep = 0
+    
+    # Get the frame rate of the video file
+    fps = cap2.get(cv2.CAP_PROP_FPS)
+    if fps < 1:  # Fallback in case the frame rate is not detected
+        fps = 30  # Assume a standard frame rate
 
-                if frm2 is not None:
-                    cv2.imshow("AD", frm2)
+    # Calculate the frame duration in seconds
+    frame_duration = 1.0 / fps
 
-                if frm1 is not None:
-                    ret, img = cap1.read()
-                    detected_faces, detected_eyes = detect_faces_and_eyes(img)
+    while True:
+        ret1, frame = cap2.read()
+        if not ret1:
+            break  # End of video file or error
 
-                    # Draw rectangles around detected faces and eyes
-                    for (x, y, width, height) in detected_faces:
-                        cv2.rectangle(img, (x, y), (x + width, y + height), (0, 0, 255), 10)
+        if cap1.isOpened():
+            ret, img = cap1.read()
+            if not ret:
+                continue  # Skip this iteration if the webcam frame is not ready
 
-                    for (x, y, w, h) in detected_eyes:
-                        cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 255), 3)
+            # Detect faces and eyes
+            detected_faces, detected_eyes = detect_faces_and_eyes(img)
+            # ... Draw rectangles logic (optional for streaming) ...
 
-                    cv2.imshow("monitoring", img)
-
-                    # Play warning audio and display warning image if no faces or eyes detected
-                    if len(detected_eyes) == 0 and len(detected_faces) == 0:
-                        if beep == 5:
-                            play_audio_warning()
-                            beep = 0
-                            display_warning_image(img2)
-                        else:
-                            beep += 1
-                    else:
-                        beep = 0
-
-                count += 1
-                cv2.waitKey(1)
-
+            # Play warning audio and display a warning image if no faces or eyes detected
+            if len(detected_eyes) == 0 and len(detected_faces) == 0:
+                if beep == 5:
+                    play_audio_warning()
+                    beep = 0
+                    # Process the warning image if necessary
+                else:
+                    beep += 1
             else:
-                break
+                beep = 0
 
+        # Convert the image to JPEG format
+        ret, buffer = cv2.imencode('.jpg', frame)
+        if not ret:
+            continue  # Skip this iteration if frame encoding fails
+
+        frame_bytes = buffer.tobytes()
+        time.sleep(frame_duration)
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+
+    if cap1.isOpened():
         cap1.release()
-
     cap2.release()
-    alt_cap.release()
-    cv2.destroyAllWindows()
-
-if __name__ == '__main__':
-    start_camera_monitoring()
-
-
 
 
 #if __name__ == '__main__':

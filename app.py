@@ -1,11 +1,13 @@
 import os
 import threading
 from flask import Flask, request, render_template, send_file, redirect, url_for, send_from_directory, make_response
+from flask import Flask, Response, request, render_template, redirect, url_for, make_response
+
 from modules.bot_module.bot import get_bot_response
 from modules.scan_module.gen import generate_qr_code, generate_barcode
 from modules.scan_module.forms import BarcodeForm
 from modules.scan_module.decoder import decode_barcode, decode_qr_code
-from modules.advert_module.monitor import start_camera_monitoring
+from modules.advert_module.monitor import generate_frames
 from modules.foodIdent_module.foodIdent import foodIdent
 import sys
 
@@ -107,19 +109,38 @@ def decode_qr_code_route():
     
 
 
-@app.route('/start_camera_monitoring', methods=['POST'])
-def start_camera_monitoring_route():
-    camera_thread = threading.Thread(target=start_camera_monitoring)
-    camera_thread.start()
-    return redirect(url_for('index'))
-    
-    
-
 @app.route('/start_food_identification', methods=['POST'])
 def start_food_identification_route():
     camera_thread = threading.Thread(target=foodIdent)
     camera_thread.start()
     return redirect(url_for('index'))
+
+
+
+# Route for video streaming
+@app.route('/video_feed')
+def video_feed():
+    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
+camera_thread = None
+# Remove the start_camera_monitoring route
+# Replace it with a route that redirects to a page where the video is displayed
+@app.route('/start_camera_monitoring', methods=['POST'])
+def start_camera_monitoring_route():
+    global camera_thread
+
+    if camera_thread is None or not camera_thread.is_alive():
+        # Start the camera monitoring in a new thread
+        camera_thread = threading.Thread(target=generate_frames)
+        camera_thread.start()
+
+    return redirect(url_for('display_video'))
+
+@app.route('/display_video')
+def display_video():
+    # Render a template that will display the video
+    return render_template('display_video.html')
 
 
 
