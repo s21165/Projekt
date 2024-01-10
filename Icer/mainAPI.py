@@ -441,14 +441,14 @@ def get_icer_shopping():
         # Modyfikacja zapytania SQL, aby pokazywać wszystkie informacje o produkcie
         user_id = user_result['id']
         query = """
-            SELECT Icer.id, Icer.UserID, Icer.produktID, Icer.ilosc, 
-                   Icer.data_waznosci, Icer.trzecia_wartosc,
+            SELECT Icer.id, Icer.UserID, Icer.produktID, Icer.ilosc,
                    Produkty.nazwa, Produkty.cena, Produkty.kalorie,
-                   Produkty.tluszcze, Produkty.weglowodany, Produkty.bialko,
-                   Produkty.kategoria
+                   Produkty.tluszcze, Produkty.weglowodany,
+                   Produkty.bialko,Produkty.kategoria
             FROM Icer
             INNER JOIN Produkty ON Icer.produktID = Produkty.id
-            WHERE Icer.UserID = %s AND Icer.ilosc = 0 or Icer.trzecia_wartosc =0
+            LEFT JOIN Shopping ON Icer.produktID = Shopping.produktID
+            WHERE Icer.UserID = %s AND (Icer.ilosc = 0 or Icer.trzecia_wartosc = 0 or Shopping.in_cart = 1)
         """
         cursor.execute(query, (user_id,))
         results = cursor.fetchall()

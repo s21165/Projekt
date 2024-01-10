@@ -58,6 +58,12 @@ CREATE TABLE UserPhotos (
 );
 
 
+create table Shopping(
+id INT AUTO_INCREMENT PRIMARY KEY,
+UserID INT,
+produktID INT,
+in_cart TINYINT(0) DEFAULT 0);
+
 
 DELIMITER //
 CREATE PROCEDURE ModifyProductQuantity(IN p_icerID INT, IN p_userID INT, IN p_action ENUM('add', 'subtract', 'zero', 'remove'))
