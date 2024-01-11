@@ -360,8 +360,13 @@ def add_product():
 
         # Jeśli podano dane zdjęcia, dodaj je do UserPhotos
         if image_data:
+            # Pobierz ostatnie ID z tabeli UserPhotos
+            last_user_photo_id = product_manager.get_last_user_photo_id()
+            photo_id = last_user_photo_id + 1 if last_user_photo_id else 1
+
+            # Utwórz nazwę zdjęcia jako ID z tabeli UserPhotos
             image_upload_data = {
-                "imageName": data['nazwa'] + "_image",  # Nazwa zdjęcia
+                "imageName": str(photo_id),  # Nowa nazwa zdjęcia to ID z tabeli UserPhotos
                 "imageData": image_data,
                 "userId": user_id,
                 "productId": product_id
@@ -473,8 +478,8 @@ def get_icer_shopping():
             cursor.close()
 
 
-@app.route('/api/Icer/get_filtered_products', methods=['POST'])
-def get_nothifications():
+@app.route('/api/Icer/get_notifications', methods=['POST'])
+def get_notifications():
     try:
         db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
         db_connector.connect()
@@ -519,7 +524,7 @@ def get_nothifications():
                     INNER JOIN Produkty ON Icer.produktID = Produkty.id
                     LEFT JOIN Photos ON Icer.produktID = Photos.produktID
                     LEFT JOIN UserPhotos ON Icer.produktID = UserPhotos.produktID AND UserPhotos.userID = %s
-                    WHERE Icer.UserID = %s AND Icer.trzecia_wartosc <= 2 AND Icer.powiadomienie = 1
+                    WHERE Icer.UserID = %s AND Icer.trzecia_wartosc <= 2 OR Icer.powiadomienie = 1
                 """
         cursor.execute(query, (user_id, user_id))
         results = cursor.fetchall()
@@ -675,7 +680,7 @@ def get_icer():
     db_connector.connect()
 
     scheduler = BackgroundScheduler()
-    scheduler.add_job(run_daily_procedure, 'interval', seconds=600)
+    scheduler.add_job(run_daily_procedure, 'interval', seconds=60)
     scheduler.start()
 
     try:
@@ -757,7 +762,7 @@ def get_icer():
 
 
 @app.route('/api/Icer/delete_user_notifications', methods=['POST'])
-def delete_user_notifications():
+def delete_notification():
     try:
         # Tworzenie instancji klasy DatabaseConnector
         db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
@@ -815,7 +820,7 @@ def delete_user_notifications():
 
 
 @app.route('/api/Icer/delete_notification', methods=['DELETE'])
-def delete_notification():
+def delete_user_notifications():
     try:
         # Tworzenie instancji klasy DatabaseConnector
         db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
