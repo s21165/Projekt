@@ -728,6 +728,7 @@ def get_icer():
             LEFT JOIN Photos ON Icer.produktID = Photos.produktID
             LEFT JOIN UserPhotos ON Icer.produktID = UserPhotos.produktID AND UserPhotos.userID = %s
             WHERE Icer.UserID = %s
+            ORDER BY Icer.data_waznosci ASC
         """
         cursor.execute(query, (user_id, user_id))
         results = cursor.fetchall()
