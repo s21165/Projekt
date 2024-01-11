@@ -762,64 +762,6 @@ def get_icer():
 
 
 @app.route('/api/Icer/delete_notification', methods=['POST'])
-def delete_all_notification():
-    try:
-        # Tworzenie instancji klasy DatabaseConnector
-        db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
-        # Łączenie z bazą danych
-        db_connector.connect()
-
-        data = request.get_json()
-        received_session_id = data.get('sessionId', None)
-        if not received_session_id:
-            raise ValueError("Session ID not provided")
-
-        if 'username' not in session:
-            raise PermissionError("User not logged in")
-
-        username = session['username']
-        connection = db_connector.get_connection()
-        cursor = connection.cursor(dictionary=True)
-        user_query = "SELECT id FROM Users WHERE username = %s"
-        cursor.execute(user_query, (username,))
-        user_result = cursor.fetchone()
-
-        if not user_result:
-            raise LookupError("User not found")
-
-        user_id = user_result['id']
-
-        notification_value = data.get('notificationValue')
-        if notification_value in [0, 1, None]:
-            # Usunięcie powiadomień danego użytkownika lub zmiana wartości na NULL, 1 lub 0
-            delete_notifications_query = "UPDATE Icer SET powiadomienie = %s WHERE UserID = %s"
-            cursor.execute(delete_notifications_query, (notification_value, user_id))
-            connection.commit()
-            return jsonify({"message": "User notifications updated successfully"})
-
-        else:
-            return jsonify({"error": "Invalid notification value. It should be 1, 0, or null."}), 400
-
-    except ValueError as ve:
-        return jsonify({"error": str(ve)}), 400
-    except PermissionError as pe:
-        return jsonify({"error": str(pe)}), 401
-    except LookupError as le:
-        return jsonify({"error": str(le)}), 404
-    except ConnectionError as ce:
-        return jsonify({"error": str(ce)}), 500
-    except Exception as error:
-        current_app.logger.error(f"Unexpected error: {error}")
-        return jsonify({"error": "Unexpected server error"}), 500
-
-    finally:
-        if cursor:
-            cursor.close()
-        if connection:
-            connection.close()
-
-
-@app.route('/api/Icer/delete_all_notification', methods=['POST'])
 def delete_notification():
     try:
         # Tworzenie instancji klasy DatabaseConnector
@@ -859,6 +801,59 @@ def delete_notification():
 
         else:
             return jsonify({"error": "Invalid notification value or missing notification ID."}), 400
+
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except PermissionError as pe:
+        return jsonify({"error": str(pe)}), 401
+    except LookupError as le:
+        return jsonify({"error": str(le)}), 404
+    except ConnectionError as ce:
+        return jsonify({"error": str(ce)}), 500
+    except Exception as error:
+        current_app.logger.error(f"Unexpected error: {error}")
+        return jsonify({"error": "Unexpected server error"}), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
+
+
+@app.route('/api/Icer/delete_all_notification', methods=['POST'])
+def delete_all_notification():
+    try:
+        # Tworzenie instancji klasy DatabaseConnector
+        db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+        # Łączenie z bazą danych
+        db_connector.connect()
+
+        data = request.get_json()
+        received_session_id = data.get('sessionId', None)
+        if not received_session_id:
+            raise ValueError("Session ID not provided")
+
+        if 'username' not in session:
+            raise PermissionError("User not logged in")
+
+        username = session['username']
+        connection = db_connector.get_connection()
+        cursor = connection.cursor(dictionary=True)
+        user_query = "SELECT id FROM Users WHERE username = %s"
+        cursor.execute(user_query, (username,))
+        user_result = cursor.fetchone()
+
+        if not user_result:
+            raise LookupError("User not found")
+
+        user_id = user_result['id']
+
+        # Usunięcie wszystkich powiadomień danego użytkownika
+        delete_all_notifications_query = "UPDATE Icer SET powiadomienie = NULL WHERE UserID = %s"
+        cursor.execute(delete_all_notifications_query, (user_id,))
+        connection.commit()
+        return jsonify({"message": "All user notifications deleted successfully"})
 
     except ValueError as ve:
         return jsonify({"error": str(ve)}), 400
