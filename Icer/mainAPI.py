@@ -761,7 +761,7 @@ def get_icer():
             cursor.close()
 
 
-@app.route('/api/Icer/delete_user_notifications', methods=['POST'])
+@app.route('/api/Icer/delete_notification', methods=['POST'])
 def delete_notification():
     try:
         # Tworzenie instancji klasy DatabaseConnector
@@ -819,30 +819,23 @@ def delete_notification():
             connection.close()
 
 
-@app.route('/api/Icer/delete_notification', methods=['DELETE'])
-def delete_user_notifications():
+@app.route('/api/Icer/delete_notification', methods=['POST'])
+def delete_notification():
     try:
         # Tworzenie instancji klasy DatabaseConnector
         db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
-
         # Łączenie z bazą danych
         db_connector.connect()
 
         data = request.get_json()
-
-        # Upewnienie się co do sesji
         received_session_id = data.get('sessionId', None)
         if not received_session_id:
             raise ValueError("Session ID not provided")
 
-        # Jeśli użytkownik nie jest zalogowany
         if 'username' not in session:
             raise PermissionError("User not logged in")
 
-        # Pobranie ID aktualnie zalogowanego użytkownika
         username = session['username']
-
-        # Pobranie ID użytkownika z bazy danych na podstawie nazwy użytkownika
         connection = db_connector.get_connection()
         cursor = connection.cursor(dictionary=True)
         user_query = "SELECT id FROM Users WHERE username = %s"
@@ -854,12 +847,18 @@ def delete_user_notifications():
 
         user_id = user_result['id']
 
-        # Ustawienie wartości powiadomienia na NULL dla wszystkich wpisów użytkownika
-        delete_notification_query = "UPDATE ICER SET Powiadomienia = NULL WHERE UserID = %s"
-        cursor.execute(delete_notification_query, (user_id,))
-        connection.commit()
+        notification_id = data.get('notificationId')
+        notification_value = data.get('notificationValue')
 
-        return jsonify({"message": "All notifications deleted successfully"})
+        if notification_value in [0, 1, None] and notification_id is not None:
+            # Usunięcie lub aktualizacja powiadomienia o konkretnym ID danego użytkownika
+            update_notification_query = "UPDATE Icer SET powiadomienie = %s WHERE id = %s AND UserID = %s"
+            cursor.execute(update_notification_query, (notification_value, notification_id, user_id))
+            connection.commit()
+            return jsonify({"message": f"Notification with ID {notification_id} updated successfully"})
+
+        else:
+            return jsonify({"error": "Invalid notification value or missing notification ID."}), 400
 
     except ValueError as ve:
         return jsonify({"error": str(ve)}), 400
@@ -870,7 +869,6 @@ def delete_user_notifications():
     except ConnectionError as ce:
         return jsonify({"error": str(ce)}), 500
     except Exception as error:
-        # Tutaj możemy logować błąd w bardziej szczegółowy sposób
         current_app.logger.error(f"Unexpected error: {error}")
         return jsonify({"error": "Unexpected server error"}), 500
 
@@ -1041,4 +1039,4 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
