@@ -22,61 +22,61 @@ function AddProduct() {
     const [qrImagePreview, setQrImagePreview] = useState(null);
     const [videoStream, setVideoStream] = useState(null);
     const [isSending, setIsSending] = useState(false);
+    //
+    // useEffect(() => {
+    //     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    //         navigator.mediaDevices.getUserMedia({ video: true })
+    //             .then(stream => {
+    //                 setVideoStream(stream);
+    //             })
+    //             .catch(err => console.error("error:", err));
+    //     } else {
+    //         console.error("getUserMedia is not supported");
+    //     }
+    // }, []);
 
-    useEffect(() => {
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(stream => {
-                    setVideoStream(stream);
-                })
-                .catch(err => console.error("error:", err));
-        } else {
-            console.error("getUserMedia is not supported");
-        }
-    }, []);
-
-    useEffect(() => {
-        if (!videoStream) return;
-
-        const intervalId = setInterval(() => {
-            const video = document.getElementById('videoElement');
-            const canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-            canvas.toBlob(blob => {
-
-                if (isSending) return; // Nie wysyłaj, jeśli poprzedni request jeszcze trwa
-                    setIsSending(true);
-                const formData = new FormData();
-                formData.append('qr_code_image', blob);
-
-                axios.post(`${API_URL}/decode_qr_code`, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    }
-                })
-                    .then(response => {
-                        setQrDecoderData(response.data);
-                    })
-                    .catch(error => {
-                        console.error('Error in QR Scan:', error);
-                    })
-                    .finally(() => {
-                        setIsSending(false); // Resetowanie flagi po zakończeniu requestu
-                    });
-            });
-        }, 1000); // Co sekundę
-
-        return () => {
-            clearInterval(intervalId);
-            if (videoStream) {
-                videoStream.getTracks().forEach(track => track.stop());
-            }
-        };
-    }, [videoStream]);
+    // useEffect(() => {
+    //     if (!videoStream) return;
+    //
+    //     const intervalId = setInterval(() => {
+    //         const video = document.getElementById('videoElement');
+    //         const canvas = document.createElement('canvas');
+    //         canvas.width = video.videoWidth;
+    //         canvas.height = video.videoHeight;
+    //         const ctx = canvas.getContext('2d');
+    //         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    //
+    //         canvas.toBlob(blob => {
+    //
+    //             if (isSending) return; // Nie wysyłaj, jeśli poprzedni request jeszcze trwa
+    //                 setIsSending(true);
+    //             const formData = new FormData();
+    //             formData.append('qr_code_image', blob);
+    //
+    //             axios.post(`${API_URL}/decode_qr_code`, formData, {
+    //                 headers: {
+    //                     'Content-Type': 'multipart/form-data',
+    //                 }
+    //             })
+    //                 .then(response => {
+    //                     setQrDecoderData(response.data);
+    //                 })
+    //                 .catch(error => {
+    //                     console.error('Error in QR Scan:', error);
+    //                 })
+    //                 .finally(() => {
+    //                     setIsSending(false); // Resetowanie flagi po zakończeniu requestu
+    //                 });
+    //         });
+    //     }, 1000); // Co sekundę
+    //
+    //     return () => {
+    //         clearInterval(intervalId);
+    //         if (videoStream) {
+    //             videoStream.getTracks().forEach(track => track.stop());
+    //         }
+    //     };
+    // }, [videoStream]);
 
 
     const [product, setProduct] = useState({
@@ -95,6 +95,14 @@ function AddProduct() {
         if (file) {
             setImage(file);
             setImagePreview(URL.createObjectURL(file));
+
+            // Konwersja obrazu na Base64
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setProduct(prevState => ({ ...prevState, imageData: reader.result }));
+            };
+            reader.readAsDataURL(file);
+
         }
     };
 
@@ -129,7 +137,7 @@ function AddProduct() {
             },
         };
         axios
-            .post(`${API_URL}/api/add_product`, product, config)
+            .post(`${API_URL}/api/add_product`,product, config)
             .then((response) => {
                 console.log(`Dodane: ${JSON.stringify(response.data)}`);
                 URL.revokeObjectURL(image); //zwolnij pamięć zdjęcia po jego zapisaniu

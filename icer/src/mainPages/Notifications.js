@@ -28,12 +28,8 @@ export function Notifications({small, left}) {
         notificationsData.setRefresh
     );
 
-    // const notificationsData = useNotificationsData();
+
     function handleReadAll() {
-
-    }
-
-    function handleDeleteAll() {
 
     }
 
