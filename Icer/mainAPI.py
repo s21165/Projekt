@@ -355,8 +355,15 @@ def add_product():
                 return jsonify({"error": "Failed to add product to Produkty table."})
 
         # Dodawanie produktu do tabeli Icer
-        icer_query = "INSERT INTO Icer (UserID, produktID, ilosc, data_waznosci) VALUES (%s, %s, %s, %s)"
-        cursor.execute(icer_query, (user_id, product_id, data['ilosc'], data['data_waznosci']))
+        icer_query = """
+            INSERT INTO Icer (UserID, produktID, ilosc, data_waznosci, trzecia_wartosc, data_otwarcia, data_dodania)
+            VALUES (%s, %s, %s, %s, %s, %s, NOW())
+        """
+        cursor.execute(icer_query, (user_id, product_id, data['ilosc'], data['data_waznosci'],
+                                    data.get('trzecia_wartosc', None), data.get('data_otwarcia', None)))
+
+        # Pobierz ostatnio dodane ID z tabeli Icer
+        icer_id = cursor.lastrowid
 
         # Jeśli podano dane zdjęcia, dodaj je do UserPhotos
         if image_data:
@@ -728,7 +735,7 @@ def get_icer():
             LEFT JOIN Photos ON Icer.produktID = Photos.produktID
             LEFT JOIN UserPhotos ON Icer.produktID = UserPhotos.produktID AND UserPhotos.userID = %s
             WHERE Icer.UserID = %s
-            ORDER BY Icer.data_waznosci ASC
+            ORDER BY Icer.data_dodania ASC
         """
         cursor.execute(query, (user_id, user_id))
         results = cursor.fetchall()

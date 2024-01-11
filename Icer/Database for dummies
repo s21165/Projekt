@@ -32,6 +32,7 @@ CREATE TABLE Icer (
     trzecia_wartosc TINYINT CHECK (trzecia_wartosc >= 0 AND trzecia_wartosc <= 4),
     data_waznosci DATE,
     data_otwarcia DATE,
+    data_dodania DATE,
     default_photo TINYINT(1) DEFAULT 1,
     powiadomienie TINYINT,
     FOREIGN KEY (UserID) REFERENCES Users (id),
