@@ -762,7 +762,7 @@ def get_icer():
 
 
 @app.route('/api/Icer/delete_notification', methods=['POST'])
-def delete_notification():
+def delete_all_notification():
     try:
         # Tworzenie instancji klasy DatabaseConnector
         db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
@@ -820,7 +820,7 @@ def delete_notification():
 
 
 @app.route('/api/Icer/delete_all_notification', methods=['POST'])
-def delete_all_notification():
+def delete_notification():
     try:
         # Tworzenie instancji klasy DatabaseConnector
         db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
