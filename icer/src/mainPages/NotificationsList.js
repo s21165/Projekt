@@ -2,7 +2,7 @@ import {useState} from "react";
 import {GetBorderStyle} from "./products/GetBorderStyle";
 import {Icon} from "@iconify/react";
 
-export function NotificationsList({data, small = false, onProductClick, left = false}) {
+export function NotificationsList({data, small = false, action, left = false}) {
 
     const [expandedProduct, setExpandedProduct] = useState(null);
     const styl = GetBorderStyle(data, "current", 4);
@@ -36,8 +36,7 @@ export function NotificationsList({data, small = false, onProductClick, left = f
                             className="notificationsNameDiv"
                             onClick={() => {
                                 handleToggleExpand(product.id);
-                                // Jeśli funkcja onProductClick została przekazana jako prop, wywołaj ją:
-                                onProductClick && onProductClick(product);
+
                             }}
                         >
                             <h5 className="notificationText">{product.nazwa}</h5>
@@ -54,7 +53,7 @@ export function NotificationsList({data, small = false, onProductClick, left = f
                                 <Icon className="notificationDeleteIcon"
                                       style={small ? {marginRight: "1vw", height:"2vh",width:"2vw"} : {marginRight: "3vw"}}
                                       icon="octicon:x-24"
-                                      onClick={() => handleDeleteClick(product.id)}/>
+                                      onClick={() => action.handleRemoveNotification(product.id)}/>
                             </div>
 
                         </div>

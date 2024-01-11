@@ -125,7 +125,7 @@ function AddProduct() {
         const config = {
             headers: {
                 'Content-Type': 'application/json',
-                'session_id': sessionId  // dodajemy sessionId
+                'session_id': sessionId
             },
         };
         axios

@@ -7,7 +7,7 @@ import {
     Link, useLocation, Await
 } from "react-router-dom";
 import {Fridge} from "./mainPages/products/Fridge";
-import {Shopping} from "./mainPages/Shopping";
+
 import {Shops} from "./mainPages/Shops";
 import {Account} from "./mainPages/account/Account";
 import {Notifications} from "./mainPages/Notifications";

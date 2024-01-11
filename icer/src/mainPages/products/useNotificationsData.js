@@ -10,10 +10,11 @@ export const useNotificationsData = () => {
     const [refresh, setRefresh] = useState(false);
 
     useEffect(() => {
-        axios.post(`${API_URL}/api/Icer/get_filtered_products`, {sessionId})
+        axios.post(`${API_URL}/api/Icer/get_notifications`, {sessionId})
             .then((response) => {
                 const newData = response.data;
                 setData(newData);
+                setRefresh(!refresh);
 
             })
             .catch((error) => {
