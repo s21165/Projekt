@@ -197,7 +197,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height:10vh;
+
+    height:20%;
+
 }
 
 .quantityControl {
@@ -207,10 +209,13 @@
 }
 
 .quantityControlLarge {
+    position:relative;
     display: flex;
+
     align-items: center;
     margin-left: 0.5vw;
     margin-bottom: 1vh;
+    height:20%;
 
 }
 
@@ -224,22 +229,24 @@
     margin: 0;
 }
 
-.decreaseProduct:hover {
+.decreaseProduct:hover, .decreaseProductLarge {
     background-color: #D9214CFF;
     transform: scale(1.1);
 }
 
-.increaseProduct:hover {
+.increaseProduct:hover , .increaseProductLarge{
     background-color: #45a049;
     transform: scale(1.1);
 }
 
-.decreaseProduct .iconifyIcon, .increaseProduct .iconifyIcon {
+.decreaseProduct .iconifyIcon, .increaseProduct .iconifyIcon, .decreaseProductLarge .iconifyIcon
+, .increaseProductLarge .iconifyIcon{
     /* Dodaj przejście dla płynnego efektu */
     transition: transform 0.3s ease;
 }
 
-.decreaseProduct:hover .iconifyIcon, .increaseProduct:hover .iconifyIcon {
+.decreaseProduct:hover .iconifyIcon, .increaseProduct:hover .iconifyIcon ,.decreaseProductLarge .iconifyIcon
+, .increaseProductLarge .iconifyIcon{
     /* Zastosuj transformację skalowania podczas najechania */
     transform: scale(1.4); /* Przykład: powiększa ikonę do 120% jej pierwotnego rozmiaru */
 }
