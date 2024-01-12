@@ -1,4 +1,5 @@
 import os
+import base64
 
 from flask import Flask, request, jsonify, session, redirect, current_app
 from flask_cors import CORS
@@ -637,20 +638,23 @@ def upload_image():
     try:
         data = request.get_json()
         image_name = data.get('imageName')
-        image_data = data.get('imageData')  # Zakładając, że obraz jest przesłany jako ciąg bajtów
+        image_data_base64 = data.get('imageData')  # Zakładając, że obraz jest przesłany jako ciąg zakodowany Base64
         user_id = data.get('userId')
         product_id = data.get('productId')
 
-        if not image_name or not image_data or not user_id or not product_id:
+        if not image_name or not image_data_base64 or not user_id or not product_id:
             raise ValueError("Missing required data for image upload")
 
+        # Odkodowanie danych obrazu z Base64
+        image_data = base64.b64decode(image_data_base64)
+
         # Tutaj można ustawić lokalizację folderu, gdzie mają być zapisane obrazy
-        images_folder = 'D:/Pobrrane/projekty Adika/Projekt-PWAAdi/icer/src/data/noImage'
+        images_folder = 'D:\\Pobrrane\\projekty Adika\\Projekt-PWAAdi\\icer\\src\\data'
 
         # Tworzenie ścieżki do zapisu obrazu
         image_path = os.path.join(images_folder, image_name)
 
-        # Zapis obrazu na serwerze
+        # Zapis odkodowanego obrazu na serwerze
         with open(image_path, 'wb') as image_file:
             image_file.write(image_data)
 
