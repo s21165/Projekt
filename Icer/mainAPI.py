@@ -1,22 +1,17 @@
-import os
 import base64
 
-from flask import Flask, request, jsonify, session, redirect, current_app
-from flask_cors import CORS
-import requests
-from dotenv import load_dotenv
 import bcrypt
+import os
+import requests
 from apscheduler.schedulers.background import BackgroundScheduler
-import base64
-from json import JSONEncoder
+from dotenv import load_dotenv
+from flask import Flask, redirect, current_app
+from flask_cors import CORS
+from modules.database_connector import DatabaseConnector
+from modules.image_handler import handle_image_upload
 
-from modules import value_manager
-from node_modules.database_connector import DatabaseConnector
 from modules.product_data import ProductData
-from datetime import datetime, timedelta
-
 from modules.value_manager import ProductManager
-import time
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -355,36 +350,9 @@ def add_product():
             if product_id is None:
                 return jsonify({"error": "Failed to add product to Produkty table."})
 
-        # Dodawanie produktu do tabeli Icer
-        icer_query = """
-            INSERT INTO Icer (UserID, produktID, ilosc, data_waznosci, trzecia_wartosc, data_otwarcia, data_dodania)
-            VALUES (%s, %s, %s, %s, %s, %s, NOW())
-        """
-        cursor.execute(icer_query, (user_id, product_id, data['ilosc'], data['data_waznosci'],
-                                    data.get('trzecia_wartosc', None), data.get('data_otwarcia', None)))
-
-        # Pobierz ostatnio dodane ID z tabeli Icer
-        icer_id = cursor.lastrowid
-
-        # Jeśli podano dane zdjęcia, dodaj je do UserPhotos
+        # Wywołanie funkcji do obsługi przesyłania zdjęcia tylko jeśli dostępne są dane zdjęcia
         if image_data:
-            # Pobierz ostatnie ID z tabeli UserPhotos
-            last_user_photo_id = product_manager.get_last_user_photo_id()
-            photo_id = last_user_photo_id + 1 if last_user_photo_id else 1
-
-            # Utwórz nazwę zdjęcia jako ID z tabeli UserPhotos
-            image_upload_data = {
-                "imageName": str(photo_id),  # Nowa nazwa zdjęcia to ID z tabeli UserPhotos
-                "imageData": image_data,
-                "userId": user_id,
-                "productId": product_id
-            }
-
-            # Wysłanie żądania do lokalnego endpointu '/api/Icer/upload_image'
-            response = requests.post("/api/Icer/upload_image", json=image_upload_data)
-
-            if response.status_code != 200:
-                return jsonify({"error": "Failed to upload image"}), response.status_code
+            handle_image_upload(db_connector, data['imageName'], image_data, user_id, product_id)
 
         connection.commit()
         cursor.close()
@@ -413,7 +381,6 @@ def edit_product(product_id):
 
 @app.route('/api/shoppingList', methods=['POST', 'GET'])
 def get_icer_shopping():
-    print("test?")
     # Tworzenie instancji klasy DatabaseConnector
     db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 
@@ -486,6 +453,93 @@ def get_icer_shopping():
             cursor.close()
 
 
+# dla czystrzego kodu pozniej to bd zaimplementowane rowniez w innych funkcjach, na razie to jest jeszcze w fazie
+# testowej
+def get_user_id_by_username(username):
+    connection = db_connector.get_connection()
+    cursor = connection.cursor()
+
+    try:
+        # Pobranie ID użytkownika na podstawie nazwy użytkownika
+        user_query = "SELECT id FROM Users WHERE username = %s"
+        cursor.execute(user_query, (username,))
+        user_result = cursor.fetchone()
+
+        if user_result:
+            return user_result['id']
+        else:
+            return None
+
+    except Exception as error:
+        print(f"Error: {str(error)}")
+        return None
+
+    finally:
+        cursor.close()
+        connection.close()
+
+
+@app.route('/api/add_to_shopping_cart', methods=['POST'])
+def add_to_shopping_cart():
+    try:
+        # Pobranie danych z żądania
+        data = request.json
+
+        # Sprawdzenie, czy użytkownik jest zalogowany
+        if 'username' not in session:
+            return jsonify({"error": "User not logged in"}), 401
+
+        # Pobranie ID użytkownika na podstawie nazwy użytkownika
+        username = session['username']
+        user_id = get_user_id_by_username(username)
+
+        if user_id is None:
+            return jsonify({"error": "User not found"}), 401
+
+        # Pobranie ID produktu z żądania
+        product_id = data.get('productID')
+
+        if product_id is None:
+            return jsonify({"error": "Product ID not provided"}), 400
+
+        # Pobranie wartości in_cart z żądania (1 lub 0)
+        in_cart_value = data.get('inCart')
+
+        if in_cart_value not in [0, 1]:
+            return jsonify({"error": "Invalid inCart value"}), 400
+
+        # Uzyskanie połączenia z bazą danych
+        db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+        db_connector.connect()
+
+        # Sprawdzenie, czy produkt już istnieje w koszyku
+        check_product_query = "SELECT id FROM Shopping WHERE UserID = %s AND produktID = %s"
+        with db_connector.get_connection().cursor() as cursor:
+            cursor.execute(check_product_query, (user_id, product_id))
+            existing_product = cursor.fetchone()
+
+        if existing_product:
+            # Aktualizacja wartości in_cart
+            update_query = "UPDATE Shopping SET in_cart = %s WHERE UserID = %s AND produktID = %s"
+            with db_connector.get_connection().cursor() as cursor:
+                cursor.execute(update_query, (in_cart_value, user_id, product_id))
+        else:
+            # Dodanie nowego produktu do koszyka
+            insert_query = "INSERT INTO Shopping (UserID, produktID, in_cart) VALUES (%s, %s, %s)"
+            with db_connector.get_connection().cursor() as cursor:
+                cursor.execute(insert_query, (user_id, product_id, in_cart_value))
+
+        # Zatwierdzenie zmian w bazie danych
+        db_connector.get_connection().commit()
+
+        return jsonify({"message": "Updated in_cart value successfully!"})
+
+    except Exception as error:
+        return jsonify({"error": str(error)}), 500
+    finally:
+        db_connector.disconnect()
+
+
 @app.route('/api/Icer/get_notifications', methods=['POST'])
 def get_notifications():
     try:
@@ -532,7 +586,7 @@ def get_notifications():
                     INNER JOIN Produkty ON Icer.produktID = Produkty.id
                     LEFT JOIN Photos ON Icer.produktID = Photos.produktID
                     LEFT JOIN UserPhotos ON Icer.produktID = UserPhotos.produktID AND UserPhotos.userID = %s
-                    WHERE Icer.UserID = %s AND Icer.trzecia_wartosc <= 2 OR Icer.powiadomienie = 1
+                    WHERE Icer.UserID = %s AND Icer.powiadomienie = 1
                 """
         cursor.execute(query, (user_id, user_id))
         results = cursor.fetchall()
@@ -607,7 +661,7 @@ def get_products_with_red_flag():
                    Produkty.kategoria
             FROM Icer
             INNER JOIN Produkty ON Icer.produktID = Produkty.id
-            WHERE Icer.UserID = %s AND Icer.trzecia_wartosc = 1
+            WHERE Icer.UserID = %s AND Icer.trzecia_wartosc >= 1
         """
         cursor.execute(query, (user_id,))
         results = cursor.fetchall()

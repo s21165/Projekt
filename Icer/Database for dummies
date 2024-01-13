@@ -95,8 +95,6 @@ DELIMITER ;
 
 
 
-
-
 DELIMITER //
 CREATE PROCEDURE UpdateTrzeciaWartosc()
 BEGIN
