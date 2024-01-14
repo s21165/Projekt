@@ -4,7 +4,7 @@ import './ShoppingList.css'
 import {Icon} from "@iconify/react";
 import {ToastContainer} from "react-toastify";
 
-export function ShoppingList({data, addNewField, showNewFields, newFields, setNewFields}) {
+export function ShoppingList({data, showNewFields, newFields, setNewFields}) {
     const [selectedItems, setSelectedItems] = useState([]);
     const lastFieldRef = useRef(null);
     const handleFieldChange = (index, field, value) => {
@@ -16,7 +16,7 @@ export function ShoppingList({data, addNewField, showNewFields, newFields, setNe
 
     useEffect(() => {
         if (showNewFields && newFields.length > 0) {
-            lastFieldRef.current?.scrollIntoView({ behavior: 'smooth' });
+            lastFieldRef.current?.scrollIntoView({behavior: 'smooth'});
         }
     }, [newFields, showNewFields]);
 
@@ -35,14 +35,16 @@ export function ShoppingList({data, addNewField, showNewFields, newFields, setNe
     return (
         <>
             <div>
-                <ToastContainer />
+                <ToastContainer/>
                 {data?.map((item) => (
-                    <div className="shoppingList" key={item.id} style={{ backgroundColor: selectedItems.includes(item.id) ? "green" : "#dddd" } } onClick={()=>toggleSelectedItem(item.id)}>
+                    <div className="shoppingList" key={item.id}
+                         style={{backgroundColor: selectedItems.includes(item.id) ? "green" : "#dddd"}}
+                         onClick={() => toggleSelectedItem(item.id)}>
 
 
                         <h2 className="shoppingListName">{item.nazwa}</h2>
-                        <h3 className="shoppingListQuantity">ilość: {item.ilosc}</h3>
-                        <h3 className="shoppingListPrice">cena: {item.cena}zł</h3>
+                        <h2 className="shoppingListQuantity">{item.ilosc}</h2>
+                        <h2 className="shoppingListPrice">{item.cena}zł</h2>
                         <div className="shoppingListSpace">
 
                         </div>
@@ -56,18 +58,34 @@ export function ShoppingList({data, addNewField, showNewFields, newFields, setNe
 
                 ))}
 
-                     {newFields.map((field, index) => (
-                        <div className="shoppingList" key={index} ref={index === newFields.length - 1 ? lastFieldRef : null}>
-                            <input className="shoppingListName" type="text" value={field.nazwa} onChange={(e) => handleFieldChange(index, 'nazwa', e.target.value)} />
-                            <input className="shoppingListQuantity" type="number" value={field.ilosc} onChange={(e) => handleFieldChange(index, 'ilosc', e.target.value)} />
-                            <input className="shoppingListPrice" type="number" value={field.cena} onChange={(e) => handleFieldChange(index, 'cena', e.target.value)} />
-                            <div className="shoppingListSpace"></div>
+                {newFields.map((field, index) => (
+                    <div className="shoppingList" key={index}
+                         ref={index === newFields.length - 1 ? lastFieldRef : null}>
+                        <div className="shoppingListNameInputDiv" >
+                            <h4 className="shoppingListNameInputDivName">nazwa</h4>
+                            <input className="shoppingListNameInput" type="text" value={field.nazwa}
+                                   onChange={(e) => handleFieldChange(index, 'nazwa', e.target.value)}/>
 
                         </div>
+                        <div className="shoppingListQuantityInputDiv">
+                            <h4 className="shoppingListNameInputDivQuantity">ilość</h4>
+                            <input className="shoppingListQuantityInput" type="number" value={field.ilosc}
+                                   onChange={(e) => handleFieldChange(index, 'ilosc', e.target.value)}/>
 
-                    ))}
+                        </div>
+                        <div className="shoppingListPriceInputDiv">
+                            <h4 className="shoppingListNameInputDivPrice">cena</h4>
+                            <input className="shoppingListPriceInput" type="number" value={field.cena}
+                                    onChange={(e) => handleFieldChange(index, 'cena', e.target.value)}/>
 
+                        </div>
+                        <div className="shoppingListSpace"></div>
+                        <button className="shoppingListDeleteIconButton">
+                            <Icon className="shoppingListDeleteIcon" icon="tabler:check"/>
+                        </button>
+                    </div>
 
+                ))}
 
 
             </div>

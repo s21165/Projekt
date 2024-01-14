@@ -5,6 +5,7 @@ import {useProductsDataNoFilter} from "./products/useProductsData";
 import "./ShoppingList.css"
 import {API_URL} from "../config";
 import {useProductCartData} from "./account/useProductCartData";
+import {Icon} from "@iconify/react";
 
 export function ShoppingCart() {
 
@@ -31,6 +32,17 @@ export function ShoppingCart() {
                 <button className="handleAddAllCartButton" onClick={addNewField}>{showNewFields ?
                     <h2>cofnij dodawanie</h2> : <h2>dodaj</h2>}</button>
 
+            </div>
+            <div className="topInfoShoppingCart">
+                <h2 className="topInfoShoppingListName">nazwa</h2>
+                <h2 className="topInfoShoppingListQuantity">ilość</h2>
+                <h2 className="topInfoShoppingListPrice">cena</h2>
+                <div className="topInfoShoppingListSpace">
+
+                </div>
+                <div className="shoppingListDeleteIconButton">
+                    <h2> akcja </h2>
+                </div>
             </div>
             <div className="shoppingListConainer">
                 <ShoppingList data={productDataCart.data} addNewField={addNewField} showNewFields={showNewFields}

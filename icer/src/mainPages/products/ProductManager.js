@@ -28,24 +28,34 @@ function ProductManager({
                 />
             ) : (
                 <>
-                    {size==='medium' && <div className="listButtons">
-                        <div className="leftButtonDiv">
-                            <button
-                                className={`leftButton ${filter === 'current' ? 'active' : ''}`}
-                                onClick={() => setFilter('current')}>
-                                <h2>Aktualne</h2>
-                            </button>
-                        </div>
-                        <div className="rightButtonDiv">
-                            <button
-                                className={`rightButton ${filter === 'old' ? 'active' : ''}`}
-                                onClick={() => setFilter('old')}>
-                                <h2>Kosz</h2>
-                            </button>
-                        </div>
-                    </div>
+                    {size === 'medium' &&
+                        <>
+                            <div>
+                                <div className="listButtons">
+
+                                    <div className="leftButtonDiv">
+                                        <button
+                                            className={`leftButton ${filter === 'current' ? 'active' : ''}`}
+                                            onClick={() => setFilter('current')}>
+                                            <h2 className="productListTopButtonsH2">Aktualne</h2>
+                                        </button>
+                                    </div>
+                                    <div className="rightButtonDiv">
+                                        <button
+                                            className={`rightButton ${filter === 'old' ? 'active' : ''}`}
+                                            onClick={() => setFilter('old')}>
+                                            <h2 className="productListTopButtonsH2">Kosz</h2>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div className="spaceBetweenButtonsAndProductList"></div>
+
+
+                        </>
                     }
-                    <div className="productList" style={size ==='small'? {height:"100%"} : {height: "90vh"}}>
+                    <div className="productList" style={size === 'small' ? {height: "100%"} : {height: "90vh"}}>
                         {productData.filteredProducts && productData.filteredProducts.map((data, index) =>
                             <ProductItem
                                 key={index}
