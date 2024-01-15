@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import ProductEdit from "./ProductEdit";
 import ProductItem from "./ProductItem";
 
@@ -13,8 +13,28 @@ function ProductManager({
 
                         }) {
     const [selectedProductId, setSelectedProductId] = useState(null);
+    const productListRef = useRef(null); // Utworzenie ref
+    const [maxDimension, setMaxDimension] = useState(0);
 
+    useEffect(() => {
+        const observeTarget = productListRef.current;
 
+        if (observeTarget) {
+            const resizeObserver = new ResizeObserver(entries => {
+                for (let entry of entries) {
+                    const { width, height } = entry.contentRect;
+                    // Ustawienie stanu na większą wartość z width i height
+                    setMaxDimension(Math.min(width, height));
+                    console.log( maxDimension)
+                }
+            });
+
+            resizeObserver.observe(observeTarget);
+
+            // Czyszczenie przy odmontowywaniu
+            return () => resizeObserver.unobserve(observeTarget);
+        }
+    }, []);
     const handleProductClick = (productId) => {
         setSelectedProductId(selectedProductId === productId ? null : productId);
     };
@@ -55,12 +75,13 @@ function ProductManager({
 
                         </>
                     }
-                    <div className="productList" style={size === 'small' ? {height: "100%"} : {height: "90vh"}}>
+                    <div className="productList" ref={productListRef} style={size === 'small' ? {height: "97vh"} : {height: "90vh"}}>
                         {productData.filteredProducts && productData.filteredProducts.map((data, index) =>
                             <ProductItem
                                 key={index}
                                 data={data}
                                 handleRemove={productActions.handleRemove}
+                                maxDimension={maxDimension}
                                 handleEditClick={productActions.handleEditClick}
                                 handleIncrease={productActions.handleIncrease}
                                 handleDecrease={productActions.handleDecrease}

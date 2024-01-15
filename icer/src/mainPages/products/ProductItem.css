@@ -2,9 +2,6 @@
 .productItem {
 
     position: relative;
-
-    flex: 1 0 35%;
-    height:50%;
     margin: 0.4vh 0.2vw;
     background-color: #f5f5f5;
     border: 1px solid #ddd;
@@ -37,16 +34,11 @@
 .productItemSmall {
 
     position: relative;
-
-    flex: 0 1 15%;
-    height: 15%;
     margin: 0.4vh 0.2vw;
     background-color: #f5f5f5;
     border: 1px solid #ddd;
     border-radius: 4px;
-    padding: calc(1vw + 1vh);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-
     background-size: 100% 100%;
     background-position: center; /* Ustala, że obraz ma być wyśrodkowany */
     backdrop-filter: blur();
@@ -206,6 +198,8 @@
     display: flex;
     align-items: center;
     margin-left: 0.5vw;
+    justify-content: space-evenly;
+
 }
 
 .quantityControlLarge {
@@ -304,22 +298,22 @@
 }
 
 
-@media only screen and (max-width: 600px) {
-    .productItem {
-        flex: 1 0 90%; /* Zajmij całą dostępną szerokość kontenera */
-    }
+/*@media only screen and (max-width: 600px) {*/
+/*    .productItem {*/
+/*        flex: 1 0 90%; !* Zajmij całą dostępną szerokość kontenera *!*/
+/*    }*/
 
-    /*.productItem h2 {*/
-    /*    font-size: calc(1.2vw + 1.2vh);*/
-    /*    margin-bottom: 1vh;*/
-    /*}*/
+/*    !*.productItem h2 {*!*/
+/*    !*    font-size: calc(1.2vw + 1.2vh);*!*/
+/*    !*    margin-bottom: 1vh;*!*/
+/*    !*}*!*/
 
-    /*.productItem div {*/
-    /*    margin: 0.8vh 0;*/
-    /*}*/
+/*    !*.productItem div {*!*/
+/*    !*    margin: 0.8vh 0;*!*/
+/*    !*}*!*/
 
-    /*.productItem button {*/
-    /*    padding: 1vh 2vh;*/
-    /*}*/
-}
+/*    !*.productItem button {*!*/
+/*    !*    padding: 1vh 2vh;*!*/
+/*    !*}*!*/
+/*}*/
 

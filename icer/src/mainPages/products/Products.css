@@ -82,9 +82,9 @@
     display: flex;
     flex-wrap: wrap;
     width: 100%; /* Zajmowanie całej dostępnej szerokości */
-    height:90vh;
+
     overflow-y: auto;
-    justify-content: center;
+    justify-content: space-around;
     margin:auto;
 }
 

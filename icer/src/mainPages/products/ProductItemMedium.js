@@ -1,11 +1,14 @@
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Icon} from "@iconify/react";
 
 function ProductItemMedium({data, useProduct, handleZero, handleRemove, handleEditClick, info, filter}) {
+
+
     return (
         <>
+
             {useProduct.showRemovalConfirmation ? (
-                <div className="moveToBinConfirmationDiv">
+                <div className="moveToBinConfirmationDiv" >
                     <h1 className="moveToBinConfirmationInfoHeader">Produkt {data.nazwa} zostanie przeniesiony do kosza,
                         kontynuować?</h1>
                     <div className="moveToBinConfirmationButtons">
@@ -27,14 +30,15 @@ function ProductItemMedium({data, useProduct, handleZero, handleRemove, handleEd
 
 
 
-                    <div className="productItemQuantityDiv">
+                    <div className="productItemQuantityDiv"
+                         >
 
                         <div className="quantityControl">
                             <button className="decreaseProduct" onClick={useProduct.handleDecreaseWithCheck}>
                                 <h2><Icon className="iconifyIcon" icon="tdesign:minus"/></h2>
                             </button>
 
-                            <span><h3>Ilość: {data.ilosc}</h3></span>
+                            <span><h3 className="productCardInfoRow">Ilość: {data.ilosc}</h3></span>
                             <button className="increaseProduct" onClick={useProduct.handleIncreaseItem}>
                                 <h2><Icon className="iconifyIcon" icon="pepicons-pencil:plus"/></h2>
                             </button>
@@ -42,7 +46,9 @@ function ProductItemMedium({data, useProduct, handleZero, handleRemove, handleEd
                         </div>
                     </div>
 
-                    <div className="iconContainer">
+                    <div className="iconContainer"
+
+                    >
                         {filter === 'current' ?
                             <button className="removeButton" onClick={() => handleZero(data.id)}>
                                 <h2><Icon className="iconifyIcon" icon="ph:trash-bold"/></h2></button>
