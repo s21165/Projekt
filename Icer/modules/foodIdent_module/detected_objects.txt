@@ -1,0 +1,2 @@
+Class: keyboard, Confidence: 0.7822943329811096, BBox: (120, 64, 415, 158)
+Class: mouse, Confidence: 0.7566746473312378, BBox: (478, 118, 137, 122)

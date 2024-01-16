@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dummy Bot Site</title>
+	<meta charset="UTF-8">
+
+</head>
+<body>
+    <h1>Welcome to the Dummy Bot Site</h1>
+    <form method="POST" action="/">
+        <input type="text" name="user_input" placeholder="Ask something...">
+        <button type="submit">Submit</button>
+    </form>
+	<p>Bot Response: {{ bot_response|safe }}</p>
+
+    
+	<form method="POST" action="/generate_barcode">
+		<input type="text" name="name" placeholder="Name">
+		<input type="text" name="price" placeholder="Price">
+		<input type="text" name="kcal" placeholder="Kcal">
+		<input type="text" name="fat" placeholder="Fat">
+		<input type="text" name="carbs" placeholder="Carbs">
+		<input type="text" name="protein" placeholder="Protein">
+		<input type="text" name="category" placeholder="Category">
+		<input type="text" name="amount" placeholder="Amount">
+		<button type="submit">Generate Barcode</button>
+	</form>
+	
+	
+
+	
+	<form method="POST" action="/generate_qr_code">
+		<input type="text" name="name" placeholder="Name">
+		<input type="text" name="price" placeholder="Price">
+		<input type="text" name="kcal" placeholder="Kcal">
+		<input type="text" name="fat" placeholder="Fat">
+		<input type="text" name="carbs" placeholder="Carbs">
+		<input type="text" name="protein" placeholder="Protein">
+		<input type="text" name="category" placeholder="Category">
+		<input type="text" name="amount" placeholder="Amount">
+		<button type="submit">Generate QR Code</button>
+	</form>
+
+    
+	<form method="POST" action="/decode_barcode" enctype="multipart/form-data">
+		<label class="file-input-button">
+			Decode Barcode
+			<input type="file" name="barcode_image" class="hidden-file-input" accept="image/*">
+		</label>
+		<button type="submit">Decode</button>
+	</form>
+
+
+	<form method="POST" action="/decode_qr_code" enctype="multipart/form-data">
+		<label class="file-input-button">
+			Decode QR Code
+			<input type="file" name="qr_code_image" class="hidden-file-input" accept="image/*">
+		</label>
+		<button type="submit">Decode</button>
+	</form>
+	
+	
+	<form action="{{ url_for('start_camera_monitoring_route') }}" method="post">
+		<button type="submit">Start Camera Monitoring</button>
+	</form>
+	
+	<form action="{{ url_for('start_food_identification_route') }}" method="post">
+		<button type="submit">Start Food Identification</button>
+	</form>
+	
+
+
+<!-- In your main page or display_video.html -->
+	<form action="{{ url_for('start_camera_monitoring_route') }}" method="post">
+		<button type="submit">Start Camera Monitoring</button>
+	</form>
+
+	
+	
+</body>
+</html>

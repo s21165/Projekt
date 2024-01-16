@@ -321,30 +321,20 @@ def add_product():
         # Łączenie z bazą danych
         db_connector.connect()
 
-        # Tworzenie instancji ProductManager
-        product_manager = ProductManager(db_connector)
-
         # Pobieranie danych z żądania
         data = request.json
         image_data = data.get('imageData')
 
-        # Sprawdzenie, czy użytkownik jest zalogowany
-        if 'username' not in session:
-            return jsonify({"error": "User not logged in"}), 401
+        # Pobranie ID użytkownika na podstawie nazwy użytkownika
+        user_id, error_response, status_code = get_user_id_by_username(session.get('username'), db_connector)
+
+        if error_response:
+            return error_response, status_code
+
+        # Reszta kodu bez zmian, używając user_id
 
         connection = db_connector.get_connection()
         cursor = connection.cursor(dictionary=True)
-        username = session['username']
-
-        # Pobranie ID użytkownika na podstawie nazwy użytkownika
-        user_query = "SELECT id FROM Users WHERE username = %s"
-        cursor.execute(user_query, (username,))
-        user_result = cursor.fetchone()
-
-        if not user_result:
-            return jsonify({"error": "User not found"}), 401
-
-        user_id = user_result['id']
 
         # Sprawdzenie, czy produkt już istnieje
         check_product_query = "SELECT id FROM Produkty WHERE nazwa = %s AND cena = %s"
@@ -354,6 +344,7 @@ def add_product():
         if product_exists:
             product_id = product_exists['id']
         else:
+            product_manager = ProductManager(db_connector)
             product_id = product_manager.dodaj_produkt(
                 data['nazwa'],
                 data['cena'],
@@ -365,8 +356,7 @@ def add_product():
             )
 
             if product_id is None:
-                return jsonify({"error": "Failed to add product to Produkty table."})
-
+                return jsonify({"error": "Failed to add product to Produkty table."}), 500
 
         # Dodanie daty dodania do tabeli 'Icer'
         add_icer_query = """
@@ -480,7 +470,10 @@ def get_icer_shopping():
 
 # dla czystrzego kodu pozniej to bd zaimplementowane rowniez w innych funkcjach, na razie to jest jeszcze w fazie
 # testowej
-def get_user_id_by_username(username):
+def get_user_id_by_username(username, db_connector):
+    if 'username' not in session:
+        return None, jsonify({"error": "User not logged in"}), 401
+
     connection = db_connector.get_connection()
     cursor = connection.cursor()
 
@@ -491,13 +484,13 @@ def get_user_id_by_username(username):
         user_result = cursor.fetchone()
 
         if user_result:
-            return user_result['id']
+            return user_result['id'], None, None
         else:
-            return None
+            return None, jsonify({"error": "User not found"}), 401
 
     except Exception as error:
         print(f"Error: {str(error)}")
-        return None
+        return None, jsonify({"error": str(error)}), 500
 
     finally:
         cursor.close()
