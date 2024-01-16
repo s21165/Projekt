@@ -17,7 +17,7 @@ class DatabaseConnector:
                 password=self.password,
                 database=self.database
             )
-            print("Połączono z bazą danych!")
+            # print("Połączono z bazą danych!")
         except mysql.connector.Error as error:
             print("Błąd połączenia z bazą danych: ", error)
 

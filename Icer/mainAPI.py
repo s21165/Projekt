@@ -51,9 +51,19 @@ def run_daily_procedure():
     local_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
     local_connector.connect()
     cursor = local_connector.get_connection().cursor()
-    cursor.callproc('UpdateTrzeciaWartosc')
-    cursor.close()
-    local_connector.get_connection().commit()
+
+    try:
+        # Wywołanie PROCEDURE UpdateTrzeciaWartosc
+        cursor.callproc('UpdateTrzeciaWartosc')
+        # Wywołanie PROCEDURE Updatenotification
+        cursor.callproc('Updatenotification')
+        cursor.close()
+        local_connector.get_connection().commit()
+    except Exception as error:
+        local_connector.get_connection().rollback()
+        raise error
+    finally:
+        local_connector.get_connection().close()
 
 
 @app.route('/api/add_to_product', methods=['POST'])
@@ -321,20 +331,30 @@ def add_product():
         # Łączenie z bazą danych
         db_connector.connect()
 
+        # Tworzenie instancji ProductManager
+        product_manager = ProductManager(db_connector)
+
         # Pobieranie danych z żądania
         data = request.json
         image_data = data.get('imageData')
 
-        # Pobranie ID użytkownika na podstawie nazwy użytkownika
-        user_id, error_response, status_code = get_user_id_by_username(session.get('username'), db_connector)
-
-        if error_response:
-            return error_response, status_code
-
-        # Reszta kodu bez zmian, używając user_id
+        # Sprawdzenie, czy użytkownik jest zalogowany
+        if 'username' not in session:
+            return jsonify({"error": "User not logged in"}), 401
 
         connection = db_connector.get_connection()
         cursor = connection.cursor(dictionary=True)
+        username = session['username']
+
+        # Pobranie ID użytkownika na podstawie nazwy użytkownika
+        user_query = "SELECT id FROM Users WHERE username = %s"
+        cursor.execute(user_query, (username,))
+        user_result = cursor.fetchone()
+
+        if not user_result:
+            return jsonify({"error": "User not found"}), 401
+
+        user_id = user_result['id']
 
         # Sprawdzenie, czy produkt już istnieje
         check_product_query = "SELECT id FROM Produkty WHERE nazwa = %s AND cena = %s"
@@ -344,7 +364,6 @@ def add_product():
         if product_exists:
             product_id = product_exists['id']
         else:
-            product_manager = ProductManager(db_connector)
             product_id = product_manager.dodaj_produkt(
                 data['nazwa'],
                 data['cena'],
@@ -356,7 +375,8 @@ def add_product():
             )
 
             if product_id is None:
-                return jsonify({"error": "Failed to add product to Produkty table."}), 500
+                return jsonify({"error": "Failed to add product to Produkty table."})
+
 
         # Dodanie daty dodania do tabeli 'Icer'
         add_icer_query = """
@@ -369,14 +389,21 @@ def add_product():
         if image_data:
             handle_image_upload(db_connector, data['imageName'], image_data, user_id, product_id)
 
+        # Uruchomienie funkcji run_daily_procedure po dodaniu produktu
+
+
         connection.commit()
         cursor.close()
         connection.close()
 
+
         return jsonify({"message": "Product added successfully!"})
+        run_daily_procedure()
+
 
     except Exception as error:
         return jsonify({"error": str(error)}), 500
+
 
 
 @app.route('/api/edit_product/<int:product_id>', methods=['PUT'])
@@ -763,7 +790,7 @@ def get_icer():
     db_connector.connect()
 
     scheduler = BackgroundScheduler()
-    scheduler.add_job(run_daily_procedure, 'interval', seconds=60)
+    scheduler.add_job(run_daily_procedure, 'interval', seconds=10)
     scheduler.start()
 
     try:
