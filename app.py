@@ -3,12 +3,15 @@ import threading
 from flask import Flask, request, render_template, send_file, redirect, url_for, send_from_directory, make_response
 from flask import Flask, Response, request, render_template, redirect, url_for, make_response
 
+from flask import Flask, request, render_template, url_for
+from modules.foodIdent_module.foodIdent import load_and_prep_image, pred_and_plot, load_model
+
 from modules.bot_module.bot import get_bot_response
 from modules.scan_module.gen import generate_qr_code, generate_barcode
 from modules.scan_module.forms import BarcodeForm
 from modules.scan_module.decoder import decode_barcode, decode_qr_code
 from modules.advert_module.monitor import generate_frames
-from modules.foodIdent_module.foodIdent import foodIdent
+
 import sys
 
 app = Flask(__name__)
@@ -16,6 +19,14 @@ app.config['BARCODE_FOLDER'] = os.path.join(app.static_folder, 'barcodes')
 app.config['QR_CODE_FOLDER'] = os.path.join(app.static_folder, 'qrcodes')  
 app.config['SECRET_KEY'] = 'key'  # Replace with a strong secret key
 #app.config['BARCODE_FOLDER'] = 'static/barcodes
+
+# Loading model
+model = load_model('model3.h5')
+print("Model loaded successfully:", model is not None)
+
+class_names = ['ciasto_czekoladowe', 'donut', 'frytki', 'hamburger', 'lasagne', 'makaroniki',
+ 'nalesniki', 'pizza', 'salatka_cezar', 'skrzydelka_z_kurczaka', 'sushi',
+ 'szarlotka', 'tatar', 'tiramisu', 'zeberka']
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -141,6 +152,30 @@ def start_camera_monitoring_route():
 def display_video():
     # Render a template that will display the video
     return render_template('display_video.html')
+
+
+
+@app.route('/upload_image', methods=['GET', 'POST'])
+def upload_predict():
+    if request.method == 'POST':
+        # Get the file from post request
+        file = request.files['file']
+
+        # Define a directory to save the file (make sure this directory exists)
+        upload_folder = 'static/uploads/'
+        filename = upload_folder + file.filename
+        file.save(filename)
+
+        # Make prediction
+        pred_class = pred_and_plot(model, filename, class_names)
+
+        # Generate the URL for the saved image
+        image_url = url_for('static', filename='uploads/' + file.filename)
+
+        return render_template('result.html', prediction=pred_class, image_file=image_url)
+
+    return render_template('upload.html')
+
 
 
 

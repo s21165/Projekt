@@ -1,0 +1,8 @@
+Problemy barcode lib nie działa,, tzreba uzyc innej
+
+CSRF protection flask key
+
+
+
+pip freeze > requirements.txt
+pip install -r requirements.txt
