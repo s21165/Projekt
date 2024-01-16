@@ -28,16 +28,14 @@ from flask import jsonify
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
-#Otawian
+# Otawian
 app.config['BARCODE_FOLDER'] = os.path.join(app.static_folder, 'barcodes')
 app.config['QR_CODE_FOLDER'] = os.path.join(app.static_folder, 'qrcodes')
 app.config['SECRET_KEY'] = 'key'  # Replace with a strong secret key
-#app.config['BARCODE_FOLDER'] = 'static/barcodes
+# app.config['BARCODE_FOLDER'] = 'static/barcodes
 ###
 
 app.secret_key = 'secret_key'  # Klucz sesji
-
-
 
 # Tworzenie instancji klasy DatabaseConnector
 db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
@@ -47,9 +45,6 @@ db_connector.connect()
 
 # Tworzenie instancji ProductManager
 product_manager = ProductManager(db_connector)
-
-
-
 
 
 def run_daily_procedure():
@@ -371,6 +366,14 @@ def add_product():
 
             if product_id is None:
                 return jsonify({"error": "Failed to add product to Produkty table."})
+
+
+        # Dodanie daty dodania do tabeli 'Icer'
+        add_icer_query = """
+            INSERT INTO Icer (UserID, produktID, ilosc, data_waznosci, data_dodania)
+            VALUES (%s, %s, %s, %s, NOW())
+        """
+        cursor.execute(add_icer_query, (user_id, product_id, data['ilosc'], data['data_waznosci']))
 
         # Wywołanie funkcji do obsługi przesyłania zdjęcia tylko jeśli dostępne są dane zdjęcia
         if image_data:
@@ -1111,7 +1114,6 @@ def edit_user():
 
     except Exception as error:
         return jsonify({"error": str(error)})
-
 
 
 @app.route('/', methods=['GET', 'POST'])
