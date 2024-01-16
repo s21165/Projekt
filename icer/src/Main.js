@@ -25,7 +25,7 @@ import Help from "./mainPages/Help";
 import ChatContainer from "./mainPages/chatBot/ChatContainer";
 import {AuthContext} from "./mainPages/account/auth-context";
 import {ShoppingCart} from "./mainPages/ShoppingCart";
-
+import {Settings} from "./mainPages/Settings";
 
 function Main() {
 
@@ -86,7 +86,7 @@ function Main() {
                             <Route path="/Konto" element={<Account/>}/>
                             <Route path="/Powiadomienia" element={<Notifications/>}/>
                             <Route path="/Sklepy" element={<Fridge/>}/>
-                            <Route path="/Ustawienia"/>
+                            <Route path="/Ustawienia" element={<Settings/>}/>
                             <Route path="/Pomoc" element={<Help/>}/>
                             <Route path="/Zaloguj" element={<Login/>}/>
                             <Route path="/Chatbot" element={<ChatContainer/>}/>

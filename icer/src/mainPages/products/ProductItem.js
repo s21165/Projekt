@@ -31,13 +31,14 @@ function ProductItem({
     const[image, setImage] = useState();
 
     const picGetter = PictureGetter(image,setImage,data.zdjecie_lokalizacja)
-    const stala =1;
+    const mediumProductsCountSetting =1;
+    const smallProductsCountSetting =3;
     const styl = GetBorderStyle(data, filter, 2);
     const [info, setInfo] = useState(infoProducts);
 
-    const itemWidth = !isSelected ? maxDimension * (smallProductsCount[4]/ 100) : maxDimension;
+    const itemWidth = !isSelected ? maxDimension * (smallProductsCount[smallProductsCountSetting]/ 100) : maxDimension;
     const itemWidthLarge = maxDimension * (smallProductsCount[2]/ 100);
-    const itemWidthMedium = maxDimension * ((mediumProductsCount[stala])/ 100);
+    const itemWidthMedium = maxDimension * ((mediumProductsCount[mediumProductsCountSetting])/ 100);
 
     const useProduct = useProductItem(data, handleDecrease, handleIncrease, setIsSelected)
     const elementRef = useRef(null);
@@ -92,7 +93,7 @@ function ProductItem({
                              className={`productItem ${!info ? '' : 'hidden'}`}
                              ref={elementRef}
                              style={{backgroundImage: `url(${picGetter})`, border: styl,flex: `1 0 ${itemWidthMedium}px`, // Ustawienie szerokości elementu
-                                 height: `${itemWidthMedium}px`,fontSize: stala === 0 ? maxDimension*1/100 : maxDimension*stala/100}}
+                                 height: `${itemWidthMedium}px`,fontSize: mediumProductsCountSetting === 0 ? maxDimension*1/100 : maxDimension*mediumProductsCountSetting/100}}
                              onClick={() => setInfo(!info)}>
                             <ProductItemMedium
                                 data={data}
@@ -103,7 +104,7 @@ function ProductItem({
                                 info={info}
                                 filter={filter}
                                 itemWidthMedium={itemWidthMedium}
-                                stala = {stala}
+                                mediumProductsCountSetting= {mediumProductsCountSetting}
                             />
                         </div>
                     );
