@@ -31,40 +31,16 @@ function ProductItem({
     const[image, setImage] = useState();
 
     const picGetter = PictureGetter(image,setImage,data.zdjecie_lokalizacja)
-
+    const stala =1;
     const styl = GetBorderStyle(data, filter, 2);
     const [info, setInfo] = useState(infoProducts);
 
-    const itemWidth = maxDimension * (smallProductsCount[0]/ 100);
+    const itemWidth = !isSelected ? maxDimension * (smallProductsCount[4]/ 100) : maxDimension;
     const itemWidthLarge = maxDimension * (smallProductsCount[2]/ 100);
-    const itemWidthMedium = maxDimension * ((mediumProductsCount[1])/ 100);
+    const itemWidthMedium = maxDimension * ((mediumProductsCount[stala])/ 100);
 
     const useProduct = useProductItem(data, handleDecrease, handleIncrease, setIsSelected)
     const elementRef = useRef(null);
-    const [fontSize, setFontSize] = useState(15);
-
-    useEffect(() => {
-        const resizeObserver = new ResizeObserver(entries => {
-            for (let entry of entries) {
-                const { width } = entry.contentRect;
-                // Oblicz nową wielkość czcionki w oparciu o szerokość elementu
-                const newFontSize = fontSize * ((mediumProductsCount[1])/ 100) // Przykład obliczenia, dostosuj wg potrzeb
-                setFontSize(newFontSize);
-                console.log(itemWidthMedium, maxDimension)
-            }
-        });
-
-        if (elementRef.current) {
-            resizeObserver.observe(elementRef.current);
-        }
-
-        return () => {
-            if (elementRef.current) {
-                resizeObserver.unobserve(elementRef.current);
-            }
-            resizeObserver.disconnect();
-        };
-    }, []);
 
 
     try {
@@ -116,7 +92,7 @@ function ProductItem({
                              className={`productItem ${!info ? '' : 'hidden'}`}
                              ref={elementRef}
                              style={{backgroundImage: `url(${picGetter})`, border: styl,flex: `1 0 ${itemWidthMedium}px`, // Ustawienie szerokości elementu
-                                 height: `${itemWidthMedium}px`,fontSize:fontSize}}
+                                 height: `${itemWidthMedium}px`,fontSize: stala === 0 ? maxDimension*1/100 : maxDimension*stala/100}}
                              onClick={() => setInfo(!info)}>
                             <ProductItemMedium
                                 data={data}
@@ -127,7 +103,7 @@ function ProductItem({
                                 info={info}
                                 filter={filter}
                                 itemWidthMedium={itemWidthMedium}
-
+                                stala = {stala}
                             />
                         </div>
                     );

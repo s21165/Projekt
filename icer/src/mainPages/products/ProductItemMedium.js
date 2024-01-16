@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Icon} from "@iconify/react";
 
-function ProductItemMedium({data, useProduct, handleZero, handleRemove, handleEditClick, info, filter}) {
+function ProductItemMedium({data, useProduct, handleZero, handleRemove, handleEditClick, info, filter, stala}) {
 
 
     return (
@@ -34,12 +34,12 @@ function ProductItemMedium({data, useProduct, handleZero, handleRemove, handleEd
                          >
 
                         <div className="quantityControl">
-                            <button className="decreaseProduct" onClick={useProduct.handleDecreaseWithCheck}>
+                            <button className="decreaseProduct"  style={{ padding: stala === 0 ? 0 : 'calc(0.2vw + 0.2vh) calc(0.4vw + 0.4vh);' }} onClick={useProduct.handleDecreaseWithCheck}>
                                 <h2><Icon className="iconifyIcon" icon="tdesign:minus"/></h2>
                             </button>
 
                             <span><h3 className="productCardInfoRow">Ilość: {data.ilosc}</h3></span>
-                            <button className="increaseProduct" onClick={useProduct.handleIncreaseItem}>
+                            <button className="increaseProduct" style={{ padding: stala === 0 ? 0 : 'calc(0.2vw + 0.2vh) calc(0.4vw + 0.4vh);' }} onClick={useProduct.handleIncreaseItem}>
                                 <h2><Icon className="iconifyIcon" icon="pepicons-pencil:plus"/></h2>
                             </button>
 
@@ -50,16 +50,16 @@ function ProductItemMedium({data, useProduct, handleZero, handleRemove, handleEd
 
                     >
                         {filter === 'current' ?
-                            <button className="removeButton" onClick={() => handleZero(data.id)}>
+                            <button className="removeButton" style={{ padding: stala === 0 ? 0 : 'calc(0.2vw + 0.2vh) calc(0.4vw + 0.4vh);' }} onClick={() => handleZero(data.id)}>
                                 <h2><Icon className="iconifyIcon" icon="ph:trash-bold"/></h2></button>
                             :
 
-                            <button className="removeButton" onClick={() => handleRemove(data.id)}>
+                            <button className="removeButton" style={{ padding: stala === 0 ? 0 : 'calc(0.2vw + 0.2vh) calc(0.4vw + 0.4vh);' }} onClick={() => handleRemove(data.id)}>
                                 <h2><Icon className="iconifyIcon" icon="ic:baseline-delete-forever"/></h2>
                             </button>}
 
 
-                        <button className="editButton" onClick={() => handleEditClick(data)}>
+                        <button className="editButton" style={{ padding: stala === 0 ? 0 : 'calc(0.2vw + 0.2vh) calc(0.4vw + 0.4vh);' }} onClick={() => handleEditClick(data)}>
                             <h2><Icon className="iconifyIcon" icon="uil:edit"/></h2>
                         </button>
                     </div>

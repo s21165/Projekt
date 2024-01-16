@@ -14,8 +14,8 @@ function ProductManager({
                         }) {
     const [selectedProductId, setSelectedProductId] = useState(null);
     const productListRef = useRef(null); // Utworzenie ref
-    const [maxDimension, setMaxDimension] = useState(0);
-
+    const [minDimension, setMinDimension] = useState(0);
+    const [dimension,setDimension]=useState({width:0, height:0});
     useEffect(() => {
         const observeTarget = productListRef.current;
 
@@ -24,8 +24,9 @@ function ProductManager({
                 for (let entry of entries) {
                     const { width, height } = entry.contentRect;
                     // Ustawienie stanu na większą wartość z width i height
-                    setMaxDimension(Math.min(width, height));
-                    console.log( maxDimension)
+                    setMinDimension(Math.min(width, height));
+                    setDimension({width:width,height:height})
+                    {console.log(minDimension,dimension)}
                 }
             });
 
@@ -34,13 +35,14 @@ function ProductManager({
             // Czyszczenie przy odmontowywaniu
             return () => resizeObserver.unobserve(observeTarget);
         }
-    }, []);
+    }, [dimension,minDimension,editingProduct]);
     const handleProductClick = (productId) => {
         setSelectedProductId(selectedProductId === productId ? null : productId);
     };
     return (
         <>
             {editingProduct ? (
+
                 <ProductEdit
                     product={editingProduct}
                     handleEdit={productActions.handleEdit}
@@ -48,6 +50,7 @@ function ProductManager({
                 />
             ) : (
                 <>
+
                     {size === 'medium' &&
                         <>
                             <div>
@@ -81,7 +84,7 @@ function ProductManager({
                                 key={index}
                                 data={data}
                                 handleRemove={productActions.handleRemove}
-                                maxDimension={maxDimension}
+                                maxDimension={minDimension}
                                 handleEditClick={productActions.handleEditClick}
                                 handleIncrease={productActions.handleIncrease}
                                 handleDecrease={productActions.handleDecrease}
