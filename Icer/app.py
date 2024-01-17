@@ -6,6 +6,9 @@ from flask import Flask, Response, request, render_template, redirect, url_for, 
 from flask import Flask, request, render_template, url_for
 from modules.foodIdent_module.foodIdent import load_and_prep_image, pred_and_plot, load_model
 
+
+from modules.foodIdent_module.foodIdentVideo import start_camera, stop_camera
+
 from modules.bot_module.bot import get_bot_response
 from modules.scan_module.gen import generate_qr_code # ,generate_barcode
 #from modules.scan_module.forms import BarcodeForm
@@ -175,6 +178,24 @@ def upload_predict():
         return render_template('result.html', prediction=pred_class, image_file=image_url)
 
     return render_template('upload.html')
+
+
+
+@app.route('/camera_control', methods=['GET'])
+def camera_control():
+    return render_template('camera_control.html')
+
+@app.route('/start_camera', methods=['POST'])
+def start_camera_route():
+    start_camera()
+    return "Camera started."
+
+@app.route('/stop_camera', methods=['POST'])
+def stop_camera_route():
+    stop_camera()
+    return "Camera stopped."
+
+
 
 
 
