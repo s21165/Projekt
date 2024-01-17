@@ -6,16 +6,21 @@ from flask import jsonify
 
 import time
 
+
+from flask import jsonify
+
+from flask import jsonify
+
 def handle_image_upload(db_connector, image_data_base64, user_id, product_id):
     try:
         # Odkodowanie danych obrazu z Base64
-        image_data = base64.b64decode(image_data_base64)
+        image_data = base64.b64decode(image_data_base64.split(",")[1])
 
         # Aktualny timestamp jako unikalna nazwa pliku
         image_name = f"{int(time.time())}.jpg"
 
-        # Tutaj można ustawić lokalizację folderu, gdzie mają być zapisane obrazy
-        images_folder = 'D:\\Pobrrane\\projekty Adika\\Projekt-PWAAdi\\icer\\src\\data'
+        # Nowa lokalizacja folderu, gdzie mają być zapisane obrazy
+        images_folder = 'D:\\repo_na_test\\Projekt-PWAAdi\\icer\\src\\data'
 
         # Tworzenie ścieżki do zapisu obrazu
         image_path = os.path.join(images_folder, image_name)
@@ -43,6 +48,7 @@ def handle_image_upload(db_connector, image_data_base64, user_id, product_id):
         return jsonify({"message": "Image uploaded and information saved successfully"})
 
     except ValueError as ve:
-        return jsonify({"error": str(ve)}), 400
+        return jsonify({"error": f"Error: {str(ve)}"}), 400
     except Exception as error:
-        return jsonify({"error": str(error)}), 500
+        return jsonify({"error": f"Unexpected error: {str(error)}"}), 500
+
