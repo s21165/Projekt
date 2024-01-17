@@ -4,11 +4,15 @@ import os
 import base64
 from flask import jsonify
 
+import time
 
-def handle_image_upload(db_connector, image_name, image_data_base64, user_id, product_id):
+def handle_image_upload(db_connector, image_data_base64, user_id, product_id):
     try:
         # Odkodowanie danych obrazu z Base64
         image_data = base64.b64decode(image_data_base64)
+
+        # Aktualny timestamp jako unikalna nazwa pliku
+        image_name = f"{int(time.time())}.jpg"
 
         # Tutaj można ustawić lokalizację folderu, gdzie mają być zapisane obrazy
         images_folder = 'D:\\Pobrrane\\projekty Adika\\Projekt-PWAAdi\\icer\\src\\data'

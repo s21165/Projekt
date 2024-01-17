@@ -380,7 +380,7 @@ def add_product():
 
         # Wywołanie funkcji do obsługi przesyłania zdjęcia tylko jeśli dostępne są dane zdjęcia
         if image_data:
-            handle_image_upload(db_connector, data['imageName'], image_data, user_id, product_id)
+            handle_image_upload(db_connector, image_data, user_id, product_id)
 
         # Uruchomienie funkcji run_daily_procedure po dodaniu produktu
 
