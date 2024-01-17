@@ -1,30 +1,24 @@
 import base64
+import os
+import threading
 
 import bcrypt
-import os
-import requests
 from apscheduler.schedulers.background import BackgroundScheduler
-
-from flask import Flask, redirect, current_app
+from flask import Flask, Response, render_template, redirect, url_for, make_response
+from flask import current_app
+from flask import send_file
 from flask_cors import CORS
-from modules.database_connector import DatabaseConnector
-from modules.image_handler import handle_image_upload
 
-from modules.product_data import ProductData
-from modules.value_manager import ProductManager
-
-import threading
-from flask import Flask, request, render_template, send_file, redirect, url_for, send_from_directory, make_response
-from flask import Flask, Response, request, render_template, redirect, url_for, make_response
-
-from modules.bot_module.bot import get_bot_response
-from modules.scan_module.gen import generate_qr_code, generate_barcode
-from modules.scan_module.forms import BarcodeForm
-from modules.scan_module.decoder import decode_barcode, decode_qr_code
 from modules.advert_module.monitor import generate_frames
+from modules.bot_module.bot import get_bot_response
+from modules.database_connector import DatabaseConnector
 from modules.foodIdent_module.foodIdent import foodIdent
-import sys
-from flask import jsonify
+from modules.image_handler import handle_image_upload
+from modules.product_data import ProductData
+from modules.scan_module.decoder import decode_barcode, decode_qr_code
+from modules.scan_module.forms import BarcodeForm
+from modules.scan_module.gen import generate_qr_code, generate_barcode
+from modules.value_manager import ProductManager
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -377,7 +371,6 @@ def add_product():
             if product_id is None:
                 return jsonify({"error": "Failed to add product to Produkty table."})
 
-
         # Dodanie daty dodania do tabeli 'Icer'
         add_icer_query = """
             INSERT INTO Icer (UserID, produktID, ilosc, data_waznosci, data_dodania)
@@ -391,11 +384,9 @@ def add_product():
 
         # Uruchomienie funkcji run_daily_procedure po dodaniu produktu
 
-
         connection.commit()
         cursor.close()
         connection.close()
-
 
         return jsonify({"message": "Product added successfully!"})
         run_daily_procedure()
@@ -403,7 +394,6 @@ def add_product():
 
     except Exception as error:
         return jsonify({"error": str(error)}), 500
-
 
 
 @app.route('/api/edit_product/<int:product_id>', methods=['PUT'])
@@ -788,8 +778,6 @@ def get_icer():
 
     # Łączenie z bazą danych
     db_connector.connect()
-
-
 
     try:
 
