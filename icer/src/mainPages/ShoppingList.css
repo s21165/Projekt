@@ -136,6 +136,16 @@
 }
 
 
+.shoppingList.crossed::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 2px; /* Grubość linii przekreślającej */
+    background: black; /* Kolor linii przekreślającej */
+    transform: translateY(-50%);
+}
 .shoppingListDeleteIconButton{
     position:relative;
     display:flex;

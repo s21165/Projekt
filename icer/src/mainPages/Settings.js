@@ -4,17 +4,17 @@ import {API_URL} from "../config";
 import './Settings.css'
 
 export function Settings() {
-
-    const [optionGroup1, setOptionGroup1] = useState(4);
-    const [optionGroup2, setOptionGroup2] = useState('');
-    const [optionGroup3, setOptionGroup3] = useState('');
-    const group1Options = ['bardzo małe', 'małe', 'średnie', 'duże', 'bardzo duże'];
+    
+    const [fridgeSizeElements, setFridgeSizeElements] = useState(4);
+    const [productsSizeElements, setProductsSizeElements] = useState('');
+    const [infoProducts, setInfoProducts] = useState('');
+    const fridgeSizeElementsArray = ['bardzo małe', 'małe', 'średnie', 'duże', 'bardzo duże'];
     const handleOptionClick = (optionValue, setter) => {
         setter(optionValue);
     }
     // Nazwy dla drugiej grupy opcji
-    const group2Options = ['bardzo małe', 'małe', 'średnie', 'duże', 'bardzo duże'];
-    const infoProducts = ['tak', 'nie'];
+    const productsSizeElementsArray = ['bardzo małe', 'małe', 'średnie', 'duże', 'bardzo duże'];
+    const infoProductsArray = ['tak', 'nie'];
     return (
         <div className="settings-container">
             <div className="settingsDiv">
@@ -22,11 +22,11 @@ export function Settings() {
                 <div className="settings-section">
                     <h2 className="settings-sectionHeader">Wielkość towarów w lodówce</h2>
                     <div className="custom-radio-container">
-                        {group1Options.map((label, i) => (
+                        {fridgeSizeElementsArray.map((label, i) => (
                             <div
                                 key={i}
-                                className={`custom-radio-button ${optionGroup1 === i  ? 'selected' : ''}`}
-                                onClick={() => handleOptionClick(i ,setOptionGroup1)}
+                                className={`custom-radio-button ${fridgeSizeElements === i  ? 'selected' : ''}`}
+                                onClick={() => handleOptionClick(i ,setFridgeSizeElements)}
                             >
                                 {label}
                             </div>
@@ -37,11 +37,11 @@ export function Settings() {
                 <div className="settings-section">
                     <h2 className="settings-sectionHeader">Wielkość towarów na stronie produktów</h2>
                     <div className="custom-radio-container">
-                        {group2Options.map((label, i) => (
+                        {productsSizeElementsArray.map((label, i) => (
                             <div
                                 key={i}
-                                className={`custom-radio-button ${optionGroup2 === i  ? 'selected' : ''}`}
-                                onClick={() => handleOptionClick(i ,setOptionGroup2)}
+                                className={`custom-radio-button ${productsSizeElements === i  ? 'selected' : ''}`}
+                                onClick={() => handleOptionClick(i ,setProductsSizeElements)}
                             >
                                 {label}
                             </div>
@@ -52,17 +52,20 @@ export function Settings() {
                 <div className="settings-section">
                     <h2 className="settings-sectionHeader">Informacje o produktach widoczne na stronie produktów</h2>
                     <div className="custom-radio-container">
-                        {infoProducts.map((label, i) => (
+                        {infoProductsArray.map((label, i) => (
                             <div
                                 key={i}
-                                className={`custom-radio-button ${optionGroup3 ===i  ? 'selected' : ''}`}
-                                onClick={() => handleOptionClick(i ,setOptionGroup3)}
+                                className={`custom-radio-button ${infoProducts === i  ? 'selected' : ''}`}
+                                onClick={() => handleOptionClick(i ,setInfoProducts)}
                             >
                                 {label}
                             </div>
 
                         ))}
                     </div>
+                </div>
+                <div className="saveDivSettings">
+                    <button className="saveButtonSettings"><h1>zapisz</h1></button>
                 </div>
             </div>
         </div>

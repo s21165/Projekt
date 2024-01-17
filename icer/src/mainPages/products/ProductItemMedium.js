@@ -7,12 +7,12 @@ function ProductItemMedium({data, useProduct, handleZero, handleRemove, handleEd
     return (
         <>
 
-            {useProduct.showRemovalConfirmation ? (
+            {useProduct.showRemovalConfirmation && filter==='current' ? (
                 <div className="moveToBinConfirmationDiv" >
-                    <h1 className="moveToBinConfirmationInfoHeader">Produkt {data.nazwa} zostanie przeniesiony do kosza,
+                    <h1 className="moveToBinConfirmationInfoHeader">Produkt {data.nazwa} zostanie przeniesiony do listy zużytych produktów wyczerpanych,
                         kontynuować?</h1>
                     <div className="moveToBinConfirmationButtons">
-                        <button onClick={useProduct.confirmRemoval} className="moveToBinConfirmationButton"><h2>DO KOSZA</h2></button>
+                        <button onClick={useProduct.confirmRemoval} className="moveToBinConfirmationButton"><h2>WYCZERPANY</h2></button>
                         <button onClick={useProduct.declineRemoval} className="moveToBinDeclineButton"><h2>ZOSTAW</h2></button>
                     </div>
                 </div>

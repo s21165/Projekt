@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import {handleImageChange} from "./handleImageChange";
 
 export const useEditProduct = (initialProduct) => {
     const [editProduct, setEditProduct] = useState({
@@ -15,12 +16,6 @@ export const useEditProduct = (initialProduct) => {
     const [image, setImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        setImage(file);
-        setImagePreview(URL.createObjectURL(file));
-    };
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setEditProduct((prevState) => ({
@@ -29,5 +24,5 @@ export const useEditProduct = (initialProduct) => {
         }));
     };
 
-    return { editProduct, setEditProduct, image, imagePreview, handleImageChange, handleChange };
+    return { editProduct, setEditProduct, image, setImage, imagePreview, setImagePreview, handleChange };
 };

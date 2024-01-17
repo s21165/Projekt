@@ -26,7 +26,7 @@ function ProductManager({
                     // Ustawienie stanu na większą wartość z width i height
                     setMinDimension(Math.min(width, height));
                     setDimension({width:width,height:height})
-                    {console.log(minDimension,dimension)}
+
                 }
             });
 
@@ -60,14 +60,14 @@ function ProductManager({
                                         <button
                                             className={`leftButton ${filter === 'current' ? 'active' : ''}`}
                                             onClick={() => setFilter('current')}>
-                                            <h2 className="productListTopButtonsH2">Aktualne</h2>
+                                            <h2 className="productListTopButtonsH2">aktualne</h2>
                                         </button>
                                     </div>
                                     <div className="rightButtonDiv">
                                         <button
                                             className={`rightButton ${filter === 'old' ? 'active' : ''}`}
                                             onClick={() => setFilter('old')}>
-                                            <h2 className="productListTopButtonsH2">Kosz</h2>
+                                            <h2 className="productListTopButtonsH2">wyczerpane</h2>
                                         </button>
                                     </div>
 

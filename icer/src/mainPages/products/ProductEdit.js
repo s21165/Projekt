@@ -4,12 +4,13 @@ import './AddProduct.css'
 import {Icon} from "@iconify/react";
 import {useOutsideClick} from "./useOutsideClick";
 import {useEditProduct} from "./useEditProduct";
+import {handleImageChange} from "./handleImageChange";
 
 function ProductEdit({product, handleEdit, setEditingProduct}) {
 
     const myDivRef = useRef(null);
     const {
-        editProduct, setEditProduct, image, imagePreview, handleImageChange, handleChange
+        editProduct, image, setEditProduct, setImage, imagePreview, setImagePreview,handleChange
     } = useEditProduct(product);
 
     useOutsideClick(myDivRef, () => setEditingProduct(null));
@@ -78,7 +79,7 @@ function ProductEdit({product, handleEdit, setEditingProduct}) {
                                 type="file"
                                 id="file-input"
                                 style={{display: 'none'}}
-                                onChange={handleImageChange}
+                                onChange={(e) => handleImageChange(e, setImage, setEditProduct,setImagePreview)}
                             />
                         </label>
                         <label className="addPhotoByCamera">

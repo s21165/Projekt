@@ -37,8 +37,8 @@ export function ShoppingList({data, showNewFields, newFields, setNewFields}) {
             <div>
                 <ToastContainer/>
                 {data?.map((item) => (
-                    <div className="shoppingList" key={item.id}
-                         style={{backgroundColor: selectedItems.includes(item.id) ? "green" : "#dddd"}}
+                    <div className={`shoppingList ${selectedItems.includes(item.id) ? 'crossed' : ''}`} key={item.id}
+
                          onClick={() => toggleSelectedItem(item.id)}>
 
 

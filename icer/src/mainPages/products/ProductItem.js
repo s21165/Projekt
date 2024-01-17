@@ -31,7 +31,7 @@ function ProductItem({
     const[image, setImage] = useState();
 
     const picGetter = PictureGetter(image,setImage,data.zdjecie_lokalizacja)
-    const mediumProductsCountSetting =1;
+    const mediumProductsCountSetting =3;
     const smallProductsCountSetting =3;
     const styl = GetBorderStyle(data, filter, 2);
     const [info, setInfo] = useState(infoProducts);
@@ -93,7 +93,7 @@ function ProductItem({
                              className={`productItem ${!info ? '' : 'hidden'}`}
                              ref={elementRef}
                              style={{backgroundImage: `url(${picGetter})`, border: styl,flex: `1 0 ${itemWidthMedium}px`, // Ustawienie szerokości elementu
-                                 height: `${itemWidthMedium}px`,fontSize: mediumProductsCountSetting === 0 ? maxDimension*1/100 : maxDimension*mediumProductsCountSetting/100}}
+                                 height: `${itemWidthMedium}px`,fontSize: mediumProductsCountSetting === 0 ? maxDimension*1/70 : maxDimension*mediumProductsCountSetting/50}}
                              onClick={() => setInfo(!info)}>
                             <ProductItemMedium
                                 data={data}
