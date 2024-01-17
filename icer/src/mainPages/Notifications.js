@@ -25,13 +25,9 @@ export function Notifications({small, left}) {
         notificationsData.setData,
         notificationsData.sessionId,
         notificationsData.refresh,
-        notificationsData.setRefresh
+        notificationsData.setRefresh,
+
     );
-
-
-    function handleReadAll() {
-
-    }
 
 
     return (
@@ -44,7 +40,7 @@ export function Notifications({small, left}) {
                         </div>
                         <div className="spaceBetweenButtonsAndNotifications"></div>
                         <div className="manageButtons">
-                            <button onClick={handleReadAll} className="handleReadAllButton"><h2>Odczytaj wszystkie</h2></button>
+                            <button onClick={notificationActions.handleReadAllNotifications} className="handleReadAllButton"><h2>Odczytaj wszystkie</h2></button>
                             <button onClick={notificationActions.handleRemoveAllNotifications} className="handleDeleteAllButton"><h2>Usuń wszystkie</h2></button>
                         </div>
                     </>}

@@ -68,12 +68,21 @@
     padding: 10px 0 10px 0;
     border-bottom: 1px solid gray;
     text-align: center;
+
     border-radius: 10px;
     align-items: center;
+    height:10vh;
 }
 .notificationText {
-    flex-grow: 1; /* Powoduje, że tekst zajmuje dostępną przestrzeń, wyśrodkowując go */
+
+    position:relative;
+    display: flex;
+    height:100%;
+    align-items: center;
+    width:100%;
     text-align: center;
+    margin:0;
+    justify-content: center;
 }
 
 .notificationsList p {
@@ -112,8 +121,10 @@
 }
 
 .notificationIcons{
+    position:relative;
     display: flex;
-
+    height:100%;
+    align-items: center;
     justify-content:flex-end;
 
 }

@@ -8,7 +8,7 @@ export const PictureGetter=(image, setImage, photo)=>{
             if (!photo){  throw 'zdjęcie nie istnieje'
 
             }else
-            setImage(require(`../../data/${photo}`));
+            setImage(require(`../../data/userPhotos/${photo}`));
         } catch (e) {
             console.error("Nie udało się załadować obrazu: ", e);
             // Ustaw domyślny obraz, jeśli nie można załadować obrazu z danej lokalizacji

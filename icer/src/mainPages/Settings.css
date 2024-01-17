@@ -14,7 +14,7 @@
 
     width:50%;
     margin:auto;
-    padding:3vh 3vw 3vh 3vw;
+    padding:2vh 2vw 2vh 2vw;
 }
 .settingsHeader{
     position:relative;
@@ -70,10 +70,14 @@
     box-shadow: 0 0 5px blue; /* Optional: Adds a shadow for a selected button */
 }
 .saveDivSettings{
+    display:flex;
+    position:relative;
     width:100%;
+
 }
 .saveButtonSettings{
     width:100%;
+    height:50%;
     border: 2px solid grey;
 }
 .saveButtonSettings:active{

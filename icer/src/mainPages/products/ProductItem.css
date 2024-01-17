@@ -55,7 +55,17 @@
     transition: all 0.3s ease; /* Płynna animacja */
 
 }
-
+.productItemSmall.selected:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: 20px;
+    backdrop-filter: blur(10px); /* Dostosuj wartość blura według potrzeb */
+    z-index: -1; /* Umieść pod elementem .productItem */
+}
 
 .productItem.hidden:after {
     content: "";

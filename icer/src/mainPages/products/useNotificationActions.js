@@ -7,13 +7,51 @@ export const useNotificationActions = (data,setData,sessionId,refresh,setRefresh
 
 
 
+    const handleReadAllNotifications = () => {
+
+        axios
+            .post(`${API_URL}/api/Icer/delete_all_notification`,{
+                sessionId: sessionId,
+                notificationValue:0
+            },)
+            .then((response) => {
+                toast.success(`Wszystkie powiadomienia zostały odczytane!`);
+                setRefresh(!refresh); // Refresh the product list after deletion
+
+            })
+            .catch((error) => {
+                console.error(`There was an error removing all notifications: ${error}`);
+                toast.error(`Nie udało się odczytać wszystkich powiadomień!`)
+            });
+    };
+
+    const handleReadNotification = (productId) => {
+
+        axios
+            .post(`${API_URL}/api/Icer/delete_notification`,{
+                sessionId: sessionId,
+                notificationId:productId,
+                notificationValue:0
+            },)
+            .then((response) => {
+                console.log(response.data);
+                toast.success(`Powiadomienie zostało odczytane!`);
+                setRefresh(!refresh); // Refresh the product list after deletion
+
+            })
+            .catch((error) => {
+                console.error(`There was an error removing the product: ${error}`);
+                toast.error(`Nie udało się odczytać powiadomienia!`)
+            });
+    };
+
 
     const handleRemoveAllNotifications = () => {
 
         axios
             .post(`${API_URL}/api/Icer/delete_all_notification`,{
-                sessionId: sessionId
-
+                sessionId: sessionId,
+                notificationValue:null
             },)
             .then((response) => {
                 toast.success(`Wszystkie powiadomienia zostały usunięte!`);
@@ -47,5 +85,5 @@ export const useNotificationActions = (data,setData,sessionId,refresh,setRefresh
     };
 
 
-    return { handleRemoveAllNotifications, handleRemoveNotification };
+    return { handleRemoveAllNotifications, handleRemoveNotification, handleReadNotification, handleReadAllNotifications};
 };
