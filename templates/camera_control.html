@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Camera Control</title>
+</head>
+<body>
+    <h1>Camera Control</h1>
+    <button onclick="startCamera()">Start Camera</button>
+    <button onclick="stopCamera()">Stop Camera</button>
+
+    <script>
+        function startCamera() {
+            fetch('/start_camera', { method: 'POST' })
+                .then(response => response.text())
+                .then(message => alert(message));
+        }
+
+        function stopCamera() {
+            fetch('/stop_camera', { method: 'POST' })
+                .then(response => response.text())
+                .then(message => alert(message));
+        }
+    </script>
+</body>
+</html>
