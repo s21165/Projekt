@@ -631,7 +631,7 @@ def get_notifications():
                     INNER JOIN Produkty ON Icer.produktID = Produkty.id
                     LEFT JOIN Photos ON Icer.produktID = Photos.produktID
                     LEFT JOIN UserPhotos ON Icer.produktID = UserPhotos.produktID AND UserPhotos.userID = %s
-                    WHERE Icer.UserID = %s AND Icer.powiadomienie = 1
+                    WHERE Icer.UserID = %s AND Icer.powiadomienie >=1 
                 """
         cursor.execute(query, (user_id, user_id))
         results = cursor.fetchall()
@@ -789,9 +789,7 @@ def get_icer():
     # Łączenie z bazą danych
     db_connector.connect()
 
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(run_daily_procedure, 'interval', seconds=10)
-    scheduler.start()
+
 
     try:
 
@@ -960,11 +958,17 @@ def delete_all_notification():
 
         user_id = user_result['id']
 
+        notification_value = data.get('notificationValue')
+
         # Usunięcie wszystkich powiadomień danego użytkownika
-        delete_all_notifications_query = "UPDATE Icer SET powiadomienie = NULL WHERE UserID = %s"
-        cursor.execute(delete_all_notifications_query, (user_id,))
-        connection.commit()
-        return jsonify({"message": "All user notifications deleted successfully"})
+        if notification_value in [0, 1, None]:
+            delete_all_notifications_query = "UPDATE Icer SET powiadomienie = %s WHERE UserID = %s"
+            cursor.execute(delete_all_notifications_query, (notification_value, user_id))
+            connection.commit()
+            return jsonify({"message": "All user notifications updated successfully"})
+
+        else:
+            return jsonify({"error": "Invalid notification value."}), 400
 
     except ValueError as ve:
         return jsonify({"error": str(ve)}), 400
