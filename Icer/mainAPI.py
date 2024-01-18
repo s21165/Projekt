@@ -9,6 +9,7 @@ from flask import current_app
 from flask import send_file
 from flask_cors import CORS
 
+import modules.database_connector
 from modules.advert_module.monitor import generate_frames
 from modules.bot_module.bot import get_bot_response
 from modules.database_connector import DatabaseConnector
@@ -332,23 +333,14 @@ def add_product():
         data = request.json
         image_data = data.get('imageData')
 
-        # Sprawdzenie, czy użytkownik jest zalogowany
-        if 'username' not in session:
-            return jsonify({"error": "User not logged in"}), 401
-
         connection = db_connector.get_connection()
         cursor = connection.cursor(dictionary=True)
-        username = session['username']
 
-        # Pobranie ID użytkownika na podstawie nazwy użytkownika
-        user_query = "SELECT id FROM Users WHERE username = %s"
-        cursor.execute(user_query, (username,))
-        user_result = cursor.fetchone()
+        # Sprawdzenie, czy użytkownik jest zalogowany
+        user_id, username, response, status_code = modules.database_connector.DatabaseConnector.get_user_id_by_username(connection, cursor, session)
 
-        if not user_result:
-            return jsonify({"error": "User not found"}), 401
-
-        user_id = user_result['id']
+        if response:
+            return response, status_code
 
         # Sprawdzenie, czy produkt już istnieje
         check_product_query = "SELECT id FROM Produkty WHERE nazwa = %s AND cena = %s"
@@ -384,13 +376,12 @@ def add_product():
 
         # Uruchomienie funkcji run_daily_procedure po dodaniu produktu
 
+
         connection.commit()
         cursor.close()
-        connection.close()
-
-        return jsonify({"message": "Product added successfully!"})
         run_daily_procedure()
 
+        return jsonify({"message": "Product added successfully!"})
 
     except Exception as error:
         return jsonify({"error": str(error)}), 500
@@ -485,33 +476,7 @@ def get_icer_shopping():
             cursor.close()
 
 
-# dla czystrzego kodu pozniej to bd zaimplementowane rowniez w innych funkcjach, na razie to jest jeszcze w fazie
-# testowej
-def get_user_id_by_username(username, db_connector):
-    if 'username' not in session:
-        return None, jsonify({"error": "User not logged in"}), 401
 
-    connection = db_connector.get_connection()
-    cursor = connection.cursor()
-
-    try:
-        # Pobranie ID użytkownika na podstawie nazwy użytkownika
-        user_query = "SELECT id FROM Users WHERE username = %s"
-        cursor.execute(user_query, (username,))
-        user_result = cursor.fetchone()
-
-        if user_result:
-            return user_result['id'], None, None
-        else:
-            return None, jsonify({"error": "User not found"}), 401
-
-    except Exception as error:
-        print(f"Error: {str(error)}")
-        return None, jsonify({"error": str(error)}), 500
-
-    finally:
-        cursor.close()
-        connection.close()
 
 
 @app.route('/api/add_to_shopping_cart', methods=['POST'])
@@ -721,55 +686,6 @@ def get_products_with_red_flag():
         if cursor:
             cursor.close()
 
-
-# Funkcja do obsługi wysyłania zdjęcia do API Icer
-@app.route('/api/Icer/upload_image', methods=['POST'])
-def upload_image():
-    try:
-        data = request.get_json()
-        image_name = data.get('imageName')
-        image_data_base64 = data.get('imageData')  # Zakładając, że obraz jest przesłany jako ciąg zakodowany Base64
-        user_id = data.get('userId')
-        product_id = data.get('productId')
-
-        if not image_name or not image_data_base64 or not user_id or not product_id:
-            raise ValueError("Missing required data for image upload")
-
-        # Odkodowanie danych obrazu z Base64
-        image_data = base64.b64decode(image_data_base64)
-
-        # Tutaj można ustawić lokalizację folderu, gdzie mają być zapisane obrazy
-        images_folder = 'D:\\Pobrrane\\projekty Adika\\Projekt-PWAAdi\\icer\\src\\data'
-
-        # Tworzenie ścieżki do zapisu obrazu
-        image_path = os.path.join(images_folder, image_name)
-
-        # Zapis odkodowanego obrazu na serwerze
-        with open(image_path, 'wb') as image_file:
-            image_file.write(image_data)
-
-        # Tutaj należy uzyskać połączenie z bazą danych
-        connection = db_connector.connect()
-        cursor = connection.cursor()
-
-        # Zapis informacji o zdjęciu do bazy danych w tabeli UserPhotos
-        insert_query = "INSERT INTO UserPhotos (produktID, userID, lokalizacja) VALUES (%s, %s, %s)"
-        cursor.execute(insert_query, (product_id, user_id, image_name))
-        connection.commit()
-
-        # Aktualizacja flagi default_photo w tabeli Icer dla konkretnego produktu użytkownika na 0
-        update_query = "UPDATE Icer SET default_photo = 0 WHERE UserID = %s AND produktID = %s"
-        cursor.execute(update_query, (user_id, product_id))
-        connection.commit()
-
-        cursor.close()
-
-        return jsonify({"message": "Image uploaded and information saved successfully"})
-
-    except ValueError as ve:
-        return jsonify({"error": str(ve)}), 400
-    except Exception as error:
-        return jsonify({"error": str(error)}), 500
 
 
 @app.route('/api/Icer', methods=['POST'])

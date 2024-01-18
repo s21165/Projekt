@@ -11,7 +11,7 @@ from flask import jsonify
 
 from flask import jsonify
 
-def handle_image_upload(db_connector, image_data_base64, user_id, product_id):
+def handle_image_upload(db_connector, image_data_base64, user_id, product_id, replace_existing=False):
     try:
         # Odkodowanie danych obrazu z Base64
         image_data = base64.b64decode(image_data_base64.split(",")[1])
@@ -32,6 +32,12 @@ def handle_image_upload(db_connector, image_data_base64, user_id, product_id):
         # Uzyskanie połączenia z bazą danych
         connection = db_connector.get_connection()
         cursor = connection.cursor()
+
+        # Jeśli replace_existing jest ustawione na True, to usuń aktualne zdjęcie produktu
+        if replace_existing:
+            delete_query = "DELETE FROM UserPhotos WHERE produktID = %s AND userID = %s"
+            cursor.execute(delete_query, (product_id, user_id))
+            connection.commit()
 
         # Zapis informacji o zdjęciu do bazy danych w tabeli UserPhotos
         insert_query = "INSERT INTO UserPhotos (produktID, userID, lokalizacja) VALUES (%s, %s, %s)"
