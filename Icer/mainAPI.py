@@ -254,33 +254,31 @@ def subtract_product():
         if connection:
             connection.close()
 
-
 @app.route('/remove_product_for_user', methods=['POST'])
 def remove_product_for_user():
-    db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
-    db_connector.connect()
-    connection = None
-    cursor = None
 
     try:
-        # Sprawdzenie, czy użytkownik jest zalogowany
-        if 'username' not in session:
-            raise PermissionError("User not logged in")
+        # Tworzenie instancji klasy DatabaseConnector
+        db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 
-        username = session['username']
+        # Łączenie z bazą danych
+        db_connector.connect()
+
+        # Tworzenie instancji ProductManager
+        product_manager = ProductManager(db_connector)
+
+        # Pobieranie danych z żądania
+        data = request.json
+        image_data = data.get('imageData')
 
         connection = db_connector.get_connection()
         cursor = connection.cursor(dictionary=True)
 
-        # Pobranie ID użytkownika na podstawie nazwy użytkownika
-        user_query = "SELECT id FROM Users WHERE username = %s"
-        cursor.execute(user_query, (username,))
-        user_result = cursor.fetchone()
+        # Sprawdzenie, czy użytkownik jest zalogowany
+        user_id, username, response, status_code = DatabaseConnector.get_user_id_by_username(cursor, session)
 
-        if not user_result:
-            raise LookupError("User not found")
-
-        user_id = user_result['id']
+        if response:
+            return response, status_code
 
         # Pobranie informacji o produkcie z żądania
         data = request.get_json()
@@ -315,7 +313,6 @@ def remove_product_for_user():
         if connection:
             connection.close()
         db_connector.disconnect()  # Zamknięcie połączenia z bazą danych
-
 
 @app.route('/api/add_product', methods=['POST'])
 def add_product():
