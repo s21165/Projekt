@@ -60,9 +60,8 @@ class DatabaseConnector:
     def get_connection(self):
         return self.connection
 
-    # dla czystrzego kodu pozniej to bd zaimplementowane rowniez w innych funkcjach, na razie to jest jeszcze w fazie
-    # testowej
-    def get_user_id_by_username(connection, cursor, session):
+    @staticmethod
+    def get_user_id_by_username( cursor, session):
         # Sprawdzenie, czy użytkownik jest zalogowany
         if 'username' not in session:
             return None, None, jsonify({"error": "User not logged in"}), 401

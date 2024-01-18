@@ -323,6 +323,7 @@ def add_product():
         # Tworzenie instancji klasy DatabaseConnector
         db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 
+
         # Łączenie z bazą danych
         db_connector.connect()
 
@@ -337,7 +338,8 @@ def add_product():
         cursor = connection.cursor(dictionary=True)
 
         # Sprawdzenie, czy użytkownik jest zalogowany
-        user_id, username, response, status_code = modules.database_connector.DatabaseConnector.get_user_id_by_username(connection, cursor, session)
+        user_id, username, response, status_code = DatabaseConnector.get_user_id_by_username(cursor, session)
+
 
         if response:
             return response, status_code
