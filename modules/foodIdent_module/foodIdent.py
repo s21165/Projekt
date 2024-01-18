@@ -2,7 +2,7 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 import numpy as np
 import os
-
+import json
 
 def load_and_prep_image(filename, img_shape=224):
   # Read the image file
@@ -29,16 +29,35 @@ def pred_and_plot(model, filename, class_names):
     pred = model.predict(tf.expand_dims(img, axis=0))
     print("Prediction array:", pred)
 
+    pred_class = None
     if pred is not None and len(pred) > 0:
-        # Get the predicted class index
-        pred_class_index = tf.argmax(pred, axis=1).numpy()[0]
-        
-        # Get the corresponding class name from class_names list
-        pred_class = class_names[pred_class_index]
-    else:
-        pred_class = None
+        # Get the maximum probability from the prediction
+        max_pred_value = np.max(pred)
+
+        # Check if the maximum probability is above the threshold
+        if max_pred_value >= 0.60:
+            # Get the predicted class index
+            pred_class_index = tf.argmax(pred, axis=1).numpy()[0]
+            
+            # Get the corresponding class name from class_names list
+            pred_class = class_names[pred_class_index]
+        else:
+            print("Prediction confidence is too low.")
+
+    # Get the directory of the current script
+    current_dir = os.path.dirname(__file__)
+
+    # Specify the path to write the JSON file in the current directory
+    json_file_path = os.path.join(current_dir, 'prediction_result.json')
+
+    # Save the prediction result to a JSON file
+    prediction_result = {"predicted_class": pred_class}
+    
+    with open(json_file_path, 'w') as json_file:
+        json.dump(prediction_result, json_file, indent=4)
     
     return pred_class
+
 
     
 def load_model(model_path):

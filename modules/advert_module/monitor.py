@@ -27,58 +27,68 @@ def display_warning_image(image):
     cv2.destroyWindow('ACHTUNG')
 
 # Function to start camera monitoring
+import cv2
+import numpy as np
+import time
+
 def generate_frames():
+    video_ended = False
     # Try to initialize the webcam
     cap1 = cv2.VideoCapture(0)  # Webcam
 
     # Check if the webcam is accessible
     if cap1.isOpened():
-        # Use the default video file if the webcam is available
-        cap2 = cv2.VideoCapture('modules/advert_module/videoplayback.mp4')
+        cap2 = cv2.VideoCapture('modules/advert_module/videoplayback.mp4')  # Default video file
     else:
-        # Use the alternate video file if the webcam is not available
-        cap2 = cv2.VideoCapture('modules/advert_module/videoplaybackalt.mp4')
+        cap2 = cv2.VideoCapture('modules/advert_module/videoplaybackalt.mp4')  # Alternate video file
 
     img2 = cv2.imread('modules/advert_module/image.jpg')  # Warning image
     beep = 0
-    
+
     # Get the frame rate of the video file
     fps = cap2.get(cv2.CAP_PROP_FPS)
-    if fps < 1:  # Fallback in case the frame rate is not detected
-        fps = 30  # Assume a standard frame rate
+    if fps < 1:  # Fallback for undetected frame rate
+        fps = 30  # Assume standard frame rate
 
-    # Calculate the frame duration in seconds
-    frame_duration = 1.0 / fps
+    frame_duration = 1.0 / fps  # Calculate frame duration in seconds
 
     while True:
         ret1, frame = cap2.read()
         if not ret1:
-            break  # End of video file or error
+            video_ended = True  # End of video file or error
 
         if cap1.isOpened():
             ret, img = cap1.read()
             if not ret:
-                continue  # Skip this iteration if the webcam frame is not ready
+                continue  # Skip if webcam frame is not ready
 
             # Detect faces and eyes
             detected_faces, detected_eyes = detect_faces_and_eyes(img)
             # ... Draw rectangles logic (optional for streaming) ...
 
-            # Play warning audio and display a warning image if no faces or eyes detected
             if len(detected_eyes) == 0 and len(detected_faces) == 0:
                 if beep == 5:
                     play_audio_warning()
                     beep = 0
-                    # Process the warning image if necessary
                 else:
                     beep += 1
             else:
                 beep = 0
 
-        # Convert the image to JPEG format
+            # Check if video has ended
+            if video_ended:
+                frame_end_signal = np.zeros((100, 100, 3), np.uint8)  # Black frame
+                cv2.putText(frame_end_signal, 'END', (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 2, cv2.LINE_AA)
+                ret, buffer = cv2.imencode('.jpg', frame_end_signal)
+                frame_bytes = buffer.tobytes()
+                yield (b'--frame\r\n'
+                       b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+                break  # Exit loop after sending end signal
+
+        # Convert image to JPEG format
         ret, buffer = cv2.imencode('.jpg', frame)
         if not ret:
-            continue  # Skip this iteration if frame encoding fails
+            continue  # Skip if frame encoding fails
 
         frame_bytes = buffer.tobytes()
         time.sleep(frame_duration)
@@ -88,6 +98,7 @@ def generate_frames():
     if cap1.isOpened():
         cap1.release()
     cap2.release()
+
 
 
 #if __name__ == '__main__':

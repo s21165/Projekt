@@ -1,5 +1,6 @@
 import cv2
 import os
+import json
 import tensorflow as tf
 import time
 import threading
@@ -43,7 +44,6 @@ def pred_and_plot(model, img, class_names, food_list):
     pred_class_index = tf.argmax(pred, axis=1).numpy()[0]
     max_pred_value = np.max(pred)
 
-    # Check if the highest probability is above the 60% threshold
     if max_pred_value >= 0.60:
         # Get the corresponding class name from class_names list
         pred_class = class_names[pred_class_index]
@@ -53,11 +53,17 @@ def pred_and_plot(model, img, class_names, food_list):
             # Add to the list
             food_list.append(pred_class)
 
-    else:
-        # If confidence is below 60%, or already in list, do not add
-        pred_class = None
+    # Get the directory of the current script
+    current_dir = os.path.dirname(__file__)
 
-    return pred_class
+    # Specify the path to write the JSON file in the current directory
+    json_file_path = os.path.join(current_dir, 'food_list.json')
+
+    # Save the food list to a JSON file
+    with open(json_file_path, 'w') as json_file:
+        json.dump(food_list, json_file, indent=4)
+
+    return food_list
    
 def load_model(model_path):
     current_directory = os.path.dirname(os.path.abspath(__file__))
