@@ -395,14 +395,26 @@ def edit_product(product_id):
         # Pobieranie danych produktu z żądania
         data = request.json
 
+        # Pobieranie user_id z funkcji get_user_id_by_username
+        connection = db_connector.get_connection()
+        cursor = connection.cursor(dictionary=True)
+        user_id, _, response, status_code = DatabaseConnector.get_user_id_by_username(cursor, session)
+
+        if response:
+            cursor.close()
+            connection.close()
+            return response, status_code
+
         # Aktualizacja produktu w bazie danych
-        db_connector.update_product(product_id, data)
+        db_connector.update_product(product_id, data, user_id)
+
+        cursor.close()
+        connection.close()
 
         return jsonify({"message": "Produkt został zaktualizowany!"})
 
     except Exception as error:
-        return jsonify({"error": str(error)})
-
+        return jsonify({"error": str(error)}), 500
 
 @app.route('/api/shoppingList', methods=['POST', 'GET'])
 def get_icer_shopping():
