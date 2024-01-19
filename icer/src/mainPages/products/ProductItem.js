@@ -31,10 +31,10 @@ function ProductItem({
     const[image, setImage] = useState();
 
     const picGetter = PictureGetter(image,setImage,data.zdjecie_lokalizacja)
-    const mediumProductsCountSetting =4;
-    const smallProductsCountSetting =3;
+    const mediumProductsCountSetting =1;
+    const smallProductsCountSetting =2;
     const styl = GetBorderStyle(data, filter, 2);
-    const [info, setInfo] = useState(infoProducts);
+    const [info, setInfo] = useState(0);
 
     const itemWidth = !isSelected ? maxDimension * (smallProductsCount[smallProductsCountSetting]/ 100) : maxDimension*95/100;
     const itemWidthLarge = maxDimension * (smallProductsCount[2]/ 100);

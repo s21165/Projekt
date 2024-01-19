@@ -3,6 +3,7 @@ import logo from "../data/logo.svg";
 import {Link} from "react-router-dom";
 import './Help.css';
 import {Icon} from "@iconify/react";
+import {Advert} from "./Advert";
 function Help({isMinimized}){
 
 
@@ -15,6 +16,7 @@ function Help({isMinimized}){
             <h2>Jak korzystać z funkcji XYZ?</h2>
             <p>Tutaj dodaj wyjaśnienia dotyczące specyficznej funkcji Twojej aplikacji.</p>
             <h2>FAQ</h2>
+
             <p>
                 <b>Pytanie 1:</b> Odpowiedź na pytanie 1.
             </p>

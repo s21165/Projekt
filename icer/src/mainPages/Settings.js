@@ -4,10 +4,11 @@ import {API_URL} from "../config";
 import './Settings.css'
 
 export function Settings() {
-    
-    const [fridgeSizeElements, setFridgeSizeElements] = useState(4);
-    const [productsSizeElements, setProductsSizeElements] = useState('');
-    const [infoProducts, setInfoProducts] = useState('');
+
+    const [fridgeSizeElements, setFridgeSizeElements] = useState(1);
+    const [productsSizeElements, setProductsSizeElements] = useState(1);
+    const [infoProducts, setInfoProducts] = useState(0);
+
     const fridgeSizeElementsArray = ['bardzo małe', 'małe', 'średnie', 'duże', 'bardzo duże'];
     const handleOptionClick = (optionValue, setter) => {
         setter(optionValue);

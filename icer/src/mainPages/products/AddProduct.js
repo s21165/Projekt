@@ -12,6 +12,7 @@ import {DecodeQrCode} from "./DecodeQrCode";
 import {initializeProduct} from "./initializeProduct";
 import {submitProduct} from "./submitProduct";
 import {handleImageChange} from "./handleImageChange";
+import {handleQRChange} from "./handleQRChange";
 
 function AddProduct() {
     const {user} = useContext(AuthContext);
@@ -20,8 +21,9 @@ function AddProduct() {
     const [image, setImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
     const [product, setProduct] = useState(initializeProduct);
-
-
+    const [qrImage, setQrImage] = useState(null);
+    const [qrImagePreview, setQrImagePreview] = useState(null);
+    const [qrData, setQrData] = useState(null);
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Wysyłam produkt:", product);
@@ -50,7 +52,57 @@ function AddProduct() {
             data_waznosci: today,
         }));
     }, [refresh]);
+    const handleQRCodeScan = async () => {
+        if (qrImage) { // Upewnij się, że masz zeskanowany obraz QR dostępny w zmiennej "image"
+            const formData = new FormData();
+            formData.append('qr_code_image', qrImage);
 
+            try {
+                const response = await axios.post(`${API_URL}/decode_qr_code`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+
+                if (response.data) {
+                    // Tutaj możesz obsłużyć zdekodowane dane zeskanowanego QR kodu
+                    console.log('Zdekodowane dane QR:', response.data);
+                    setQrData(response.data)
+
+
+                    const keyValuePairs = response.data.split(',');
+                    const parsedData = keyValuePairs.reduce((obj, pair) => {
+                        const [key, value] = pair.split(':');
+                        obj[key.trim()] = value.trim();
+                        return obj;
+                    }, {});
+                    const startIndex = 26; // 27th character
+                    const endIndex = response.data.indexOf(',', 27);
+                    console.log('Zdekodowane dane QR w zmiennej:', parsedData);
+                    // Możesz przypisać te dane do odpowiednich pól w swoim formularzu
+                    setProduct(() => ({
+
+                        nazwa: response.data.substring(27, endIndex), // Przykład przypisania danych do pola "nazwa"
+                        cena: parsedData.Price,
+                        kalorie: parsedData.Kcal,
+                        tluszcze: parsedData.Fat,
+                        weglowodany: parsedData.Carbs,
+                        bialko: parsedData.Protein,
+                        kategoria: parsedData.Category,
+                        ilosc: parsedData.Amount,
+                        data_waznosci: new Date().toISOString().split('T')[0],
+                    }));
+                    setQrImage(null);
+                    setQrImagePreview(null);
+
+                }
+            } catch (error) {
+                console.error('Błąd podczas przesyłania obrazu QR:', error);
+            }
+        }
+    };
+
+   
     return (
         <div className="productContainerDiv">
 
@@ -132,12 +184,25 @@ function AddProduct() {
                         <span> <h5>Skanuj Barcode</h5> </span>
                     </label>
 
-                    <label className="scannerLabel">
+                    <label  onClick={handleQRCodeScan} className="scannerLabel">
 
 
-                        <Icon className="qrIcon" icon="bx:qr-scan"/>
 
-                        <h5> Skanuj QR </h5>
+                        {!qrImage && <Icon className="qrIcon" icon="bx:qr-scan"/>}
+                        {qrImagePreview && (
+                            <img
+                                src={qrImagePreview}
+                                alt="Podgląd"
+                                style={{maxWidth: '100px', maxHeight: '100px'}}
+                            />
+                        )}
+                        <h5 > Skanuj QR </h5>
+                        {!qrImage && <input
+                            type="file"
+                            id="file-input"
+                            style={{display: 'none'}}
+                            onChange={(e) => handleQRChange(e, setQrImage,setQrImagePreview)}
+                        />}
                     </label>
 
                 </div>

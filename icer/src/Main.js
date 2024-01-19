@@ -26,6 +26,7 @@ import ChatContainer from "./mainPages/chatBot/ChatContainer";
 import {AuthContext} from "./mainPages/account/auth-context";
 import {ShoppingCart} from "./mainPages/ShoppingCart";
 import {Settings} from "./mainPages/Settings";
+import {Advert} from "./mainPages/Advert";
 
 function Main() {
 
@@ -90,6 +91,7 @@ function Main() {
                             <Route path="/Pomoc" element={<Help/>}/>
                             <Route path="/Zaloguj" element={<Login/>}/>
                             <Route path="/Chatbot" element={<ChatContainer/>}/>
+                            <Route path="/Advert" element={<Advert/>}/>
 
 
                         </Routes>
@@ -147,6 +149,12 @@ function Main() {
                                         </Link>
 
                                         <Link to="/Pomoc">
+                                            <div className="navDivMain">
+                                                {isIcon ? <h3>pomoc</h3> :
+                                                    <Icon className="menuIcons" icon="solar:help-linear"/>}
+                                            </div>
+                                        </Link>
+                                        <Link to="/Advert">
                                             <div className="navDivMain">
                                                 {isIcon ? <h3>pomoc</h3> :
                                                     <Icon className="menuIcons" icon="solar:help-linear"/>}
