@@ -490,55 +490,75 @@ def get_icer_shopping():
 
 
 
+
+
+app = Flask(__name__)
+
 @app.route('/api/add_to_shopping_cart', methods=['POST'])
 def add_to_shopping_cart():
     try:
-        # Pobranie danych z żądania
+        # Tworzenie instancji klasy DatabaseConnector
+        db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+
+        # Łączenie z bazą danych
+        db_connector.connect()
+
+        # Tworzenie instancji ProductManager
+        product_manager = ProductManager(db_connector)
+
+        # Pobieranie danych z żądania
         data = request.json
+        image_data = data.get('imageData')
+
+        connection = db_connector.get_connection()
+        cursor = connection.cursor(dictionary=True)
 
         # Sprawdzenie, czy użytkownik jest zalogowany
-        if 'username' not in session:
-            return jsonify({"error": "User not logged in"}), 401
+        user_id, username, response, status_code = DatabaseConnector.get_user_id_by_username(cursor, session)
 
-        # Pobranie ID użytkownika na podstawie nazwy użytkownika
-        username = session['username']
-        user_id = get_user_id_by_username(username)
-
-        if user_id is None:
-            return jsonify({"error": "User not found"}), 401
+        if response:
+            return response, status_code
 
         # Pobranie ID produktu z żądania
         product_id = data.get('productID')
 
         if product_id is None:
-            return jsonify({"error": "Product ID not provided"}), 400
+            # Sprawdzenie, czy dostarczono wymagane dane (nazwa, cena, ilość)
+            if 'nazwa' not in data or 'cena' not in data or 'ilosc' not in data:
+                return jsonify({"error": "Product ID not provided, and missing required data (nazwa, cena, ilosc)"}), 400
 
-        # Pobranie wartości in_cart z żądania (1 lub 0)
-        in_cart_value = data.get('inCart')
-
-        if in_cart_value not in [0, 1]:
-            return jsonify({"error": "Invalid inCart value"}), 400
-
-        # Uzyskanie połączenia z bazą danych
-        db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
-        db_connector.connect()
-
-        # Sprawdzenie, czy produkt już istnieje w koszyku
-        check_product_query = "SELECT id FROM Shopping WHERE UserID = %s AND produktID = %s"
-        with db_connector.get_connection().cursor() as cursor:
-            cursor.execute(check_product_query, (user_id, product_id))
-            existing_product = cursor.fetchone()
-
-        if existing_product:
-            # Aktualizacja wartości in_cart
-            update_query = "UPDATE Shopping SET in_cart = %s WHERE UserID = %s AND produktID = %s"
-            with db_connector.get_connection().cursor() as cursor:
-                cursor.execute(update_query, (in_cart_value, user_id, product_id))
-        else:
             # Dodanie nowego produktu do koszyka
-            insert_query = "INSERT INTO Shopping (UserID, produktID, in_cart) VALUES (%s, %s, %s)"
+            insert_query = "INSERT INTO Shopping (UserID, nazwa, cena, ilosc, in_cart) VALUES (%s, %s, %s, %s, 1)"
             with db_connector.get_connection().cursor() as cursor:
-                cursor.execute(insert_query, (user_id, product_id, in_cart_value))
+                cursor.execute(insert_query, (user_id, data['nazwa'], data['cena'], data['ilosc']))
+
+        else:
+            # Pobranie wartości in_cart z żądania (1 lub 0)
+            in_cart_value = data.get('inCart')
+
+            if in_cart_value not in [0, 1]:
+                return jsonify({"error": "Invalid inCart value"}), 400
+
+            # Uzyskanie połączenia z bazą danych
+            db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+            db_connector.connect()
+
+            # Sprawdzenie, czy produkt już istnieje w koszyku
+            check_product_query = "SELECT id FROM Shopping WHERE UserID = %s AND produktID = %s"
+            with db_connector.get_connection().cursor() as cursor:
+                cursor.execute(check_product_query, (user_id, product_id))
+                existing_product = cursor.fetchone()
+
+            if existing_product:
+                # Aktualizacja wartości in_cart
+                update_query = "UPDATE Shopping SET in_cart = %s WHERE UserID = %s AND produktID = %s"
+                with db_connector.get_connection().cursor() as cursor:
+                    cursor.execute(update_query, (in_cart_value, user_id, product_id))
+            else:
+                # Dodanie nowego produktu do koszyka
+                insert_query = "INSERT INTO Shopping (UserID, produktID, in_cart) VALUES (%s, %s, %s)"
+                with db_connector.get_connection().cursor() as cursor:
+                    cursor.execute(insert_query, (user_id, product_id, in_cart_value))
 
         # Zatwierdzenie zmian w bazie danych
         db_connector.get_connection().commit()
@@ -549,6 +569,10 @@ def add_to_shopping_cart():
         return jsonify({"error": str(error)}), 500
     finally:
         db_connector.disconnect()
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
 
 
 @app.route('/api/Icer/get_notifications', methods=['POST'])
