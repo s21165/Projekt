@@ -1,14 +1,14 @@
 import base64
 import os
 import threading
-
+from flask import session, jsonify, request
 import bcrypt
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, Response, render_template, redirect, url_for, make_response
 from flask import current_app
 from flask import send_file
 from flask_cors import CORS
-
+import uuid  # potrzebne do generowania unikalnych ID sesji
 import modules.database_connector
 from modules.advert_module.monitor import generate_frames
 from modules.bot_module.bot import get_bot_response
@@ -914,8 +914,53 @@ def get_products():
     return jsonify(products)
 
 
-from flask import session, jsonify, request
-import uuid  # potrzebne do generowania unikalnych ID sesji
+
+# Endpoint do aktualizacji preferencji użytkownika
+@app.route('/api/update_preferences', methods=['POST'])
+def update_preferences():
+    try:
+        # Tworzenie instancji klasy DatabaseConnector
+        db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+
+        # Łączenie z bazą danych
+        db_connector.connect()
+
+        # Pobieranie danych z żądania
+        data = request.json
+
+        # Funkcja do walidacji rozmiaru
+        def validate_size(value):
+            valid_sizes = ['bardzo male', 'male', 'srednie', 'duze', 'bardzo duze']
+            return value.lower() in valid_sizes
+
+        # Sprawdzenie poprawności wartości
+        if not validate_size(data['wielkosc_lodowki']) or not validate_size(data['wielkosc_strony_produktu']):
+            return jsonify({"error": "Nieprawidłowe wartości wielkości."}), 400
+
+        connection = db_connector.get_connection()
+        cursor = connection.cursor()
+
+        # Sprawdzenie, czy użytkownik jest zalogowany
+        user_id, username, response, status_code = DatabaseConnector.get_user_id_by_username(cursor, session)
+
+        if response:
+            return response, status_code
+
+        # Aktualizacja preferencji użytkownika
+        update_preferences_query = """
+            UPDATE preferencje_uzytkownikow
+            SET wielkosc_lodowki = %s, wielkosc_strony_produktu = %s, widocznosc_informacji_o_produkcie = %s
+            WHERE UserID = %s
+        """
+        cursor.execute(update_preferences_query, (data['wielkosc_lodowki'], data['wielkosc_strony_produktu'], data['widocznosc_informacji_o_produkcie'], user_id))
+
+        connection.commit()
+        cursor.close()
+
+        return jsonify({"message": "Preferences updated successfully!"})
+
+    except Exception as error:
+        return jsonify({"error": str(error)}), 500
 
 
 @app.route('/login', methods=['GET', 'POST'])
