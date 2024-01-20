@@ -1,5 +1,5 @@
-from barcode import get_barcode
 import qrcode
+import requests
 from pyzbar.pyzbar import decode
 from PIL import Image
 
@@ -15,6 +15,7 @@ def decode_barcode(image_path):
         return "No barcode found"
 
 # Function to decode a QR code from an image
+
 def decode_qr_code(image_path):
     qr_image = Image.open(image_path)
     decoded_objects = decode(qr_image)

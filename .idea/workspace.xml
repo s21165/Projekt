@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ad3a8541-c869-49c8-9153-a52a878e269b" name="Changes" comment="" />
+    <list default="true" id="ad3a8541-c869-49c8-9153-a52a878e269b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Icer/mainAPI.py" beforeDir="false" afterPath="$PROJECT_DIR$/Icer/mainAPI.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Icer/modules/advert_module/monitor.py" beforeDir="false" afterPath="$PROJECT_DIR$/Icer/modules/advert_module/monitor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Icer/modules/image_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/Icer/modules/image_handler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Icer/modules/scan_module/decoder.py" beforeDir="false" afterPath="$PROJECT_DIR$/Icer/modules/scan_module/decoder.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Icer/modules/scan_module/gen.py" beforeDir="false" afterPath="$PROJECT_DIR$/Icer/modules/scan_module/gen.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Icer/templates/display_video.html" beforeDir="false" afterPath="$PROJECT_DIR$/Icer/templates/display_video.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -12,6 +20,13 @@
   </component>
   <component name="ComposerSettings">
     <execution />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -24,21 +39,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "D:/RepoA/Projekt-Adi",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;F:/lastTry&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -50,10 +66,40 @@
       <workItem from="1690278419677" duration="1892000" />
       <workItem from="1690302644038" duration="604000" />
       <workItem from="1690303503661" duration="2352000" />
+      <workItem from="1705698075701" duration="1122000" />
+      <workItem from="1705699873740" duration="2564000" />
+      <workItem from="1705702458892" duration="723000" />
+      <workItem from="1705703223582" duration="7491000" />
+      <workItem from="1705755417646" duration="4507000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Icer/modules/advert_module/monitor.py</url>
+          <line>35</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Icer/modules/advert_module/monitor.py</url>
+          <line>100</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Icer/modules/advert_module/monitor.py</url>
+          <line>87</line>
+          <option name="timeStamp" value="25" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/lastTry$mainAPI.coverage" NAME="mainAPI Coverage Results" MODIFIED="1705760887068" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Icer" />
+    <SUITE FILE_PATH="coverage/lastTry$monitor.coverage" NAME="monitor Coverage Results" MODIFIED="1705760416851" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Icer/modules/advert_module" />
   </component>
 </project>

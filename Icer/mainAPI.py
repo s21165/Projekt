@@ -8,8 +8,9 @@ from flask import Flask, Response, render_template, redirect, url_for, make_resp
 from flask import current_app
 from flask import send_file
 from flask_cors import CORS
+from flask_socketio import SocketIO
+from modules.advert_module.sharedres.shared import camera_status
 
-import modules.database_connector
 from modules.advert_module.monitor import generate_frames
 from modules.bot_module.bot import get_bot_response
 from modules.database_connector import DatabaseConnector
@@ -22,8 +23,11 @@ from modules.scan_module.gen import generate_qr_code, generate_barcode
 from modules.value_manager import ProductManager
 
 app = Flask(__name__)
+
 CORS(app, supports_credentials=True)
+
 # Otawian
+socketio = SocketIO(app, cors_allowed_origins="*")
 app.config['BARCODE_FOLDER'] = os.path.join(app.static_folder, 'barcodes')
 app.config['QR_CODE_FOLDER'] = os.path.join(app.static_folder, 'qrcodes')
 app.config['SECRET_KEY'] = 'key'  # Replace with a strong secret key
@@ -254,9 +258,9 @@ def subtract_product():
         if connection:
             connection.close()
 
+
 @app.route('/remove_product_for_user', methods=['POST'])
 def remove_product_for_user():
-
     try:
         # Tworzenie instancji klasy DatabaseConnector
         db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
@@ -314,12 +318,12 @@ def remove_product_for_user():
             connection.close()
         db_connector.disconnect()  # Zamknięcie połączenia z bazą danych
 
+
 @app.route('/api/add_product', methods=['POST'])
 def add_product():
     try:
         # Tworzenie instancji klasy DatabaseConnector
         db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
-
 
         # Łączenie z bazą danych
         db_connector.connect()
@@ -336,7 +340,6 @@ def add_product():
 
         # Sprawdzenie, czy użytkownik jest zalogowany
         user_id, username, response, status_code = DatabaseConnector.get_user_id_by_username(cursor, session)
-
 
         if response:
             return response, status_code
@@ -375,7 +378,6 @@ def add_product():
 
         # Uruchomienie funkcji run_daily_procedure po dodaniu produktu
 
-
         connection.commit()
         cursor.close()
         run_daily_procedure()
@@ -412,6 +414,7 @@ def edit_product(product_id):
 
     except Exception as error:
         return jsonify({"error": str(error)}), 500
+
 
 @app.route('/api/shoppingList', methods=['POST', 'GET'])
 def get_icer_shopping():
@@ -485,9 +488,6 @@ def get_icer_shopping():
     finally:
         if cursor:
             cursor.close()
-
-
-
 
 
 @app.route('/api/add_to_shopping_cart', methods=['POST'])
@@ -696,7 +696,6 @@ def get_products_with_red_flag():
     finally:
         if cursor:
             cursor.close()
-
 
 
 @app.route('/api/Icer', methods=['POST'])
@@ -1155,6 +1154,16 @@ def start_food_identification_route():
     return redirect(url_for('index'))
 
 
+
+@app.route('/receive_data', methods=['POST'])
+def receive_data():
+    data = request.json
+    print("Received data:", data)
+    # Here you can process the data as needed
+    return jsonify({"status": "Data received successfully"})
+
+
+
 # Route for video streaming
 @app.route('/video_feed')
 def video_feed():
@@ -1169,19 +1178,14 @@ camera_thread = None
 @app.route('/start_camera_monitoring', methods=['POST'])
 def start_camera_monitoring_route():
     global camera_thread
-
     if camera_thread is None or not camera_thread.is_alive():
-        # Start the camera monitoring in a new thread
         camera_thread = threading.Thread(target=generate_frames)
         camera_thread.start()
-
-    return redirect(url_for('display_video'))
-
-
-@app.route('/display_video')
-def display_video():
-    # Render a template that will display the video
-    return render_template('display_video.html')
+    data = request.json.get('dane')
+    print(data)
+    # Emit data to the frontend
+    socketio.emit('update_status', {'data': data})
+    return {'status': 'Data received'}
 
 
 # Strona wylogowania
