@@ -6,6 +6,16 @@ import winsound
 import time
 
 
+def print_and_send(data):
+    print(data)
+    api_endpoint = "http://192.168.0.130:5000/start_camera_monitoring"
+    try:
+        response = requests.post(api_endpoint, json={'dane': data})
+        response.raise_for_status()
+    except requests.RequestException as e:
+        print(f"Błąd wysyłania danych: {e}")
+
+
 # Function to detect faces and eyes in an image
 def detect_faces_and_eyes(image):
     gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
