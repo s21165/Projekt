@@ -25,13 +25,16 @@ function ProductItem({
                          setIsSelected,
                          isHidden,
                          onProductClick,
-                         maxDimension
+                         maxDimension,
+                         rightButtonDivRef
                      }) {
 
     const[image, setImage] = useState();
+    const [animatingProductId, setAnimatingProductId] = useState(null);
+
 
     const picGetter = PictureGetter(image,setImage,data.zdjecie_lokalizacja)
-    const mediumProductsCountSetting =1;
+    const mediumProductsCountSetting =0;
     const smallProductsCountSetting =2;
     const styl = GetBorderStyle(data, filter, 2);
     const [info, setInfo] = useState(0);
@@ -40,7 +43,7 @@ function ProductItem({
     const itemWidthLarge = maxDimension * (smallProductsCount[2]/ 100);
     const itemWidthMedium = maxDimension * ((mediumProductsCount[mediumProductsCountSetting])/ 100);
 
-    const useProduct = useProductItem(data, handleDecrease, handleIncrease, setIsSelected)
+    const useProduct = useProductItem(data, handleDecrease, handleIncrease,handleZero,handleRemove, setIsSelected)
     const elementRef = useRef(null);
     function getFontSize(mediumProductsCountSetting, maxDimension) {
         switch (mediumProductsCountSetting) {
@@ -58,6 +61,10 @@ function ProductItem({
                 return 16; // default font size if none of the cases match
         }
     }
+
+
+
+
 
     try {
         if (data) {
@@ -105,7 +112,7 @@ function ProductItem({
                 case 'medium':
                     return (
                         <div key={index}
-                             className={`productItem ${!info ? '' : 'hidden'}`}
+                             className={`productItem ${!info ? '' : 'hidden'} ${animatingProductId === data.id ? 'animating' : ''}`}
                              ref={elementRef}
                              style={{
                                  backgroundImage: `url(${picGetter})`,
@@ -122,9 +129,13 @@ function ProductItem({
                                 handleRemove={handleRemove}
                                 handleEditClick={handleEditClick}
                                 info={info}
+                                elementRef={elementRef}
+                                animatingProductId={animatingProductId}
+                                setAnimatingProductId={setAnimatingProductId}
                                 filter={filter}
                                 itemWidthMedium={itemWidthMedium}
                                 mediumProductsCountSetting= {mediumProductsCountSetting}
+                                rightButtonDivRef={rightButtonDivRef}
                             />
                         </div>
                     );

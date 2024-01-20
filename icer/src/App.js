@@ -13,15 +13,23 @@ import {SettingsProvider} from "./mainPages/SettingsContext";
 import {Advert} from "./mainPages/Advert";
 
 function App() {
-    const {user} = useContext(AuthContext);
-    const [adIsOn, setAdIsOn] = useState();
+    const { user } = useContext(AuthContext);
+    // Initial state set to true to show the ad when the user logs in
+    const [adIsOn, setAdIsOn] = useState(true);
+
+    useEffect(() => {
+        if (user) {
+            setAdIsOn(true); // Reset adIsOn to true when user logs in
+        }
+    }, [user]);
 
     return (
         <SettingsProvider>
             <Router>
                 <ToastContainer/>
-
-                {user ?(<Main/>) : <Login/>}
+                {/* Show Advert if user is logged in and adIsOn is true */}
+                {user ?  <Main /> : <Login />}
+                {/*{user ? (adIsOn ? <Advert adIsOn= {adIsOn} setAdIsOn={setAdIsOn} /> : <Main />) : <Login />}*/}
             </Router>
         </SettingsProvider>
     );

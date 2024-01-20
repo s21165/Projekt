@@ -1,21 +1,19 @@
-import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { API_URL } from "../config";
+import {useEffect, useState, useRef} from "react";
+import {useNavigate} from "react-router-dom";
+import {API_URL} from "../config";
 import axios from "axios";
 import './Advert.css';
 import io from 'socket.io-client';
 
-export function Advert() {
+export function Advert({adIsOn, setAdIsOn}) {
     const [videoFeedUrl, setVideoFeedUrl] = useState("");
-    const navigate = useNavigate();
     const socketRef = useRef(null);
-    const [adIsOn, setAdIsOn] = useState(false);
+    const [finishWord, setFinishWord] = useState("");
 
     useEffect(() => {
         socketRef.current = io(API_URL);
         socketRef.current.on('update_status', (data) => {
-            console.log('Received data:', data);
-            // Handle the data here
+            setFinishWord(data.data);
         });
 
         return () => {
@@ -33,21 +31,28 @@ export function Advert() {
                 }
             })
                 .then((response) => {
-                    setAdIsOn(true);
+                    console.error(`adisOn: ${adIsOn}`);
                     setVideoFeedUrl(`${API_URL}/video_feed`);
-                    console.log(response.data);
+                    console.log('dostalem data:', finishWord);
                 })
                 .catch((error) => {
                     console.error(`Error starting camera monitoring: ${error}`);
                 });
         };
+        if (finishWord === 'finished') {
+            setAdIsOn(false); // Turn off the advertisement
 
+
+
+        } else {
+            fetchVideoFeed();
+        }
         fetchVideoFeed();
-    }, [setAdIsOn]);
+    }, [finishWord,adIsOn]);
 
     return (
         <div className="advertContainer">
-            {videoFeedUrl && <img className="advertImage" src={videoFeedUrl} alt="Video Feed" />}
+            {videoFeedUrl && <img className="advertImage" src={videoFeedUrl} alt="Video Feed"/>}
         </div>
     );
 }

@@ -16,6 +16,8 @@ function ProductManager({
     const productListRef = useRef(null); // Utworzenie ref
     const [minDimension, setMinDimension] = useState(0);
     const [dimension,setDimension]=useState({width:0, height:0});
+    const rightButtonDivRef = useRef(null);
+
     useEffect(() => {
         const observeTarget = productListRef.current;
 
@@ -36,9 +38,11 @@ function ProductManager({
             return () => resizeObserver.unobserve(observeTarget);
         }
     }, [dimension,minDimension,editingProduct]);
+
     const handleProductClick = (productId) => {
         setSelectedProductId(selectedProductId === productId ? null : productId);
     };
+
     return (
         <>
             {editingProduct ? (
@@ -63,7 +67,7 @@ function ProductManager({
                                             <h2 className="productListTopButtonsH2">aktualne</h2>
                                         </button>
                                     </div>
-                                    <div className="rightButtonDiv">
+                                    <div className="rightButtonDiv" ref={rightButtonDivRef}>
                                         <button
                                             className={`rightButton ${filter === 'old' ? 'active' : ''}`}
                                             onClick={() => setFilter('old')}>
@@ -84,6 +88,7 @@ function ProductManager({
                                 key={index}
                                 data={data}
                                 handleRemove={productActions.handleRemove}
+                                dimension={dimension}
                                 maxDimension={minDimension}
                                 handleEditClick={productActions.handleEditClick}
                                 handleIncrease={productActions.handleIncrease}
@@ -91,6 +96,7 @@ function ProductManager({
                                 handleZero={productActions.handleZero}
                                 filter={filter}
                                 size={size}
+                                rightButtonDivRef={rightButtonDivRef}
                                 isSelected={selectedProductId === data.id}
                                 isHidden={selectedProductId !== null && selectedProductId !== data.id}
                                 setIsSelected={setSelectedProductId}

@@ -10,7 +10,7 @@
     justify-content: center; /* Wyrównuje elementy do początku */
     margin: 0.5vh 0.2vw 0.5vh;
     text-align: center;
-
+    background: transparent;
 }
 
 .listButtons div {
@@ -18,7 +18,7 @@
     height: 100%;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     justify-content: center;
-
+    background: transparent;
 }
 
 .leftButtonDiv {
@@ -30,6 +30,7 @@
     text-align: center;
     color: white;
     margin-right: 7px;
+
     /* Zapewnienie, że nie ma marginesów, które mogą wpływać na wysokość */
 }
 
