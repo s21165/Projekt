@@ -1,44 +1,49 @@
-import {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {API_URL} from "../config";
+import { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { API_URL } from "../config";
 import axios from "axios";
 import './Advert.css';
+import io from 'socket.io-client';
 
-export function Advert({setAdIsOn}) {
-    const [videoFeedUrl, setVideoFeedUrl] = useState('');
+export function Advert() {
+    const [videoFeedUrl, setVideoFeedUrl] = useState("");
     const navigate = useNavigate();
+    const socketRef = useRef(null);
+    const [adIsOn, setAdIsOn] = useState(false);
+
+    useEffect(() => {
+        socketRef.current = io(API_URL);
+        socketRef.current.on('update_status', (data) => {
+            console.log('Received data:', data);
+            // Handle the data here
+        });
+
+        return () => {
+            if (socketRef.current) {
+                socketRef.current.disconnect();
+            }
+        };
+    }, []);
 
     useEffect(() => {
         const fetchVideoFeed = () => {
-            axios.post(`${API_URL}/start_camera_monitoring`)
+            axios.post(`${API_URL}/start_camera_monitoring`, {}, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
                 .then((response) => {
-                    setAdIsOn=true;
+                    setAdIsOn(true);
                     setVideoFeedUrl(`${API_URL}/video_feed`);
-                    console.log(response.data)
+                    console.log(response.data);
                 })
                 .catch((error) => {
                     console.error(`Error starting camera monitoring: ${error}`);
                 });
         };
 
-        const checkForEndSignal = () => {
-            const img = document.createElement('img');
-            img.src = videoFeedUrl;
-            img.onload = () => {
-                if (img.naturalWidth === 100 && img.naturalHeight === 100) {
-                    clearInterval(intervalId);
-                    setAdIsOn = false;
-                    navigate('/')
-                    console.log('xx')
-                }
-            };
-        };
-
         fetchVideoFeed();
-        const intervalId = setInterval(checkForEndSignal, 1000); // Check every second
-
-        return () => clearInterval(intervalId); // Cleanup on unmount
-    }, [videoFeedUrl, navigate]);
+    }, [setAdIsOn]);
 
     return (
         <div className="advertContainer">

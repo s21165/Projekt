@@ -1,0 +1,12 @@
+.advertContainer{
+    position:relative;
+    display:flex;
+    height:500px;
+    width:500px;
+
+}
+.advertImage{
+
+    height:500px;
+    width:500px;
+}
