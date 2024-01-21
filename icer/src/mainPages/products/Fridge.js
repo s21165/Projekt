@@ -77,17 +77,7 @@ export function Fridge(){
                             size={"small"}
                         />
                 </div>
-                <div className="kontener">
-                   <button > <div className="light2">
-                        <div  className="box">
-                            <div onClick={()=>setSwiatlo(!swiatlo)} className={`bulb2${swiatlo?'.on':''}`}>
-                                <span></span>
-                                <span></span>
-                            </div>
-                        </div>
-                    </div>
-                   </button>
-                </div>
+
                 <div onClick={handleClick} className={`light-bulb ${bulbIsOn ? 'on' : 'off'} ${bulbPosition(lowWidth, lowHeight) ? '' : 'left'}`}>
 
                     <Icon className="bulb" icon="mdi:lightbulb-on-outline" />

@@ -87,7 +87,7 @@ function Main() {
                             <Route path="/Konto" element={<Account/>}/>
                             <Route path="/Powiadomienia" element={<Notifications/>}/>
                             <Route path="/Sklepy" element={<Fridge/>}/>
-                            <Route path="/Ustawienia" element={<Settings/>}/>
+                            <Route path="/Ustawienia" element={<Settings where='settings'/>}/>
                             <Route path="/Pomoc" element={<Help/>}/>
                             <Route path="/Zaloguj" element={<Login/>}/>
                             <Route path="/Chatbot" element={<ChatContainer/>}/>

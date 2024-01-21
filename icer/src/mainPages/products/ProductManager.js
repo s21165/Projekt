@@ -1,6 +1,8 @@
 import React, {useEffect, useRef, useState} from 'react';
 import ProductEdit from "./ProductEdit";
 import ProductItem from "./ProductItem";
+import {Settings} from "../Settings";
+import {Icon} from "@iconify/react";
 
 function ProductManager({
                             editingProduct,
@@ -17,6 +19,14 @@ function ProductManager({
     const [minDimension, setMinDimension] = useState(0);
     const [dimension,setDimension]=useState({width:0, height:0});
     const rightButtonDivRef = useRef(null);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const sidebarRef = useRef(null);
+
+
+    const toggleSidebar = () => {
+        setIsSidebarOpen(!isSidebarOpen);
+    };
+
 
     useEffect(() => {
         const observeTarget = productListRef.current;
@@ -45,6 +55,16 @@ function ProductManager({
 
     return (
         <>
+            <div
+                ref={sidebarRef}
+                className={`settings-container-otherSites ${isSidebarOpen ? 'open' : ''}`}
+
+            >
+                <button onClick={toggleSidebar} className={`settings-button`}>
+                    <Icon className="settingBurgerButton" icon="iconamoon:menu-burger-vertical-duotone" />
+                </button>
+                {isSidebarOpen && <Settings where={size === 'small' ? 'fridge' : size === 'medium' ? 'products' : ''}/>}
+            </div>
             {editingProduct ? (
 
                 <ProductEdit
@@ -54,6 +74,7 @@ function ProductManager({
                 />
             ) : (
                 <>
+
 
                     {size === 'medium' &&
                         <>
@@ -67,6 +88,8 @@ function ProductManager({
                                             <h2 className="productListTopButtonsH2">aktualne</h2>
                                         </button>
                                     </div>
+
+
                                     <div className="rightButtonDiv" ref={rightButtonDivRef}>
                                         <button
                                             className={`rightButton ${filter === 'old' ? 'active' : ''}`}
@@ -81,8 +104,12 @@ function ProductManager({
 
 
                         </>
+
                     }
-                    <div className="productList" ref={productListRef} style={size === 'small' ? {height: "97vh"} : {height: "90vh"}}>
+
+
+
+                    <div className="productList" ref={productListRef} style={size === 'small' ? {height: "100vh"} : {height: "90vh"}}>
                         {productData.filteredProducts && productData.filteredProducts.map((data, index) =>
                             <ProductItem
                                 key={index}
