@@ -2,7 +2,6 @@ import os
 import qrcode
 import barcode
 import json
-from barcode import Code128, EAN13
 from barcode.writer import ImageWriter
 from PIL import Image
 
