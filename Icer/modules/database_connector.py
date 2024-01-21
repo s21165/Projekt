@@ -23,20 +23,56 @@ class DatabaseConnector:
 
     def update_product(self, product_id, data, user_id):
         try:
-            # Zaktualizuj Produkt
-            update_produkt_query = """UPDATE Produkty SET 
-                                       nazwa=%s, 
-                                       cena=%s,
-                                       kalorie=%s,
-                                       tluszcze=%s, 
-                                       weglowodany=%s, 
-                                       bialko=%s, 
-                                       kategoria=%s
-                                    WHERE id=%s"""
-
+            # Sprawdź wartość is_podstawowe
+            check_default_query = "SELECT is_podstawowe FROM Produkty WHERE id=%s"
             cursor = self.connection.cursor()
-            cursor.execute(update_produkt_query, (data['nazwa'], data['cena'], data['kalorie'], data['tluszcze'],
-                                                  data['weglowodany'], data['bialko'], data['kategoria'], product_id))
+            cursor.execute(check_default_query, (product_id,))
+            is_default = cursor.fetchone()
+
+            if is_default and is_default.get('is_podstawowe') == 1:
+                # Utwórz kopię produktu z is_podstawowe=0
+                copy_product_query = """INSERT INTO Produkty (nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria, is_podstawowe)
+                                        SELECT nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria, 0
+                                        FROM Produkty
+                                        WHERE id=%s"""
+
+                cursor.execute(copy_product_query, (product_id,))
+                self.connection.commit()
+
+                # Pobierz nowe ID produktu
+                cursor.execute("SELECT LAST_INSERT_ID()")
+                new_product_id = cursor.fetchone()['LAST_INSERT_ID()']
+
+                # Zaktualizuj oryginalny produkt
+                update_produkt_query = """UPDATE Produkty SET 
+                                           nazwa=%s, 
+                                           cena=%s,
+                                           kalorie=%s,
+                                           tluszcze=%s, 
+                                           weglowodany=%s, 
+                                           bialko=%s, 
+                                           kategoria=%s
+                                        WHERE id=%s"""
+
+                cursor.execute(update_produkt_query, (data['nazwa'], data['cena'], data['kalorie'], data['tluszcze'],
+                                                      data['weglowodany'], data['bialko'], data['kategoria'],
+                                                      product_id))
+            else:
+                # Zaktualizuj Produkt bez tworzenia kopii
+                update_produkt_query = """UPDATE Produkty SET 
+                                           nazwa=%s, 
+                                           cena=%s,
+                                           kalorie=%s,
+                                           tluszcze=%s, 
+                                           weglowodany=%s, 
+                                           bialko=%s, 
+                                           kategoria=%s
+                                        WHERE id=%s"""
+
+                cursor.execute(update_produkt_query, (data['nazwa'], data['cena'], data['kalorie'], data['tluszcze'],
+                                                      data['weglowodany'], data['bialko'], data['kategoria'],
+                                                      product_id))
+
             self.connection.commit()
 
             # Zaktualizuj ilość w tabeli 'Icer'

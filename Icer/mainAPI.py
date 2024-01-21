@@ -488,12 +488,6 @@ def get_icer_shopping():
 
 
 
-
-
-
-
-app = Flask(__name__)
-
 @app.route('/api/add_to_shopping_cart', methods=['POST'])
 def add_to_shopping_cart():
     try:
@@ -569,9 +563,6 @@ def add_to_shopping_cart():
         return jsonify({"error": str(error)}), 500
     finally:
         db_connector.disconnect()
-
-if __name__ == '__main__':
-    app.run(debug=True)
 
 
 
