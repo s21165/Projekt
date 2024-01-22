@@ -967,7 +967,7 @@ def update_preferences():
             return jsonify({"error": "Nieprawidłowe wartości wielkości."}), 400
 
         connection = db_connector.get_connection()
-        cursor = connection.cursor()
+        cursor = connection.cursor(dictionary=True)
 
         # Sprawdzenie, czy użytkownik jest zalogowany
         user_id, username, response, status_code = DatabaseConnector.get_user_id_by_username(cursor, session)
