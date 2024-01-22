@@ -28,7 +28,7 @@ app.config['BARCODE_FOLDER'] = os.path.join(app.static_folder, 'barcodes')
 app.config['QR_CODE_FOLDER'] = os.path.join(app.static_folder, 'qrcodes')
 app.config['SECRET_KEY'] = 'key'  # Replace with a strong secret key
 # app.config['BARCODE_FOLDER'] = 'static/barcodes
-###
+### #
 
 app.secret_key = 'secret_key'  # Klucz sesji
 
