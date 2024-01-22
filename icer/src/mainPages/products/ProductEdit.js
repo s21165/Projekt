@@ -6,24 +6,27 @@ import {useOutsideClick} from "./useOutsideClick";
 import {useEditProduct} from "./useEditProduct";
 import {handleImageChange} from "./handleImageChange";
 
-function ProductEdit({product, handleEdit, setEditingProduct}) {
+function ProductEdit({product, handleEdit, setEditingProduct, productActions}) {
 
     const myDivRef = useRef(null);
     const {
         editProduct, image, setEditProduct, setImage, imagePreview, setImagePreview,handleChange
     } = useEditProduct(product);
 
+
     useOutsideClick(myDivRef, () => setEditingProduct(null));
 
 
-    const handleUpdate = () => {
+    const handleUpdate = (e) => {
+        e.preventDefault();
         handleEdit({...editProduct, image});
         setEditingProduct(null);
-    };
 
+    };
 
     return (
         <div className="productContainerDiv">
+
             <form onSubmit={handleUpdate} className="addProductForm" ref={myDivRef}>
                 <label>
                     <h5>Nazwa:</h5>
@@ -31,23 +34,23 @@ function ProductEdit({product, handleEdit, setEditingProduct}) {
                 </label>
                 <label>
                     <h5>Cena:</h5>
-                    <input type="text" name="cena" value={editProduct.cena} onChange={handleChange}/>
+                    <input type="number" name="cena" value={editProduct.cena} onChange={handleChange}/>
                 </label>
                 <label>
                     <h5> Kalorie:</h5>
-                    <input type="text" name="kalorie" value={editProduct.kalorie} onChange={handleChange}/>
+                    <input type="number" name="kalorie" value={editProduct.kalorie} onChange={handleChange}/>
                 </label>
                 <label>
                     <h5> Tłuszcze:</h5>
-                    <input type="text" name="tluszcze" value={editProduct.tluszcze} onChange={handleChange}/>
+                    <input type="number" name="tluszcze" value={editProduct.tluszcze} onChange={handleChange}/>
                 </label>
                 <label>
                     <h5>Węglowodany:</h5>
-                    <input type="text" name="weglowodany" value={editProduct.weglowodany} onChange={handleChange}/>
+                    <input type="number" name="weglowodany" value={editProduct.weglowodany} onChange={handleChange}/>
                 </label>
                 <label>
                     <h5> Białko:</h5>
-                    <input type="text" name="bialko" value={editProduct.bialko} onChange={handleChange}/>
+                    <input type="number" name="bialko" value={editProduct.bialko} onChange={handleChange}/>
                 </label>
                 <label>
                     <h5>Kategoria:</h5>
@@ -55,7 +58,7 @@ function ProductEdit({product, handleEdit, setEditingProduct}) {
                 </label>
                 <label>
                     <h5>Ilość:</h5>
-                    <input type="text" name="ilosc" value={editProduct.ilosc} onChange={handleChange}/>
+                    <input type="number" name="ilosc" value={editProduct.ilosc} onChange={handleChange}/>
                 </label>
                 <label className="dataLabel">
                     <h5>Data ważności:</h5>

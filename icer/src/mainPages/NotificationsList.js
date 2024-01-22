@@ -22,8 +22,15 @@ export function NotificationsList({data, small = false, action, left = false}) {
     const handleDeleteClick = (productId) => {
         // Logika usuwania powiadomienia
     };
+    const handleNotificationClick = (productId) => {
+        // Only mark notification as read if it's not currently expanded
+        if (expandedProduct !== productId) {
+            action.handleReadNotification(productId);
+        }
+        handleToggleExpand(productId);
+    };
 
-    const selectAlertColor = (notification) =>{
+    const selectAlertColor = (notification) => {
         switch (notification) {
             case 0:
                 return 'black'; // example ratio
@@ -53,30 +60,43 @@ export function NotificationsList({data, small = false, action, left = false}) {
                         >
                             <h5 className="notificationText"
                                 onClick={() => {
-                                    action.handleReadNotification(product.id)
-                                    handleToggleExpand(product.id);
+                                    handleNotificationClick(product.id)
                                 }}
                             >{product.nazwa}</h5>
                             <div className="notificationIcons"
 
 
                             >
-                                <Icon className="notificationAlertIcon"
-                                      style={
-                                          small
-                                              ? { marginRight: "1vw", height: "2vh", width: "2vw", color: selectAlertColor(product.powiadomienie) }
-                                              : { marginRight: "3vw", color: selectAlertColor(product.powiadomienie) }
-                                      }
+                                <div className="notificationAlertIconDiv">
+                                    <Icon className="notificationAlertIcon"
+                                          style={
+                                              small
+                                                  ? {
+                                                      marginRight: "1vw",
+                                                      height: "2vh",
+                                                      width: "2vw",
+                                                      color: selectAlertColor(product.powiadomienie)
+                                                  }
+                                                  : {marginRight: "3vw", color: selectAlertColor(product.powiadomienie)}
+                                          }
 
-                                      icon="fluent:alert-16-regular"
-                                      onClick={() =>{ handleAlertClick(product.id)
-                                          action.handleReadNotification(product.id)}}
-                                />
-                                <Icon className="notificationDeleteIcon"
-                                      style={small ? {marginRight: "1vw", height:"2vh",width:"2vw"} : {marginRight: "3vw"}}
-                                      icon="octicon:x-24"
-                                      onClick={() => action.handleRemoveNotification(product.id) }/>
-
+                                          icon="fluent:alert-16-regular"
+                                          onClick={() => {
+                                              handleAlertClick(product.id)
+                                              action.handleReadNotification(product.id)
+                                          }}
+                                    />
+                                </div>
+                                <div className="notificationDeleteIconDiv">
+                                    <Icon className="notificationDeleteIcon"
+                                          style={small ? {
+                                              marginRight: "1vw",
+                                              height: "2vh",
+                                              width: "2vw"
+                                          } : {marginRight: "3vw"}}
+                                          icon="octicon:x-24"
+                                          onClick={() => action.handleRemoveNotification(product.id)}/>
+                                </div>
                             </div>
 
                         </div>

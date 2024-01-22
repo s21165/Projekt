@@ -6,14 +6,14 @@ import {useContext} from 'react';
 import {AuthContext} from '../account/auth-context';
 import {API_URL} from "../../config";
 import {Icon} from "@iconify/react";
-import { ToastContainer, toast } from 'react-toastify';
+import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {DecodeQrCode} from "./DecodeQrCode";
 import {initializeProduct} from "./initializeProduct";
 import {submitProduct} from "./submitProduct";
 import {handleImageChange} from "./handleImageChange";
 import {handleQRChange} from "./handleQRChange";
-import backpack  from '../../data/backpack.png'
+import groceryBag from '../../data/groceryBag.svg'
 
 function AddProduct() {
     const {user} = useContext(AuthContext);
@@ -131,122 +131,129 @@ function AddProduct() {
         }
     };
     return (
-        <div className="productContainerDiv">
-            <div onClick={handleAddToBackpack}>
-                czesc
-                {productBackpack.map((product, index) => (
-                    <div key={index}>{product.nazwa} i inne dane...</div>
-                ))}
-            </div>
+        <>
 
-            <form onSubmit={handleSubmit} className="addProductForm">
-                <label>
-                    <h5>Nazwa:</h5>
-                    <input type="text" name="nazwa" value={product.nazwa} onChange={handleChange}/>
-                </label>
-                <label>
-                    <h5>Cena:</h5>
-                    <input type="text" name="cena" value={product.cena} onChange={handleChange}/>
-                </label>
-                <label>
-                    <h5> Kalorie:</h5>
-                    <input type="text" name="kalorie" value={product.kalorie} onChange={handleChange}/>
-                </label>
-                <label>
-                    <h5> Tłuszcze:</h5>
-                    <input type="text" name="tluszcze" value={product.tluszcze} onChange={handleChange}/>
-                </label>
-                <label>
-                    <h5>Węglowodany:</h5>
-                    <input type="text" name="weglowodany" value={product.weglowodany} onChange={handleChange}/>
-                </label>
-                <label>
-                    <h5> Białko:</h5>
-                    <input type="text" name="bialko" value={product.bialko} onChange={handleChange}/>
-                </label>
-                <label>
-                    <h5>Kategoria:</h5>
-                    <input type="text" name="kategoria" value={product.kategoria} onChange={handleChange}/>
-                </label>
-                <label>
-                    <h5>Ilość:</h5>
-                    <input type="text" name="ilosc" value={product.ilosc} onChange={handleChange}/>
-                </label>
-                <label className="dataLabel">
-                    <h5>Data ważności:</h5>
-                    <input type="date" name="data_waznosci" className="dataInput" value={product.data_waznosci}
-                           onChange={handleChange}/>
-                </label>
-                <div className="addPhotoDiv">
-                    <label><h5> Zdjęcie: </h5></label>
-                    <div className="image-options">
-                        <label className="addPhotoFromDir">
-                            {!image && <Icon className="addPhotoFromDirIcon" icon="clarity:directory-line"/>}
-                            {imagePreview && (
+
+
+
+            <div className="productContainerDiv">
+                <div className="backpackAddProductDiv" onClick={handleBackpackClick}>
+                    <img className="backpackAddProduct" src={groceryBag}/>
+                    <span className="backpackCounter">{productBackpack.length}</span>
+                </div>
+                <div onClick={handleAddToBackpack}>
+                    czesc
+                    {productBackpack.map((product, index) => (
+                        <div key={index}>{product.nazwa} i inne dane...</div>
+                    ))}
+                </div>
+
+                <form onSubmit={handleSubmit} className="addProductForm">
+                    <label>
+                        <h5>Nazwa:</h5>
+                        <input type="text" name="nazwa" value={product.nazwa} onChange={handleChange}/>
+                    </label>
+                    <label>
+                        <h5>Cena:</h5>
+                        <input type="number" name="cena" value={product.cena} onChange={handleChange}/>
+                    </label>
+                    <label>
+                        <h5> Kalorie:</h5>
+                        <input type="number" name="kalorie" value={product.kalorie} onChange={handleChange}/>
+                    </label>
+                    <label>
+                        <h5> Tłuszcze:</h5>
+                        <input type="number" name="tluszcze" value={product.tluszcze} onChange={handleChange}/>
+                    </label>
+                    <label>
+                        <h5>Węglowodany:</h5>
+                        <input type="number" name="weglowodany" value={product.weglowodany} onChange={handleChange}/>
+                    </label>
+                    <label>
+                        <h5> Białko:</h5>
+                        <input type="number" name="bialko" value={product.bialko} onChange={handleChange}/>
+                    </label>
+                    <label>
+                        <h5>Kategoria:</h5>
+                        <input type="text" name="kategoria" value={product.kategoria} onChange={handleChange}/>
+                    </label>
+                    <label>
+                        <h5>Ilość:</h5>
+                        <input type="number" name="ilosc" value={product.ilosc} onChange={handleChange}/>
+                    </label>
+                    <label className="dataLabel">
+                        <h5>Data ważności:</h5>
+                        <input type="date" name="data_waznosci" className="dataInput" value={product.data_waznosci}
+                               onChange={handleChange}/>
+                    </label>
+                    <div className="addPhotoDiv">
+                        <label><h5> Zdjęcie: </h5></label>
+                        <div className="image-options">
+                            <label className="addPhotoFromDir">
+                                {!image && <Icon className="addPhotoFromDirIcon" icon="clarity:directory-line"/>}
+                                {imagePreview && (
+                                    <img
+                                        src={imagePreview}
+                                        alt="Podgląd"
+                                        style={{maxWidth: '100px', maxHeight: '100px'}}
+                                    />
+                                )}
+                                <span> <h5> dodaj z urządzenia </h5> </span>
+                                <input
+                                    type="file"
+                                    id="file-input"
+                                    style={{display: 'none'}}
+                                    onChange={(e) => handleImageChange(e, setImage, setProduct, setImagePreview)}
+                                />
+                            </label>
+                            <label className="addPhotoByCamera">
+                                <Icon className="addPhotoByCameraIcon" icon="arcticons:photo-pro"/>
+                                <span> <h5>zrób teraz </h5> </span>
+                            </label>
+                        </div>
+
+                    </div>
+                    <div className="AddProductButtonDiv">
+                        <button type="submit" className="addProductButton"><h4> Dodaj produkt </h4></button>
+                    </div>
+                    <div className="qrUploadDiv">
+
+                    </div>
+                    <div className="scanners">
+
+                        <label className="scannerLabel">
+                            <Icon className="barcodeIcon" icon="material-symbols:barcode"/>
+                            <span> <h5>Skanuj Barcode</h5> </span>
+                        </label>
+
+                        <label onClick={handleQRCodeScan} className="scannerLabel">
+
+
+                            {!qrImage && <Icon className="qrIcon" icon="bx:qr-scan"/>}
+                            {qrImagePreview && (
                                 <img
-                                    src={imagePreview}
+                                    src={qrImagePreview}
                                     alt="Podgląd"
                                     style={{maxWidth: '100px', maxHeight: '100px'}}
                                 />
                             )}
-                            <span> <h5> dodaj z urządzenia </h5> </span>
-                            <input
+                            <h5> Skanuj QR </h5>
+                            {!qrImage && <input
                                 type="file"
                                 id="file-input"
                                 style={{display: 'none'}}
-                                onChange={(e) => handleImageChange(e, setImage, setProduct,setImagePreview)}
-                            />
+                                onChange={(e) => handleQRChange(e, setQrImage, setQrImagePreview)}
+                            />}
                         </label>
-                        <label className="addPhotoByCamera">
-                            <Icon className="addPhotoByCameraIcon" icon="arcticons:photo-pro"/>
-                            <span> <h5>zrób teraz </h5> </span>
-                        </label>
+
                     </div>
 
-                </div>
-                <div className="AddProductButtonDiv">
-                    <button type="submit" className="addProductButton"><h4> Dodaj produkt </h4></button>
-                </div>
-                <div className="qrUploadDiv">
 
-                </div>
-                <div className="scanners">
+                </form>
 
-                    <label className="scannerLabel">
-                        <Icon className="barcodeIcon" icon="material-symbols:barcode"/>
-                        <span> <h5>Skanuj Barcode</h5> </span>
-                    </label>
-
-                    <label  onClick={handleQRCodeScan} className="scannerLabel">
-
-
-
-                        {!qrImage && <Icon className="qrIcon" icon="bx:qr-scan"/>}
-                        {qrImagePreview && (
-                            <img
-                                src={qrImagePreview}
-                                alt="Podgląd"
-                                style={{maxWidth: '100px', maxHeight: '100px'}}
-                            />
-                        )}
-                        <h5 > Skanuj QR </h5>
-                        {!qrImage && <input
-                            type="file"
-                            id="file-input"
-                            style={{display: 'none'}}
-                            onChange={(e) => handleQRChange(e, setQrImage,setQrImagePreview)}
-                        />}
-                    </label>
-
-                </div>
-
-
-            </form>
-            <div className="backpackAddProductDiv" onClick={handleBackpackClick}>
-                <img className="backpackAddProduct" src={backpack} />
-                <span className="backpackCounter">{productBackpack.length}</span>
             </div>
-        </div>
+
+        </>
     );
 }
 

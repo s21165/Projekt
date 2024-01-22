@@ -19,6 +19,7 @@ export const useProductActions = (refresh,data,sessionId, setData, setRefresh,ed
             });
     };
     const handleEditClick = (product) => {
+        console.log(product)
         setEditingProduct({
             id: product.id,
             nazwa: product.nazwa,
@@ -33,7 +34,7 @@ export const useProductActions = (refresh,data,sessionId, setData, setRefresh,ed
         });
     };
 
-    const handleEdit = () => {
+    const handleEdit = (edProduct) => {
         const id = editingProduct.id;
         const config = {
             headers: {
@@ -42,11 +43,11 @@ export const useProductActions = (refresh,data,sessionId, setData, setRefresh,ed
 
             },
         };
-
+        console.log("wysylam:"+ edProduct.nazwa);
         axios
-            .put(`${API_URL}/api/edit_product/${id}`, editingProduct, config)
+            .put(`${API_URL}/api/edit_product/${id}`, edProduct, config)
             .then((response) => {
-                console.log(response.data);
+
                 setEditingProduct(null);
                 setRefresh(!refresh);
             })

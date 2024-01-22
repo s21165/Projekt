@@ -1,6 +1,7 @@
 import React, {useRef} from 'react';
 import { Icon } from "@iconify/react";
 import {useOutsideClick} from "./useOutsideClick";
+import {formatDate} from "../account/hooks/formatDate";
 
 function ProductItemLarge({ data, useProduct,handleZero, handleRemove, handleEditClick, info, filter,setIsSelected}) {
     const myDivRef = useRef();
@@ -29,7 +30,7 @@ function ProductItemLarge({ data, useProduct,handleZero, handleRemove, handleEdi
                     <div className="productCardInfoRow"><h3>Węglowodany: {data.weglowodany}</h3></div>
                     <div className="productCardInfoRow"><h3>Białko: {data.bialko}</h3></div>
                     <div className="productCardInfoRow"><h3>Kategoria: {data.kategoria}</h3></div>
-                    <div className="productCardInfoRow"><h3>data ważności: {data.data_waznosci}</h3></div>
+                    <div className="productCardInfoRow"><h3>data ważności: {formatDate(data.data_waznosci)}</h3></div>
 
 
                     <div className="productItemQuantityDiv">

@@ -71,6 +71,7 @@ function ProductManager({
                     product={editingProduct}
                     handleEdit={productActions.handleEdit}
                     setEditingProduct={setEditingProduct}
+                    productActions ={productActions}
                 />
             ) : (
                 <>

@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Icon} from "@iconify/react";
 import {formatDate} from "../account/hooks/formatDate";
 import {useShoppingCartActions} from "./useShoppingCartActions";
-
+import can from '../../data/eptyCa.svg'
 function ProductItemMedium({data, useProduct,elementRef,rightButtonDivRef, animatingProductId,setAnimatingProductId, handleZero, handleRemove, handleEditClick, info, filter, mediumProductsCountSetting}) {
     const shoppingCartActions = useShoppingCartActions()
 
