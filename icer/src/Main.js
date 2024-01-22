@@ -25,6 +25,7 @@ import {AuthContext} from "./mainPages/account/auth-context";
 import {ShoppingCart} from "./mainPages/ShoppingCart";
 import {Settings} from "./mainPages/Settings";
 import {Advert} from "./mainPages/Advert";
+import {GenerateQR} from "./mainPages/GenerateQR";
 
 function Main() {
 
@@ -89,6 +90,7 @@ function Main() {
                             <Route path="/Zaloguj" element={<Login/>}/>
                             <Route path="/Chatbot" element={<ChatContainer/>}/>
                             <Route path="/Advert" element={<Advert/>}/>
+                            <Route path="/GenerateQR" element={<GenerateQR/>}/>
 
 
                         </Routes>
@@ -151,9 +153,9 @@ function Main() {
                                                     <Icon className="menuIcons" icon="solar:help-linear"/>}
                                             </div>
                                         </Link>
-                                        <Link to="/Advert">
+                                        <Link to="/GenerateQR">
                                             <div className="navDivMain">
-                                                {isIcon ? <h3>pomoc</h3> :
+                                                {isIcon ? <h3>Generuj</h3> :
                                                     <Icon className="menuIcons" icon="solar:help-linear"/>}
                                             </div>
                                         </Link>

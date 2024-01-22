@@ -137,10 +137,10 @@ function AddProduct() {
 
 
             <div className="productContainerDiv">
-                <div className="backpackAddProductDiv" onClick={handleBackpackClick}>
+                {productBackpack.length > 0 && <div className="backpackAddProductDiv" onClick={handleBackpackClick}>
                     <img className="backpackAddProduct" src={groceryBag}/>
                     <span className="backpackCounter">{productBackpack.length}</span>
-                </div>
+                </div>}
                 <div onClick={handleAddToBackpack}>
                     czesc
                     {productBackpack.map((product, index) => (

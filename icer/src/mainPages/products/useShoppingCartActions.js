@@ -12,7 +12,7 @@ export const useShoppingCartActions = ()=>{
     const removeFromCart = (id) => {
         console.log('poszlo delete')
         // Znajdź produkt o danym ID i zwiększ jego ilość
-        axios.post(`${API_URL}/api/add_to_shopping_cart`,
+        axios.post(`${API_URL}/api/edit_shopping_cart`,
             {sessionId:sessionId,
                 productID: id,
                 inCart:0
@@ -31,7 +31,7 @@ export const useShoppingCartActions = ()=>{
     const addToCart = (newFields) => {
         // Znajdź produkt o danym ID i zwiększ jego ilość
         console.log('poszlo add')
-        axios.post(`${API_URL}/api/add_to_shopping_cart`,
+        axios.post(`${API_URL}/api/edit_shopping_cart`,
             {sessionId:sessionId,
                 nazwa:newFields.nazwa,
                 cena:newFields.cena,
@@ -51,7 +51,7 @@ export const useShoppingCartActions = ()=>{
     const addToCartFromProducts = (id) => {
         // Znajdź produkt o danym ID i zwiększ jego ilość
         console.log('poszlo add')
-        axios.post(`${API_URL}/api/add_to_shopping_cart`,
+        axios.post(`${API_URL}/api/edit_shopping_cart`,
             {sessionId:sessionId,
                 productID: id,
                 inCart:1
