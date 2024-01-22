@@ -488,7 +488,7 @@ def get_icer_shopping():
 
 
 @app.route('/api/add_to_shopping_cart', methods=['POST'])
-def add_to_shopping_cart():
+def edit_shopping_cart():
     try:
         # Tworzenie instancji klasy DatabaseConnector
         db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
