@@ -30,7 +30,7 @@ class ProductManager:
     def __init__(self, database_connector):
         self.db_connector = database_connector
 
-    def dodaj_produkt(self, nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria):
+    def dodaj_produkt(self, nazwa, cena, kalorie=None, tluszcze=None, weglowodany=None, bialko=None, kategoria=None):
         try:
             connection = self.db_connector.get_connection()
             cursor = connection.cursor()

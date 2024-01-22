@@ -269,7 +269,6 @@ def remove_product_for_user():
 
         # Pobieranie danych z żądania
         data = request.json
-        image_data = data.get('imageData')
 
         connection = db_connector.get_connection()
         cursor = connection.cursor(dictionary=True)
@@ -489,7 +488,7 @@ def get_icer_shopping():
 
 
 @app.route('/api/add_to_shopping_cart', methods=['POST'])
-def edit_shopping_cart():
+def add_to_shopping_cart():
     try:
         # Tworzenie instancji klasy DatabaseConnector
         db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
@@ -502,7 +501,6 @@ def edit_shopping_cart():
 
         # Pobieranie danych z żądania
         data = request.json
-        image_data = data.get('imageData')
 
         connection = db_connector.get_connection()
         cursor = connection.cursor(dictionary=True)
@@ -520,11 +518,24 @@ def edit_shopping_cart():
             # Sprawdzenie, czy dostarczono wymagane dane (nazwa, cena, ilość)
             if 'nazwa' not in data or 'cena' not in data or 'ilosc' not in data:
                 return jsonify({"error": "Product ID not provided, and missing required data (nazwa, cena, ilosc)"}), 400
+            product_id = product_manager.dodaj_produkt(data['nazwa'], data['cena'])
 
             # Dodanie nowego produktu do koszyka
-            insert_query = "INSERT INTO Shopping (UserID, nazwa, cena, ilosc, in_cart) VALUES (%s, %s, %s, %s, 1)"
+            insert_query = "INSERT INTO Shopping (UserID, produktID, in_cart) VALUES (%s, %s, %s)"
             with db_connector.get_connection().cursor() as cursor:
-                cursor.execute(insert_query, (user_id, data['nazwa'], data['cena'], data['ilosc']))
+                cursor.execute(insert_query, (user_id, product_id, 1))
+            print (insert_query)
+            with db_connector.get_connection().cursor() as cursor:
+                cursor.execute(insert_query, (user_id, data['cena'], data['ilosc']))
+
+                add_icer_query = """
+                            INSERT INTO Icer (UserID, produktID, ilosc, data_dodania)
+                            VALUES (%s, %s, %s, NOW())
+                        """
+            with db_connector.get_connection().cursor() as cursor:
+                cursor.execute(add_icer_query, (user_id, product_id, data['ilosc']))
+
+
 
         else:
             # Pobranie wartości in_cart z żądania (1 lub 0)
@@ -554,6 +565,8 @@ def edit_shopping_cart():
                 with db_connector.get_connection().cursor() as cursor:
                     cursor.execute(insert_query, (user_id, product_id, in_cart_value))
 
+
+
         # Zatwierdzenie zmian w bazie danych
         db_connector.get_connection().commit()
 
@@ -563,6 +576,7 @@ def edit_shopping_cart():
         return jsonify({"error": str(error)}), 500
     finally:
         db_connector.disconnect()
+
 
 
 
