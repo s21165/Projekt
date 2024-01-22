@@ -13,6 +13,7 @@ import {initializeProduct} from "./initializeProduct";
 import {submitProduct} from "./submitProduct";
 import {handleImageChange} from "./handleImageChange";
 import {handleQRChange} from "./handleQRChange";
+import backpack  from '../../data/backpack.png'
 
 function AddProduct() {
     const {user} = useContext(AuthContext);
@@ -24,6 +25,7 @@ function AddProduct() {
     const [qrImage, setQrImage] = useState(null);
     const [qrImagePreview, setQrImagePreview] = useState(null);
     const [qrData, setQrData] = useState(null);
+    const [productBackpack, setProductBackpack] = useState([]);
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Wysyłam produkt:", product);
@@ -101,10 +103,41 @@ function AddProduct() {
             }
         }
     };
+    const handleAddToBackpack = () => {
+        const newProduct = {
+            nazwa: 'siema',
+            cena: 2,
+            kalorie: 3,
+            tluszcze: 3,
+            weglowodany: 1,
+            bialko: 5,
+            kategoria: 'cze',
+            ilosc: 1,
+            data_waznosci: new Date().toISOString().split('T')[0],
+        };
 
-   
+        setProductBackpack(prevBackpack => [...prevBackpack, newProduct]);
+    };
+    const handleBackpackClick = () => {
+        if (productBackpack.length > 0) {
+            // Wybierz pierwszy produkt z listy
+            const selectedProduct = productBackpack[0];
+
+            // Ustaw stan produktu na wybrany produkt
+            setProduct(selectedProduct);
+
+            // Usuń wybrany produkt z listy productBackpack
+            setProductBackpack(prevBackpack => prevBackpack.filter((_, index) => index !== 0));
+        }
+    };
     return (
         <div className="productContainerDiv">
+            <div onClick={handleAddToBackpack}>
+                czesc
+                {productBackpack.map((product, index) => (
+                    <div key={index}>{product.nazwa} i inne dane...</div>
+                ))}
+            </div>
 
             <form onSubmit={handleSubmit} className="addProductForm">
                 <label>
@@ -209,7 +242,10 @@ function AddProduct() {
 
 
             </form>
-
+            <div className="backpackAddProductDiv" onClick={handleBackpackClick}>
+                <img className="backpackAddProduct" src={backpack} />
+                <span className="backpackCounter">{productBackpack.length}</span>
+            </div>
         </div>
     );
 }

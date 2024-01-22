@@ -2,9 +2,7 @@ import axios from 'axios';
 import { API_URL } from "../../config";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-export const useProductActions = (refresh,data,sessionId, setData, setRefresh,editingProduct,setEditingProduct
-
-) => {
+export const useProductActions = (refresh,data,sessionId, setData, setRefresh,editingProduct,setEditingProduct) => {
     const handleIncrease = (productId) => {
         // logika zwiększania ilości produktu
         axios.post(`${API_URL}/api/add_to_product`,

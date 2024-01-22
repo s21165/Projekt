@@ -100,6 +100,29 @@
     background-color: #45a049;
 }
 
+.backpackAddProduct {
+    position: relative; /* Ustaw kontener obrazu jako element nadrzędny dla licznika */
+    display: inline-block; /* Zapewnia, że kontener zachowuje wymiary obrazu */
+    height:100%;
+    width:100%;
+}
+
+.backpackCounter {
+    position: absolute; /* Absolutne pozycjonowanie licznika względem obrazu plecaka */
+    top: 0; /* Dostosuj tę wartość, aby umieścić licznik w odpowiednim miejscu */
+    right: 0; /* Dostosuj tę wartość, aby umieścić licznik w odpowiednim miejscu */
+    background-color: red; /* Tło licznika, można zmienić */
+    color: white; /* Kolor tekstu licznika, można zmienić */
+     /* Sprawia, że licznik jest okrągły */
+    padding: 1px; /* Dostosuj padding dla licznika */
+    font-size: 1em; /* Dostosuj rozmiar czcionki licznika */
+}
+.backpackAddProductDiv{
+    height:10vh;
+    position:relative;
+
+}
+
 
 @media only screen and (max-width: 1200px) {
     .addProductForm {

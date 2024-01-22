@@ -1,18 +1,23 @@
 import React, {useEffect, useRef, useState} from "react";
 import axios from "axios";
 import {ShoppingList} from "./ShoppingList";
-import {useProductsDataNoFilter} from "./products/useProductsData";
 import "./ShoppingList.css"
 import {API_URL} from "../config";
 import {useProductCartData} from "./account/useProductCartData";
 import {Icon} from "@iconify/react";
+import {useShoppingCartActions} from "./products/useShoppingCartActions";
 
 export function ShoppingCart() {
 
     const productDataCart = useProductCartData();
     const [showNewFields, setShowNewFields] = useState(false);
     const [newFields, setNewFields] = useState([]);
+    const shoppingCartActions = useShoppingCartActions(
+        productDataCart.data
+        ,productDataCart.setData
+        ,productDataCart.sessionId
 
+    );
 
     const addNewField = () => {
         if (showNewFields) {
@@ -40,13 +45,13 @@ export function ShoppingCart() {
                 <div className="topInfoShoppingListSpace">
 
                 </div>
-                <div className="shoppingListDeleteIconButton">
+                <div  className="shoppingListDeleteIconButton">
                     <h2> akcja </h2>
                 </div>
             </div>
             <div className="shoppingListConainer">
                 <ShoppingList data={productDataCart.data} addNewField={addNewField} showNewFields={showNewFields}
-                              newFields={newFields} setNewFields={setNewFields}
+                              newFields={newFields} setNewFields={setNewFields} shoppingCartActions = {shoppingCartActions}
                 />
 
 

@@ -4,7 +4,7 @@ import './ShoppingList.css'
 import {Icon} from "@iconify/react";
 import {ToastContainer} from "react-toastify";
 
-export function ShoppingList({data, showNewFields, newFields, setNewFields}) {
+export function ShoppingList({data, showNewFields, newFields, setNewFields, shoppingCartActions}) {
     const [selectedItems, setSelectedItems] = useState([]);
     const lastFieldRef = useRef(null);
     const handleFieldChange = (index, field, value) => {
@@ -47,8 +47,9 @@ export function ShoppingList({data, showNewFields, newFields, setNewFields}) {
                         <h2 className="shoppingListPrice">{item.cena}zł</h2>
                         <div className="shoppingListSpace">
 
+
                         </div>
-                        <button className="shoppingListDeleteIconButton">
+                        <button onClick={()=>{shoppingCartActions.removeFromCart(item.produktID)}} className="shoppingListDeleteIconButton">
                             <Icon className="shoppingListDeleteIcon"
                                   icon="octicon:x-24"
                             />
@@ -80,7 +81,7 @@ export function ShoppingList({data, showNewFields, newFields, setNewFields}) {
 
                         </div>
                         <div className="shoppingListSpace"></div>
-                        <button className="shoppingListDeleteIconButton">
+                        <button className="shoppingListDeleteIconButton" onClick={()=>{shoppingCartActions.addToCart(field)}}>
                             <Icon className="shoppingListDeleteIcon" icon="tabler:check"/>
                         </button>
                     </div>

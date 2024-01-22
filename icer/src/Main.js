@@ -7,8 +7,6 @@ import {
     Link, useLocation, Await
 } from "react-router-dom";
 import {Fridge} from "./mainPages/products/Fridge";
-
-import {Shops} from "./mainPages/Shops";
 import {Account} from "./mainPages/account/Account";
 import {Notifications} from "./mainPages/Notifications";
 import {Icon} from '@iconify/react';
@@ -83,7 +81,6 @@ function Main() {
                             <Route path="/edycjaKonta" element={<EditAccount/>}/>
                             <Route path="/" element={<Fridge/>}/>
                             <Route path="/ListaZakupow" element={<ShoppingCart/>}/>
-                            <Route path="/Sklepy" element={<Shops/>}/>
                             <Route path="/Konto" element={<Account/>}/>
                             <Route path="/Powiadomienia" element={<Notifications/>}/>
                             <Route path="/Sklepy" element={<Fridge/>}/>

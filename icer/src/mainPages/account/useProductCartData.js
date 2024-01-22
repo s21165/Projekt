@@ -13,7 +13,7 @@ useEffect(() => {
     axios.post(`${API_URL}/api/shoppingList`,{sessionId:sessionId} )
         .then((response) => {
             setData(response.data);
-            console.log(data);
+
 
         })
         .catch((error) => {
@@ -21,5 +21,5 @@ useEffect(() => {
         });
 }, [data]);
 
-    return{ data, setData}
+    return{ data, setData,user, sessionId}
 }
