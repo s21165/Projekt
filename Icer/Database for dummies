@@ -14,15 +14,17 @@ VALUES ('root', '$2b$12$8JnOBy0M5Edogzihz79MsOUzPQVLlWtYBnf3X9KQSaQx825MqFbsu');
 
 -- tworzenie tabeli Produkty
 CREATE TABLE Produkty (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  nazwa VARCHAR(100),
-  cena DECIMAL(8,2),
-  kalorie INT,
-  tluszcze DECIMAL(4,2),
-  weglowodany DECIMAL(4,2),
-  bialko DECIMAL(4,2),
-  kategoria VARCHAR(50)
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    nazwa VARCHAR(100) NULL,
+    cena DECIMAL(8,2) NULL,
+    kalorie INT NULL,
+    tluszcze DECIMAL(4,2) NULL,
+    weglowodany DECIMAL(4,2) NULL,
+    bialko DECIMAL(4,2) NULL,
+    kategoria VARCHAR(50) NULL,
+    podstawowy TINYINT(1) NULL DEFAULT 0
 );
+
 
 CREATE TABLE Icer (
     id INT AUTO_INCREMENT PRIMARY KEY,

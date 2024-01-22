@@ -461,7 +461,7 @@ def get_icer_shopping():
             FROM Icer
             INNER JOIN Produkty ON Icer.produktID = Produkty.id
             LEFT JOIN Shopping ON Icer.produktID = Shopping.produktID
-            WHERE Icer.UserID = %s AND (Icer.ilosc = 0 or Icer.trzecia_wartosc = 0 or Shopping.in_cart = 1)
+            WHERE Icer.UserID = %s AND ((Icer.ilosc = 0 OR Icer.trzecia_wartosc = 0) AND Shopping.in_cart = 1);
         """
         cursor.execute(query, (user_id,))
         results = cursor.fetchall()
@@ -487,7 +487,7 @@ def get_icer_shopping():
 
 
 
-@app.route('/api/add_to_shopping_cart', methods=['POST'])
+@app.route('/api/edit_shopping_cart', methods=['POST']) ### to change it
 def edit_shopping_cart():
     try:
         # Tworzenie instancji klasy DatabaseConnector
