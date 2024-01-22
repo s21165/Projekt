@@ -30,6 +30,7 @@ export function Notifications({small, left}) {
     );
 
 
+
     return (
         <>
             {small && !left ? <NotificationsList data={notificationsData.data} action={notificationActions} small={true} left={true}/> :

@@ -13,6 +13,7 @@ import ProductItem from "./ProductItem";
 import Products from "./Products";
 import ProductManager from "./ProductManager";
 import {ToastContainer} from "react-toastify";
+import {useNotificationsData} from "./useNotificationsData";
 
 
 export function Fridge(){
@@ -31,9 +32,17 @@ export function Fridge(){
         editingProduct,
         setEditingProduct
     );
+    const notificationData = useNotificationsData();
+    const [hasNotification, setHasNotification] = useState(false);
+
+    useEffect(() => {
+
+        const hasNotif = notificationData.data?.some(product => product.powiadomienie === 1 );
+        setHasNotification(hasNotif);
 
 
 
+    }, [notificationData.data]);
     const  handleClick = ()=> {
         setbulbIsOn(!bulbIsOn);
     }
@@ -78,7 +87,7 @@ export function Fridge(){
                         />
                 </div>
 
-                <div onClick={handleClick} className={`light-bulb ${bulbIsOn ? 'on' : 'off'} ${bulbPosition(lowWidth, lowHeight) ? '' : 'left'}`}>
+                <div onClick={handleClick} className={`light-bulb ${hasNotification ? 'on' : 'off'} ${bulbPosition(lowWidth, lowHeight) ? '' : 'left'}`}>
 
                     <Icon className="bulb" icon="mdi:lightbulb-on-outline" />
                     <div className="light">
