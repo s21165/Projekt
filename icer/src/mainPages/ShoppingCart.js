@@ -12,12 +12,7 @@ export function ShoppingCart() {
     const productDataCart = useProductCartData();
     const [showNewFields, setShowNewFields] = useState(false);
     const [newFields, setNewFields] = useState([]);
-    const shoppingCartActions = useShoppingCartActions(
-        productDataCart.data
-        ,productDataCart.setData
-        ,productDataCart.sessionId
-
-    );
+    const shoppingCartActions = useShoppingCartActions();
 
     const addNewField = () => {
         if (showNewFields) {

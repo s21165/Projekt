@@ -2,10 +2,13 @@ import axios from 'axios';
 import { API_URL } from "../../config";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {useContext} from "react";
+import {AuthContext} from "../account/auth-context";
 
 
-export const useShoppingCartActions = (data, setData,sessionId)=>{
-
+export const useShoppingCartActions = ()=>{
+    const { user } = useContext(AuthContext);
+    const sessionId = user ? user.sessionId : null;
     const removeFromCart = (id) => {
         console.log('poszlo delete')
         // Znajdź produkt o danym ID i zwiększ jego ilość
@@ -36,8 +39,26 @@ export const useShoppingCartActions = (data, setData,sessionId)=>{
                 inCart:1
             } )
             .then((response) => {
-                setData(response.data);
+
                 toast.success(`Produkt ${newFields.nazwa} został dodany do listy zakupów!`);
+
+
+            })
+            .catch((error) => {
+                console.error(`There was an error retrieving the data: ${error}`);
+            });
+    };
+    const addToCartFromProducts = (id) => {
+        // Znajdź produkt o danym ID i zwiększ jego ilość
+        console.log('poszlo add')
+        axios.post(`${API_URL}/api/add_to_shopping_cart`,
+            {sessionId:sessionId,
+                productID: id,
+                inCart:1
+            } )
+            .then((response) => {
+
+                toast.success(`Produkt został dodany do listy zakupów!`);
 
 
             })
@@ -47,5 +68,5 @@ export const useShoppingCartActions = (data, setData,sessionId)=>{
     };
 
 
-    return {removeFromCart, addToCart};
+    return {removeFromCart, addToCart,addToCartFromProducts};
 };

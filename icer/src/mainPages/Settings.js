@@ -1,13 +1,17 @@
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import {API_URL} from "../config";
 import './Settings.css'
+import {AuthContext} from "./account/auth-context";
 
 export function Settings({where}) {
 
     const [fridgeSizeElements, setFridgeSizeElements] = useState(1);
     const [productsSizeElements, setProductsSizeElements] = useState(1);
     const [infoProducts, setInfoProducts] = useState(0);
+    const { user } = useContext(AuthContext);
+    const sessionId = user ? user.sessionId : null;
+
 
     const fridgeSizeElementsArray = ['bardzo małe', 'małe', 'średnie', 'duże', 'bardzo duże'];
     const handleOptionClick = (optionValue, setter) => {
@@ -30,9 +34,33 @@ export function Settings({where}) {
             where === 'products' ||  where === 'fridge'   ? 'settingsDiv--products' : ''
     }`;
 
+
+    const mapSizeToApiValue = (sizeIndex) => {
+        const sizeMapping = ['bardzo male', 'male', 'srednie', 'duze', 'bardzo duze'];
+        return sizeMapping[sizeIndex];
+    };
+
+    const savePreferences = () => {
+        const pref = {
+            wielkosc_lodowki: mapSizeToApiValue(fridgeSizeElements),
+            wielkosc_strony_produktu: mapSizeToApiValue(productsSizeElements),
+            widocznosc_informacji_o_produkcie: infoProducts === 0 ? 'tak' : 'nie'
+        };
+
+        axios.post(`${API_URL}/api/update_preferences`, pref,{sessionId:sessionId})
+            .then((response) => {
+                // Handle success, show success message
+                console.log('Preferences updated:', response.data);
+            })
+            .catch((error) => {
+                // Handle error, show error message
+                console.error('Error updating preferences:', error);
+            });
+    };
+
     return (
         <div className="settings-container"
-             style={{}}
+
 
         >
 
@@ -90,7 +118,7 @@ export function Settings({where}) {
                         </div>
                     </>}
                 {where === 'settings' &&
-                    <div className="saveDivSettings">
+                    <div className="saveDivSettings" onClick={savePreferences}>>
                         <button className="saveButtonSettings"><h1>zapisz</h1></button>
                     </div>}
             </div>

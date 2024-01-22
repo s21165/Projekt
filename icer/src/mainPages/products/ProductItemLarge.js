@@ -21,7 +21,7 @@ function ProductItemLarge({ data, useProduct,handleZero, handleRemove, handleEdi
                 </div>
             ) : (
                 <div className="card" >
-
+                    <div className="productItemLargeToListIconDiv"><Icon className="productItemToListIcon" icon="fluent-mdl2:add-to-shopping-list" /></div>
                     <div className="productCardInfoRow"><h2>{data.nazwa}</h2></div>
                     <div className="productCardInfoRow"><h3>Cena: {data.cena}</h3></div>
                     <div className="productCardInfoRow"><h3>Kalorie: {data.kalorie}</h3></div>
@@ -29,7 +29,7 @@ function ProductItemLarge({ data, useProduct,handleZero, handleRemove, handleEdi
                     <div className="productCardInfoRow"><h3>Węglowodany: {data.weglowodany}</h3></div>
                     <div className="productCardInfoRow"><h3>Białko: {data.bialko}</h3></div>
                     <div className="productCardInfoRow"><h3>Kategoria: {data.kategoria}</h3></div>
-                    <div className="productCardInfoRow"><h3>trzecia wartosc: {data.trzecia_wartosc}</h3></div>
+                    <div className="productCardInfoRow"><h3>data ważności: {data.data_waznosci}</h3></div>
 
 
                     <div className="productItemQuantityDiv">

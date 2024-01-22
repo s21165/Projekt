@@ -13,8 +13,27 @@
     background-position: center; /* Ustala, że obraz ma być wyśrodkowany */
     backdrop-filter: blur();
 }
+.productItemToListIconDiv{
+    position:absolute;
+    top:0;
+    right:0;
+    height:10%;
+    width:10%;
+    z-index: 101;
+}
+.productItemLargeToListIconDiv{
+    position:absolute;
+    top:10%;
+    right:0;
+    height:10%;
+    width:10%;
+}
+.productItemToListIcon{
+    width:100%;
+    height:100%;
+    color: rgba(255, 255, 0);
 
-
+}
 .LargeProductItemContainer {
     position: relative;
     display:flex;

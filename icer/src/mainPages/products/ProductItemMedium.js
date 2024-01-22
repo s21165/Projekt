@@ -1,8 +1,10 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Icon} from "@iconify/react";
+import {formatDate} from "../account/hooks/formatDate";
+import {useShoppingCartActions} from "./useShoppingCartActions";
 
 function ProductItemMedium({data, useProduct,elementRef,rightButtonDivRef, animatingProductId,setAnimatingProductId, handleZero, handleRemove, handleEditClick, info, filter, mediumProductsCountSetting}) {
-
+    const shoppingCartActions = useShoppingCartActions()
 
     useEffect(() => {
         if (elementRef && animatingProductId === data.id) {
@@ -35,6 +37,7 @@ function ProductItemMedium({data, useProduct,elementRef,rightButtonDivRef, anima
         setAnimatingProductId(data.id);
     }
 
+
     return (
         <>
 
@@ -49,7 +52,7 @@ function ProductItemMedium({data, useProduct,elementRef,rightButtonDivRef, anima
                 </div>
             ) : (
                 <div className={`card ${!info ? 'hidden' : ''}`}>
-
+                    <div className="productItemToListIconDiv" onClick={()=>{shoppingCartActions.addToCartFromProducts(data.id)}}><Icon className="productItemToListIcon" icon="fluent-mdl2:add-to-shopping-list" /></div>
                     <div className="productCardInfoRow"><h2>{data.nazwa}</h2></div>
                     <div className="productCardInfoRow"><h3>Cena: {data.cena}</h3></div>
                     <div className="productCardInfoRow"><h3>Kalorie: {data.kalorie}</h3></div>
@@ -57,7 +60,7 @@ function ProductItemMedium({data, useProduct,elementRef,rightButtonDivRef, anima
                     <div className="productCardInfoRow"><h3>Węglowodany: {data.weglowodany}</h3></div>
                     <div className="productCardInfoRow"><h3>Białko: {data.bialko}</h3></div>
                     <div className="productCardInfoRow"><h3>Kategoria: {data.kategoria}</h3></div>
-                    <div className="productCardInfoRow"><h3>trzecia wartosc: {data.trzecia_wartosc}</h3></div>
+                    <div className="productCardInfoRow"><h3>data ważności: {formatDate(data.data_waznosci)}</h3></div>
 
 
 
