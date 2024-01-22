@@ -21,9 +21,15 @@ from modules.scan_module.forms import BarcodeForm
 from modules.scan_module.gen import generate_qr_code, generate_barcode
 from modules.value_manager import ProductManager
 
+### from flask_socketio import Namespace
+from flask_socketio import SocketIO
+from modules.advert_module.sharedres.shared import camera_status
+
+
+
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
-# Otawian
+socketio = SocketIO(app, cors_allowed_origins="*")
 app.config['BARCODE_FOLDER'] = os.path.join(app.static_folder, 'barcodes')
 app.config['QR_CODE_FOLDER'] = os.path.join(app.static_folder, 'qrcodes')
 app.config['SECRET_KEY'] = 'key'  # Replace with a strong secret key
@@ -1229,7 +1235,16 @@ def start_food_identification_route():
     return redirect(url_for('index'))
 
 
-# Route for video streaming
+@app.route('/receive_data', methods=['POST'])
+def receive_data():
+    data = request.json
+    print("Received data:", data)
+    # Here you can process the data as needed
+    return jsonify({"status": "Data received successfully"})
+
+
+
+#Route for video streaming
 @app.route('/video_feed')
 def video_feed():
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
@@ -1238,24 +1253,19 @@ def video_feed():
 camera_thread = None
 
 
-# Remove the start_camera_monitoring route
-# Replace it with a route that redirects to a page where the video is displayed
+#Remove the start_camera_monitoring route
+#Replace it with a route that redirects to a page where the video is displayed
 @app.route('/start_camera_monitoring', methods=['POST'])
 def start_camera_monitoring_route():
     global camera_thread
-
     if camera_thread is None or not camera_thread.is_alive():
-        # Start the camera monitoring in a new thread
         camera_thread = threading.Thread(target=generate_frames)
         camera_thread.start()
-
-    return redirect(url_for('display_video'))
-
-
-@app.route('/display_video')
-def display_video():
-    # Render a template that will display the video
-    return render_template('display_video.html')
+    data = request.json.get('dane')
+    print(data)
+    # Emit data to the frontend
+    socketio.emit('update_status', {'data': data})
+    return {'status': 'Data received'}
 
 
 # Strona wylogowania
