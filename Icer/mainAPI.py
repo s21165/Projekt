@@ -400,7 +400,9 @@ def edit_product(product_id):
         # Pobieranie user_id z funkcji get_user_id_by_username
         connection = db_connector.get_connection()
         cursor = connection.cursor(dictionary=True)
-        user_id, _, response, status_code = DatabaseConnector.get_user_id_by_username(cursor, session)
+
+        # Sprawdzenie, czy użytkownik jest zalogowany
+        user_id, username, response, status_code = DatabaseConnector.get_user_id_by_username(cursor, session)
 
         if response:
             cursor.close()
@@ -993,6 +995,46 @@ def update_preferences():
         cursor.close()
 
         return jsonify({"message": "Preferences updated successfully!"})
+
+    except Exception as error:
+        return jsonify({"error": str(error)}), 500
+
+
+
+# Endpoint do pobierania preferencji użytkownika
+@app.route('/api/get_user_preferences', methods=['GET'])
+def get_user_preferences():
+    try:
+        # Tworzenie instancji klasy DatabaseConnector
+        db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+
+        # Łączenie z bazą danych
+        db_connector.connect()
+
+        connection = db_connector.get_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        # Sprawdzenie, czy użytkownik jest zalogowany
+        user_id, username, response, status_code = DatabaseConnector.get_user_id_by_username(cursor, session)
+
+        if response:
+            return response, status_code
+
+        # Pobieranie preferencji użytkownika
+        get_preferences_query = """
+            SELECT wielkosc_lodowki, wielkosc_strony_produktu, widocznosc_informacji_o_produkcie
+            FROM preferencje_uzytkownikow
+            WHERE UserID = %s
+        """
+        cursor.execute(get_preferences_query, (user_id,))
+        preferences = cursor.fetchone()
+
+        cursor.close()
+
+        if preferences:
+            return jsonify(preferences)
+        else:
+            return jsonify({"error": "Preferences not found."}), 404
 
     except Exception as error:
         return jsonify({"error": str(error)}), 500
