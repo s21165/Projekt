@@ -44,7 +44,7 @@ export function Settings({where}) {
         const pref = {
             wielkosc_lodowki: mapSizeToApiValue(fridgeSizeElements),
             wielkosc_strony_produktu: mapSizeToApiValue(productsSizeElements),
-            widocznosc_informacji_o_produkcie: infoProducts === 0 ? 'tak' : 'nie'
+            widocznosc_informacji_o_produkcie: infoProducts === 0 ? 1 : 0
         };
 
         axios.post(`${API_URL}/api/update_preferences`, pref,{sessionId:sessionId})

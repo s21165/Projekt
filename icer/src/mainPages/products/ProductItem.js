@@ -34,8 +34,8 @@ function ProductItem({
 
 
     const picGetter = PictureGetter(image,setImage,data.zdjecie_lokalizacja)
-    const mediumProductsCountSetting =0;
-    const smallProductsCountSetting =2;
+    const mediumProductsCountSetting =3;
+    const smallProductsCountSetting =3;
     const styl = GetBorderStyle(data, filter, 2);
     const [info, setInfo] = useState(0);
 
