@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import './ProductItem.css';
 
 import {GetBorderStyle} from "./GetBorderStyle";
@@ -10,7 +10,7 @@ import ProductItemSmall from "./ProductItemSmall";
 import ProductItemMedium from "./ProductItemMedium";
 import ProductItemLarge from "./ProductItemLarge";
 import {PictureGetter} from "./PictureGetter";
-
+import SettingsContext from "../SettingsContext";
 function ProductItem({
                          index,
                          data,
@@ -31,13 +31,15 @@ function ProductItem({
 
     const[image, setImage] = useState();
     const [animatingProductId, setAnimatingProductId] = useState(null);
-
+    const {getFridgeSizeIndex,
+        getProductsSizeIndex,infoProducts} = useContext(SettingsContext)
 
     const picGetter = PictureGetter(image,setImage,data.zdjecie_lokalizacja)
-    const mediumProductsCountSetting =3;
-    const smallProductsCountSetting =3;
+    const mediumProductsCountSetting =getProductsSizeIndex();
+    const smallProductsCountSetting =getFridgeSizeIndex();
     const styl = GetBorderStyle(data, filter, 2);
-    const [info, setInfo] = useState(0);
+    const infoProductsNumeric = infoProducts ? 1 : 0;
+    const [info, setInfo] = useState(infoProductsNumeric);
 
     const itemWidth = !isSelected ? maxDimension * (smallProductsCount[smallProductsCountSetting]/ 100) : maxDimension*95/100;
     const itemWidthLarge = maxDimension * (smallProductsCount[2]/ 100);

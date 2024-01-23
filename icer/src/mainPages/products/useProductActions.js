@@ -21,7 +21,7 @@ export const useProductActions = (refresh,data,sessionId, setData, setRefresh,ed
     const handleEditClick = (product) => {
         console.log(product)
         setEditingProduct({
-            id: product.id,
+            id: product.produktID,
             nazwa: product.nazwa,
             cena: product.cena,
             kalorie: product.kalorie,
