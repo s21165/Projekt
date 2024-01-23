@@ -983,13 +983,28 @@ def update_preferences():
         if response:
             return response, status_code
 
-        # Aktualizacja preferencji użytkownika
-        update_preferences_query = """
-            UPDATE preferencje_uzytkownikow
-            SET wielkosc_lodowki = %s, wielkosc_strony_produktu = %s, widocznosc_informacji_o_produkcie = %s
-            WHERE UserID = %s
+        # Sprawdzenie, czy istnieje wpis w tabeli preferencje_uzytkownikow
+        check_preferences_query = """
+            SELECT UserID FROM preferencje_uzytkownikow WHERE UserID = %s
         """
-        cursor.execute(update_preferences_query, (data['wielkosc_lodowki'], data['wielkosc_strony_produktu'], data['widocznosc_informacji_o_produkcie'], user_id))
+        cursor.execute(check_preferences_query, (user_id,))
+        existing_user = cursor.fetchone()
+
+        if existing_user:
+            # Aktualizacja preferencji użytkownika
+            update_preferences_query = """
+                UPDATE preferencje_uzytkownikow
+                SET wielkosc_lodowki = %s, wielkosc_strony_produktu = %s, widocznosc_informacji_o_produkcie = %s
+                WHERE UserID = %s
+            """
+            cursor.execute(update_preferences_query, (data['wielkosc_lodowki'], data['wielkosc_strony_produktu'], data['widocznosc_informacji_o_produkcie'], user_id))
+        else:
+            # Tworzenie nowego wpisu w tabeli preferencje_uzytkownikow
+            insert_preferences_query = """
+                INSERT INTO preferencje_uzytkownikow (UserID, wielkosc_lodowki, wielkosc_strony_produktu, widocznosc_informacji_o_produkcie)
+                VALUES (%s, %s, %s, %s)
+            """
+            cursor.execute(insert_preferences_query, (user_id, data['wielkosc_lodowki'], data['wielkosc_strony_produktu'], data['widocznosc_informacji_o_produkcie']))
 
         connection.commit()
         cursor.close()
@@ -998,6 +1013,7 @@ def update_preferences():
 
     except Exception as error:
         return jsonify({"error": str(error)}), 500
+
 
 
 
