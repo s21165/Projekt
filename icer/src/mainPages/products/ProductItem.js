@@ -65,7 +65,9 @@ function ProductItem({
     }
 
 
+    useEffect(()=>{
 
+    },[info])
 
 
     try {
