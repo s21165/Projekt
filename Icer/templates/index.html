@@ -38,6 +38,7 @@
 		<input type="text" name="protein" placeholder="Protein">
 		<input type="text" name="category" placeholder="Category">
 		<input type="text" name="amount" placeholder="Amount">
+		<input type="text" name="date" placeholder="Date">
 		<button type="submit">Generate QR Code</button>
 	</form>
 
@@ -75,6 +76,32 @@
 		<button type="submit">Start Camera Monitoring</button>
 	</form>
 
+
+
+
+	<form method="POST" action="/upload_image" enctype="multipart/form-data">
+    <label class="file-input-button">
+        Upload Food Image
+        <input type="file" name="file" class="hidden-file-input" accept="image/*">
+    </label>
+    <button type="submit">Identify Food</button>
+	</form>
+	
+	<form action="/start_video_feed" method="post">
+		<input type="submit" value="Start Video Feed">
+	</form>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <p>{{ message }}</p>
+          <!-- If you stored the URL in the session, you can retrieve and display it here -->
+          <!-- <p>View your QR Code: <a href="{{ session['qr_code_image_url'] }}">Click here</a></p> -->
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+	
+	
+	
 	
 	
 </body>

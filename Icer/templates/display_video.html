@@ -1,10 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Camera Monitoring</title>
+    <title>Video Stream</title>
+    <script type="text/javascript">
+        function checkForEndSignal() {
+            var img = document.getElementById('stream');
+            img.onload = function() {
+                // Check for the special end signal
+                if (img.naturalWidth === 100 && img.naturalHeight === 100) {
+                    window.location.href = '/'; // Redirect to index route
+                }
+            };
+        }
+    </script>
 </head>
-<body>
-    <h1>Camera Monitoring</h1>
-    <img src="{{ url_for('video_feed') }}" alt="Video Feed">
+<body onload="checkForEndSignal();">
+    <img id="stream" src="{{ url_for('video_feed') }}" />
 </body>
 </html>
