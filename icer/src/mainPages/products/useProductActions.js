@@ -35,7 +35,7 @@ export const useProductActions = (refresh,data,sessionId, setData, setRefresh,ed
     };
 
     const handleEdit = (edProduct) => {
-        const id = edProduct.id;
+        const id = editingProduct.id;
         const config = {
             headers: {
                 'Content-Type': 'application/json', // informuje serwer, że dane wysyłane w żądaniu są w formacie JSON.

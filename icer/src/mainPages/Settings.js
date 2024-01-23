@@ -14,11 +14,13 @@ export function Settings({where}) {
 
     const fridgeSizeElementsArray = ['bardzo małe', 'małe', 'średnie', 'duże', 'bardzo duże'];
     const handleOptionClick = (optionValue, setter) => {
+        console.log(`Zmiana opcji na: ${optionValue}`); // Dodaj to dla debugowania
         setter(optionValue);
-    }
+
+    };
     // Nazwy dla drugiej grupy opcji
     const productsSizeElementsArray = ['bardzo małe', 'małe', 'średnie', 'duże', 'bardzo duże'];
-    const infoProductsArray = ['tak', 'nie'];
+    const infoProductsArray = ['nie','tak'];
 
     const sectionHeaderClass = `settings-sectionHeader ${
             
@@ -39,13 +41,13 @@ export function Settings({where}) {
         const sizeMapping = ['bardzo male', 'male', 'srednie', 'duze', 'bardzo duze'];
         return sizeMapping[sizeIndex];
     };
-    const savePreferences = () => {
+   useEffect(()=> {
         const preferences = {
-            wielkosc_lodowki: mapSizeToApiValue(fridgeSizeElements),
-            wielkosc_strony_produktu: mapSizeToApiValue(productsSizeElements),
-            widocznosc_informacji_o_produkcie: infoProducts === 0 ? 1 : 0
+            wielkosc_lodowki: fridgeSizeElements,
+            wielkosc_strony_produktu:productsSizeElements,
+            widocznosc_informacji_o_produkcie: infoProducts === 0 ? 0 : 1
         };
-
+        console.log(infoProducts)
         axios.post(`${API_URL}/api/update_preferences`, { ...preferences, sessionId })
             .then((response) => {
                 console.log('Preferences updated:', response.data);
@@ -53,7 +55,7 @@ export function Settings({where}) {
             .catch((error) => {
                 console.error('Error updating preferences:', error);
             });
-    };
+   },[mapSizeToApiValue]);
 
     return (
         <div className="settings-container"
@@ -66,15 +68,14 @@ export function Settings({where}) {
                 {(where === 'fridge' || where === 'settings') && <div className="settings-section">
                     <h2 className={sectionHeaderClass}>Wielkość towarów w lodówce</h2>
                     <div className="custom-radio-container">
-                        {fridgeSizeElementsArray.map((label) => (
+                        {fridgeSizeElementsArray.map((label, index) => (
                             <div
                                 key={label}
-                                className={`${customRadioButtonClass} ${fridgeSizeElements === label ? 'selected' : ''}`}
-                                onClick={() => handleOptionClick(label, setFridgeSizeElements)}
+                                className={`${customRadioButtonClass} ${fridgeSizeElements === mapSizeToApiValue(index) ? 'selected' : ''}`}
+                                onClick={() => handleOptionClick(mapSizeToApiValue(index), setFridgeSizeElements)}
                             >
-                                {where ==='settings' ? <label>{label}</label> : <h5>{label}</h5>}
+                                {label}
                             </div>
-
                         ))}
                     </div>
                 </div>}
@@ -84,11 +85,11 @@ export function Settings({where}) {
                         <div className="settings-section">
                             <h2 className={sectionHeaderClass}>Wielkość towarów na stronie produktów</h2>
                             <div className="custom-radio-container">
-                                {productsSizeElementsArray.map((label) => (
+                                {productsSizeElementsArray.map((label,index) => (
                                     <div
                                         key={label}
-                                        className={`${customRadioButtonClass} ${productsSizeElements === label ? 'selected' : ''}`}
-                                        onClick={() => handleOptionClick(label, setProductsSizeElements)}
+                                        className={`${customRadioButtonClass} ${productsSizeElements === mapSizeToApiValue(index) ? 'selected' : ''}`}
+                                        onClick={() => handleOptionClick(mapSizeToApiValue(index), setProductsSizeElements)}
                                     >
                                         {where ==='settings' ? <label>{label}</label> : <h5>{label}</h5>}
                                     </div>
@@ -101,11 +102,11 @@ export function Settings({where}) {
                             <h2 className={sectionHeaderClass}>Informacje o produktach widoczne na stronie
                                 produktów</h2>
                             <div className="custom-radio-container">
-                                {infoProductsArray.map((label) => (
+                                {infoProductsArray.map((label,index) => (
                                     <div
-                                        key={label}
-                                        className={`${customRadioButtonClass} ${infoProducts === label ? 'selected' : ''}`}
-                                        onClick={() => handleOptionClick(label, setInfoProducts)}
+                                        key={index}
+                                        className={`${customRadioButtonClass} ${infoProducts === index ? 'selected' : ''}`}
+                                        onClick={() => handleOptionClick((index), setInfoProducts)}
                                     >
                                         {where ==='settings' ? <label>{label}</label> : <h5>{label}</h5>}
                                     </div>
@@ -114,10 +115,7 @@ export function Settings({where}) {
                             </div>
                         </div>
                     </>}
-                {where === 'settings' &&
-                    <div className="saveDivSettings" onClick={savePreferences}>
-                        <button className="saveButtonSettings"><h1>zapisz</h1></button>
-                    </div>}
+
             </div>
         </div>
     );
