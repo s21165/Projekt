@@ -481,7 +481,7 @@ def get_icer_shopping():
             FROM Icer
             INNER JOIN Produkty ON Icer.produktID = Produkty.id
             LEFT JOIN Shopping ON Icer.produktID = Shopping.produktID
-            WHERE Icer.UserID = %s AND ((Icer.ilosc = 0 OR Icer.trzecia_wartosc = 0) AND Shopping.in_cart = 1);
+            WHERE Icer.UserID = %s AND Shopping.in_cart = 1;
         """
         cursor.execute(query, (user_id,))
         results = cursor.fetchall()
@@ -544,9 +544,6 @@ def edit_shopping_cart():
             insert_query = "INSERT INTO Shopping (UserID, produktID, in_cart) VALUES (%s, %s, %s)"
             with db_connector.get_connection().cursor() as cursor:
                 cursor.execute(insert_query, (user_id, product_id, 1))
-            print (insert_query)
-            with db_connector.get_connection().cursor() as cursor:
-                cursor.execute(insert_query, (user_id, data['cena'], data['ilosc']))
 
                 add_icer_query = """
                             INSERT INTO Icer (UserID, produktID, ilosc, data_dodania)
