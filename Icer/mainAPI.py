@@ -391,6 +391,12 @@ def add_product():
 
 @app.route('/api/edit_product/<int:product_id>', methods=['PUT'])
 def edit_product(product_id):
+    # Tworzenie instancji klasy DatabaseConnector
+    db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+
+    # Łączenie z bazą danych
+    db_connector.connect()
+
     try:
         # Pobieranie danych produktu z żądania
         data = request.json
@@ -408,7 +414,6 @@ def edit_product(product_id):
             cursor.close()
             connection.close()
             return response, status_code
-
 
 
 

@@ -20,7 +20,7 @@ def handle_image_upload(db_connector, image_data_base64, user_id, product_id, re
         image_name = f"{int(time.time())}.jpg"
 
         # Nowa lokalizacja folderu, gdzie mają być zapisane obrazy
-        images_folder = 'D:\\repo_na_test\\Projekt-PWAAdi\\icer\\src\\data'
+        images_folder = 'D:\\repo_na_test\\Projekt-PWAAdi\\icer\\src\\data\\userPhotos'
 
         # Tworzenie ścieżki do zapisu obrazu
         image_path = os.path.join(images_folder, image_name)

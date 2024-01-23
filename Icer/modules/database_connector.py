@@ -25,11 +25,11 @@ class DatabaseConnector:
         try:
             # Sprawdź wartość is_podstawowe
             check_default_query = "SELECT podstawowy FROM Produkty WHERE id=%s"
-            cursor = self.connection.cursor()
+            cursor = self.connection.cursor(dictionary=True)
             cursor.execute(check_default_query, (product_id,))
             is_default = cursor.fetchone()
 
-            if is_default and is_default.get('  podstawowe') == 1:
+            if is_default and is_default.get('podstawowe') == 1:
                 # Utwórz kopię produktu z is_podstawowe=0
                 copy_product_query = """INSERT INTO Produkty (nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria, podstawowy)
                                         SELECT nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria, 0
