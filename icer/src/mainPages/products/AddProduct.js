@@ -187,10 +187,12 @@ function AddProduct() {
                                onChange={handleChange}/>
                     </label>
                     <div className="addPhotoDiv">
-                        <label><h5> Zdjęcie: </h5></label>
+
                         <div className="image-options">
+
                             <label className="addPhotoFromDir">
-                                {!image && <Icon className="addPhotoFromDirIcon" icon="clarity:directory-line"/>}
+                                <label><h5> zdjęcie: </h5></label>
+                                {!image && <Icon className="addPhotoFromDirIcon" icon="arcticons:photo-pro"/>}
                                 {imagePreview && (
                                     <img
                                         src={imagePreview}
@@ -206,9 +208,13 @@ function AddProduct() {
                                     onChange={(e) => handleImageChange(e, setImage, setProduct, setImagePreview)}
                                 />
                             </label>
-                            <label className="addPhotoByCamera">
-                                <Icon className="addPhotoByCameraIcon" icon="arcticons:photo-pro"/>
-                                <span> <h5>zrób teraz </h5> </span>
+
+                            <label className="addPhotoFromDir">
+                                <label><h5> kamera: </h5></label>
+
+                                <Icon className="addPhotoFromDirIcon" icon="icon-park-twotone:camera-one" />
+
+                                <span> <h5>identyfikuj</h5> </span>
                             </label>
                         </div>
 

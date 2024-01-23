@@ -3,14 +3,13 @@ import axios from "axios";
 import {API_URL} from "../config";
 import './Settings.css'
 import {AuthContext} from "./account/auth-context";
+import SettingsContext from "./SettingsContext";
 
 export function Settings({where}) {
 
-    const [fridgeSizeElements, setFridgeSizeElements] = useState(1);
-    const [productsSizeElements, setProductsSizeElements] = useState(1);
-    const [infoProducts, setInfoProducts] = useState(0);
     const { user } = useContext(AuthContext);
     const sessionId = user ? user.sessionId : null;
+    const { fridgeSizeElements, setFridgeSizeElements, productsSizeElements, setProductsSizeElements, infoProducts, setInfoProducts } = useContext(SettingsContext);
 
 
     const fridgeSizeElementsArray = ['bardzo małe', 'małe', 'średnie', 'duże', 'bardzo duże'];
@@ -33,27 +32,25 @@ export function Settings({where}) {
     const settingsDivClass = `settingsDiv ${
             where === 'products' ||  where === 'fridge'   ? 'settingsDiv--products' : ''
     }`;
+    console.log({ fridgeSizeElements, productsSizeElements, infoProducts });
 
 
     const mapSizeToApiValue = (sizeIndex) => {
         const sizeMapping = ['bardzo male', 'male', 'srednie', 'duze', 'bardzo duze'];
         return sizeMapping[sizeIndex];
     };
-
     const savePreferences = () => {
-        const pref = {
+        const preferences = {
             wielkosc_lodowki: mapSizeToApiValue(fridgeSizeElements),
             wielkosc_strony_produktu: mapSizeToApiValue(productsSizeElements),
             widocznosc_informacji_o_produkcie: infoProducts === 0 ? 1 : 0
         };
 
-        axios.post(`${API_URL}/api/update_preferences`, pref,{sessionId:sessionId})
+        axios.post(`${API_URL}/api/update_preferences`, { ...preferences, sessionId })
             .then((response) => {
-                // Handle success, show success message
                 console.log('Preferences updated:', response.data);
             })
             .catch((error) => {
-                // Handle error, show error message
                 console.error('Error updating preferences:', error);
             });
     };
@@ -69,11 +66,11 @@ export function Settings({where}) {
                 {(where === 'fridge' || where === 'settings') && <div className="settings-section">
                     <h2 className={sectionHeaderClass}>Wielkość towarów w lodówce</h2>
                     <div className="custom-radio-container">
-                        {fridgeSizeElementsArray.map((label, i) => (
+                        {fridgeSizeElementsArray.map((label) => (
                             <div
-                                key={i}
-                                className={`${customRadioButtonClass} ${fridgeSizeElements === i ? 'selected' : ''}`}
-                                onClick={() => handleOptionClick(i, setFridgeSizeElements)}
+                                key={label}
+                                className={`${customRadioButtonClass} ${fridgeSizeElements === label ? 'selected' : ''}`}
+                                onClick={() => handleOptionClick(label, setFridgeSizeElements)}
                             >
                                 {where ==='settings' ? <label>{label}</label> : <h5>{label}</h5>}
                             </div>
@@ -87,11 +84,11 @@ export function Settings({where}) {
                         <div className="settings-section">
                             <h2 className={sectionHeaderClass}>Wielkość towarów na stronie produktów</h2>
                             <div className="custom-radio-container">
-                                {productsSizeElementsArray.map((label, i) => (
+                                {productsSizeElementsArray.map((label) => (
                                     <div
-                                        key={i}
-                                        className={`${customRadioButtonClass} ${productsSizeElements === i ? 'selected' : ''}`}
-                                        onClick={() => handleOptionClick(i, setProductsSizeElements)}
+                                        key={label}
+                                        className={`${customRadioButtonClass} ${productsSizeElements === label ? 'selected' : ''}`}
+                                        onClick={() => handleOptionClick(label, setProductsSizeElements)}
                                     >
                                         {where ==='settings' ? <label>{label}</label> : <h5>{label}</h5>}
                                     </div>
@@ -104,11 +101,11 @@ export function Settings({where}) {
                             <h2 className={sectionHeaderClass}>Informacje o produktach widoczne na stronie
                                 produktów</h2>
                             <div className="custom-radio-container">
-                                {infoProductsArray.map((label, i) => (
+                                {infoProductsArray.map((label) => (
                                     <div
-                                        key={i}
-                                        className={`${customRadioButtonClass} ${infoProducts === i ? 'selected' : ''}`}
-                                        onClick={() => handleOptionClick(i, setInfoProducts)}
+                                        key={label}
+                                        className={`${customRadioButtonClass} ${infoProducts === label ? 'selected' : ''}`}
+                                        onClick={() => handleOptionClick(label, setInfoProducts)}
                                     >
                                         {where ==='settings' ? <label>{label}</label> : <h5>{label}</h5>}
                                     </div>
@@ -118,7 +115,7 @@ export function Settings({where}) {
                         </div>
                     </>}
                 {where === 'settings' &&
-                    <div className="saveDivSettings" onClick={savePreferences}>>
+                    <div className="saveDivSettings" onClick={savePreferences}>
                         <button className="saveButtonSettings"><h1>zapisz</h1></button>
                     </div>}
             </div>
