@@ -69,7 +69,6 @@ def run_daily_procedure():
 
 @app.route('/api/add_to_product', methods=['POST'])
 def add_to_product():
-    print("dochp?")
     # Tworzenie instancji klasy DatabaseConnector
     db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 
@@ -383,7 +382,6 @@ def add_product():
 
         connection.commit()
         cursor.close()
-        run_daily_procedure()
 
         return jsonify({"message": "Product added successfully!"})
 
@@ -396,9 +394,11 @@ def edit_product(product_id):
     try:
         # Pobieranie danych produktu z żądania
         data = request.json
+        image_data = data.get('imageData')
 
         # Pobieranie user_id z funkcji get_user_id_by_username
         connection = db_connector.get_connection()
+
         cursor = connection.cursor(dictionary=True)
 
         # Sprawdzenie, czy użytkownik jest zalogowany
@@ -409,8 +409,15 @@ def edit_product(product_id):
             connection.close()
             return response, status_code
 
+
+
+
         # Aktualizacja produktu w bazie danych
         db_connector.update_product(product_id, data, user_id)
+
+        # Wywołanie funkcji do obsługi przesyłania zdjęcia tylko jeśli dostępne są dane zdjęcia
+        if image_data:
+            handle_image_upload(db_connector, image_data, user_id, product_id)
 
         cursor.close()
         connection.close()
