@@ -59,7 +59,7 @@ def pred_and_plot(model, filename, class_names):
     return pred_class
 
 
-    
+#Loading trained model    
 def load_model(model_path):
     current_directory = os.path.dirname(os.path.abspath(__file__))
     model_file_path = os.path.join(current_directory, model_path)

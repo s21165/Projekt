@@ -6,10 +6,11 @@ import json
 # from barcode.writer import ImageWriter
 from PIL import Image
 
+
 # Generate QR code based on data and save it to the output folder
 def generate_qr_code(data, output_folder):
     # Construct the data string for the QR code
-    qr_data = f"Name:{data['name']}, Price:{data['price']}, Kcal:{data['kcal']}, Fat:{data['fat']}, Carbs:{data['carbs']}, Protein:{data['protein']}, Category:{data['category']}, Amount:{data['amount']}"
+    qr_data = f"Nazwa:{data['name']}, Cena:{data['price']}, Kalorie:{data['kcal']}, Tłuszcze:{data['fat']}, Węglowodany:{data['carbs']}, Białko:{data['protein']}, Kategoria:{data['category']}, Ilość:{data['amount']}, Data:{data['date']}"
     
     # Create a QR code object
     qr = qrcode.QRCode(
@@ -34,6 +35,7 @@ def generate_qr_code(data, output_folder):
     qr_image.save(image_path)
     
     return image_filename
+
 
 # Generate barcode based on data and save it to the output folder
 # def generate_barcode(data, output_folder):

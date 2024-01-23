@@ -8,17 +8,24 @@
     <button onclick="startCamera()">Start Camera</button>
     <button onclick="stopCamera()">Stop Camera</button>
 
+    <img id="cameraFeed" src="{{ url_for('stream_camera') }}" />
+
     <script>
         function startCamera() {
             fetch('/start_camera', { method: 'POST' })
                 .then(response => response.text())
-                .then(message => alert(message));
+                .then(message => {
+                    alert(message);
+                    // Refresh the image source to start the stream
+                    document.getElementById('cameraFeed').src = "{{ url_for('stream_camera') }}?" + new Date().getTime();
+                });
         }
 
         function stopCamera() {
             fetch('/stop_camera', { method: 'POST' })
                 .then(response => response.text())
                 .then(message => alert(message));
+            // Optionally, handle the stopping of the stream in the UI
         }
     </script>
 </body>

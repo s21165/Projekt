@@ -1,9 +1,12 @@
 import cv2
+import numpy as np
 import winsound
 import time
 
+
 # Function to detect faces and eyes in an image
 def detect_faces_and_eyes(image):
+    # Convert the image to grayscale
     gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # Load Haar cascades for face and eye detection
@@ -18,21 +21,20 @@ def detect_faces_and_eyes(image):
 
 # Function to play an audio warning
 def play_audio_warning():
+    # Play a beep sound for 500 milliseconds
     winsound.Beep(440, 500)
 
 # Function to display a warning image
 def display_warning_image(image):
+    # Display a warning image with the title 'ACHTUNG' and wait for user interaction
     cv2.imshow('ACHTUNG', image)
     cv2.waitKey(-1)
     cv2.destroyWindow('ACHTUNG')
 
 # Function to start camera monitoring
-import cv2
-import numpy as np
-import time
-
 def generate_frames():
     video_ended = False
+
     # Try to initialize the webcam
     cap1 = cv2.VideoCapture(0)  # Webcam
 
@@ -49,7 +51,7 @@ def generate_frames():
     fps = cap2.get(cv2.CAP_PROP_FPS)
     if fps < 1:  # Fallback for undetected frame rate
         fps = 30  # Assume standard frame rate
-
+    print("Video FPS:", fps)
     frame_duration = 1.0 / fps  # Calculate frame duration in seconds
 
     while True:
@@ -64,7 +66,6 @@ def generate_frames():
 
             # Detect faces and eyes
             detected_faces, detected_eyes = detect_faces_and_eyes(img)
-            # ... Draw rectangles logic (optional for streaming) ...
 
             if len(detected_eyes) == 0 and len(detected_faces) == 0:
                 if beep == 5:
@@ -75,15 +76,15 @@ def generate_frames():
             else:
                 beep = 0
 
-            # Check if video has ended
-            if video_ended:
-                frame_end_signal = np.zeros((100, 100, 3), np.uint8)  # Black frame
-                cv2.putText(frame_end_signal, 'END', (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 2, cv2.LINE_AA)
-                ret, buffer = cv2.imencode('.jpg', frame_end_signal)
-                frame_bytes = buffer.tobytes()
-                yield (b'--frame\r\n'
-                       b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
-                break  # Exit loop after sending end signal
+        # Check if video has ended
+        if video_ended:
+            frame_end_signal = np.zeros((100, 100, 3), np.uint8)  # Black frame
+            cv2.putText(frame_end_signal, 'END', (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 2, cv2.LINE_AA)
+            ret, buffer = cv2.imencode('.jpg', frame_end_signal)
+            frame_bytes = buffer.tobytes()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+            break  # Exit loop after sending end signal
 
         # Convert image to JPEG format
         ret, buffer = cv2.imencode('.jpg', frame)
@@ -99,7 +100,3 @@ def generate_frames():
         cap1.release()
     cap2.release()
 
-
-
-#if __name__ == '__main__':
-#    start_camera_monitoring()
