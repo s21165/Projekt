@@ -9,8 +9,8 @@ import {BrowserRouter as Router} from 'react-router-dom';
 import axios from 'axios';
 import {useEffect} from 'react';
 import {ToastContainer} from "react-toastify";
-import {SettingsProvider} from "./mainPages/SettingsContext";
-import {Advert} from "./mainPages/Advert";
+import {SettingsProvider} from "./mainPages/settings/SettingsContext";
+import {Advert} from "./mainPages/advert/Advert";
 
 function App() {
     const { user } = useContext(AuthContext);

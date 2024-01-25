@@ -3,7 +3,7 @@ import axios from 'axios';
 import LoginForm from './LoginForm';
 import { AuthContext } from "./auth-context";
 import RegisterForm from "./RegisterForm";
-import {API_URL} from "../../config";
+import {API_URL} from "../settings/config";
 import { useNavigate } from 'react-router-dom';
 import { useLogin } from './hooks/useLogin';
 import useRegister from "./hooks/useRegister";

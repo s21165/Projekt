@@ -5,7 +5,7 @@ import './editAccount.css';
 import face from "../../data/face.jpg";
 import { AuthContext } from "./auth-context";
 import axios from "axios";
-import {API_URL} from "../../config";
+import {API_URL} from "../settings/config";
 
 
 

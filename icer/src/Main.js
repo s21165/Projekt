@@ -6,26 +6,27 @@ import {
     Route,
     Link, useLocation, Await
 } from "react-router-dom";
-import {Fridge} from "./mainPages/products/Fridge";
+import {Fridge} from "./mainPages/products/fridge/Fridge";
 import {Account} from "./mainPages/account/Account";
-import {Notifications} from "./mainPages/Notifications";
+import {Notifications} from "./mainPages/notifications/Notifications";
 import {Icon} from '@iconify/react';
 import React, {useContext, useEffect, useState} from "react";
 
 
 import EditAccount from "./mainPages/account/EditAccount";
-import Products from "./mainPages/products/Products";
-import AddProduct from "./mainPages/products/AddProduct";
+import Products from "./mainPages/products/productList/Products";
+import AddProduct from "./mainPages/products/add/AddProduct";
 
 import Login from "./mainPages/account/Login";
 
 import Help from "./mainPages/Help";
 import ChatContainer from "./mainPages/chatBot/ChatContainer";
 import {AuthContext} from "./mainPages/account/auth-context";
-import {ShoppingCart} from "./mainPages/ShoppingCart";
-import {Settings} from "./mainPages/Settings";
-import {Advert} from "./mainPages/Advert";
-import {GenerateQR} from "./mainPages/GenerateQR";
+import {ShoppingCart} from "./mainPages/shoppingCart/ShoppingCart";
+import {Settings} from "./mainPages/settings/Settings";
+import {Advert} from "./mainPages/advert/Advert";
+import {GenerateQR} from "./mainPages/products/QR/GenerateQR";
+import {handleClickToggleMenu} from "./mainPages/hooks/handleClickToggleMenu";
 
 function Main() {
 
@@ -34,6 +35,10 @@ function Main() {
     const [isIcon, setIsIcon] = useState(true);
     const [lowResolution, setLowResolution] = useState(window.innerWidth);
     const { logout } = useContext(AuthContext);
+
+    const onToggleMenu = () => {
+        handleClickToggleMenu(isOpen, setIsOpen, isIcon, setIsIcon);
+    };
     const  handleLogout = () => {
         logout();
     };
@@ -49,24 +54,6 @@ function Main() {
         };
 
     }, [isOpen, lowResolution]);
-
-
-    const handleClick = () => {
-
-        if (isOpen) {
-            setIsOpen(!isOpen);
-
-            setTimeout(() => {
-                setIsIcon(!isIcon)
-            }, 450)
-        } else {
-            setIsOpen(!isOpen);
-
-            setTimeout(() => {
-                setIsIcon(!isIcon)
-            }, 350)
-        }
-    }
 
 
     return (
@@ -101,7 +88,7 @@ function Main() {
 
                         <nav className={isOpen ? "menu" : "slimMenu"}>
                             {lowResolution >= 1200 && <div className="navExpandButton">
-                                <button onClick={handleClick}>{isIcon ?
+                                <button onClick={onToggleMenu}>{isIcon ?
                                     <Icon icon="material-symbols:arrow-forward-ios"/> :
                                     <Icon icon="material-symbols:arrow-back-ios-new"/>} </button>
                             </div>}
@@ -112,7 +99,7 @@ function Main() {
                                     </div>
                                 </Link>
                                 :
-                                <button onClick={handleClick}>
+                                <button onClick={onToggleMenu}>
                                     <div className="logoContainer">
                                         <img src={logo} alt="Your Image" className={isIcon ? "logo" : "smallLogo"}/>
                                     </div>

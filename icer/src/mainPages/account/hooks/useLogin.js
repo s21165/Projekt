@@ -5,7 +5,7 @@ import { BrowserRouter as Router,
     Route,useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from "../auth-context";
-import { API_URL } from "../../../config";
+import { API_URL } from "../../settings/config";
 import {toast} from "react-toastify";
 
 export const useLogin = () => {

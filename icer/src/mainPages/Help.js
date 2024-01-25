@@ -3,7 +3,7 @@ import logo from "../data/logo.svg";
 import {Link} from "react-router-dom";
 import './Help.css';
 import {Icon} from "@iconify/react";
-import {Advert} from "./Advert";
+import {Advert} from "./advert/Advert";
 function Help({isMinimized}){
 
 

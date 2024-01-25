@@ -6,7 +6,7 @@ import Main from "../../Main";
 import Help from "../Help";
 import { Icon } from '@iconify/react';
 import axios from "axios";
-import {API_URL} from "../../config";
+import {API_URL} from "../settings/config";
 
 
 
