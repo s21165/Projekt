@@ -1,3 +1,5 @@
+
+//hook rozwijający i zwijający menu boczne aplikacji
 export const handleClickToggleMenu = (isOpen, setIsOpen, isIcon, setIsIcon) => {
     if (isOpen) {
         setIsOpen(!isOpen);

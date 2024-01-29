@@ -4,10 +4,12 @@ import {useNavigate} from "react-router-dom";
 import {toast, ToastContainer} from "react-toastify";
 
 function RegisterForm({ onRegister, onSwitchToLogin  }) {
+
+    //inicjalizacja zmiennych przetrzymujących nazwę oraz hasło
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-
+    // złożenie formularza wywołuje funkcję rejestracji oraz zmianę podstrony na ekran logowania
     const handleSubmit = event => {
         event.preventDefault();
 
@@ -16,6 +18,7 @@ function RegisterForm({ onRegister, onSwitchToLogin  }) {
 
     };
 
+    //formularz rejestracji
     return (
         <form onSubmit={handleSubmit} className="loginFormAll">
 

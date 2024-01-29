@@ -12,7 +12,7 @@ import image2 from "../../../data/image6.png";
 import ProductItem from "../item/ProductItem";
 import Products from "../productList/Products";
 import ProductManager from "../productList/ProductManager";
-import {ToastContainer} from "react-toastify";
+
 import {useNotificationsData} from "../../notifications/useNotificationsData";
 
 
@@ -70,7 +70,7 @@ export function Fridge(){
 
     return(
         <div className="fridgeContainer">
-            <ToastContainer />
+
             <div className="fridge">
 
 

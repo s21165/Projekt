@@ -1,11 +1,3 @@
-/* Dla etykiet */
-.accountContainer {
-    display: grid;
-    place-items: center; /* Wyśrodkowanie w obu osiach */
-    height: 100vh;
-}
-
-
 .editAccount button:hover {
     background-color: #0056b3;
 }
@@ -14,32 +6,30 @@
     margin-bottom:0;
 
 }
-
+/*wejścia kontenera ze zdjęciem oraz informacjami o użytkowniku*/
 .accountInfo input {
-    width: 80%;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s, border-color 0.3s;
-    margin-bottom: 10px;
-    padding: 10px 0 10px 0;
-
-
-    font-size: 16px;
-    justify-content: center;
-    align-items: center;
+    width: 80%;  /*szerokość*/
+    border-radius: 5px; /* zaokrąglenie krawędzi */
+    border: 1px solid #ccc; /* ustawienie krawędzi: jego szerokość, styl i kolor */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* cień */
+    transition: box-shadow 0.3s, border-color 0.3s;  /* płynna zmiana koloru krawędzi oraz cienia w czasie 0.3s */
+    margin-bottom: 10px; /* margines dolny */
+    padding: 10px 0 10px 0; /* odstęp wewnętrzny z góry oraz dołu */
+    font-size: 16px; /* wielkość czcionki */
+    justify-content: center; /* wyśrodkowania kontentu */
+    align-items: center; /* wyśrodkowanie przedmiotów */
 }
 
+/* kiedy wprowadzamy zmiany do znacznika wejściowego */
 input:focus {
-    outline: none;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
-    border-color: #7fb0d5;
+    outline: none; /* usuwa linię zewnętrzną znacznika */
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); /* nadanie cienia */
+    border-color: #7fb0d5; /* zmiana koloru krawędzi */
 }
 
 
-/* Styl dla przycisków */
+/* Styl dla przycisków educji konta */
 .editAccount button {
-    cursor: pointer;
     width: 80%;
     padding: 10px 15px;
     border-radius: 5px;
@@ -54,15 +44,19 @@ input:focus {
     align-items: center;
 
 }
-
+/* zmiana koloru nagłówka h3 klasy editAccount */
 .editAccount h3 {
 
     color: #333;
 }
+/* zmiana koloru tła przycisku klasy editAccount po najechaniu na niego*/
 .editAccount button:hover {
     background-color: #0056b3;
 }
+
+/*dla ekranów o maxymalnej szerokości 1200px*/
 @media only screen and (max-width: 1200px) {
+    /*zmiana wielkości czcionki dla przycisków w klasie editAccount*/
     .editAccount button {
         font-size: 13px;
 
@@ -70,7 +64,9 @@ input:focus {
 
 
 }
+/*dla ekranów o maxymalnej szerokości 600px*/
 @media only screen and (max-width: 600px) {
+    /*zmiana wielkości czcionki dla przycisków w klasie editAccount*/
     .editAccount button {
         font-size: 10px;
 

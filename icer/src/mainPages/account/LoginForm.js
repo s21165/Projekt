@@ -8,10 +8,12 @@ import {Link} from "react-router-dom";
 import logo from "../../data/logo.svg";
 import {toast} from "react-toastify";
 
+//formularz logowania
 function LoginForm({ onLogin , onSwitchToRegister  }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+    // złożenie formularza wywołuje funkcję logowania
     const handleSubmit = event => {
         event.preventDefault();
         if (onLogin) {
@@ -21,7 +23,7 @@ function LoginForm({ onLogin , onSwitchToRegister  }) {
 
     };
 
-
+    //formularz logowania
     return (
         <form onSubmit={handleSubmit} className="loginFormAll">
             <div className="loginFormBox">
@@ -43,17 +45,16 @@ function LoginForm({ onLogin , onSwitchToRegister  }) {
                     Zarejestruj się
                 </button>
 
+                {/*<div className="loginTypes">*/}
+                {/*    <button className="loginGoogle">*/}
+                {/*        <img src={google} alt="googleLogo" className="googleLogo"/>*/}
+                {/*    </button>*/}
 
-                <div className="loginTypes">
-                    <button className="loginGoogle">
-                        <img src={google} alt="googleLogo" className="googleLogo"/>
-                    </button>
+                {/*    <button className="loginFacebook">*/}
+                {/*        <img src={facebook} alt="facebookLogo" className="facebookLogo"/>*/}
 
-                    <button className="loginFacebook">
-                        <img src={facebook} alt="facebookLogo" className="facebookLogo"/>
-
-                    </button>
-                </div>
+                {/*    </button>*/}
+                {/*</div>*/}
             </div>
 
         </form>

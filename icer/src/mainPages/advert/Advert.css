@@ -1,3 +1,5 @@
+
+/*kontener z reklamą na cały ekran*/
 .advertContainer{
     position:relative;
     display:flex;
@@ -5,6 +7,7 @@
     width:100vw;
 
 }
+/*reklama - na cały ekran*/
 .advertImage{
 
     height:100vh;

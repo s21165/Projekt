@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import {GetBorderStyle} from "../products/item/GetBorderStyle";
 import './ShoppingList.css'
 import {Icon} from "@iconify/react";
-import {ToastContainer} from "react-toastify";
+
 
 export function ShoppingList({data, showNewFields, newFields, setNewFields, shoppingCartActions}) {
     const [selectedItems, setSelectedItems] = useState([]);
@@ -35,7 +35,7 @@ export function ShoppingList({data, showNewFields, newFields, setNewFields, shop
     return (
         <>
             <div>
-                <ToastContainer/>
+
                 {data?.map((item) => (
                     <div className={`shoppingList ${selectedItems.includes(item.id) ? 'crossed' : ''}`} key={item.id}
 

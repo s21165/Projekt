@@ -6,7 +6,7 @@ import {useContext} from 'react';
 import {AuthContext} from '../../account/auth-context';
 import {API_URL} from "../../settings/config";
 import {Icon} from "@iconify/react";
-import {ToastContainer, toast} from 'react-toastify';
+import { toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {DecodeQrCode} from "../QR/DecodeQrCode";
 import {initializeProduct} from "../hooks/initializeProduct";
@@ -28,7 +28,8 @@ function AddProduct() {
     const [productBackpack, setProductBackpack] = useState([]);
     const [showCameraOptions, setShowCameraOptions] = useState(false); // New state variable
     const [cameraOption, setCameraOption] = useState("");
-    const [streamCamera,setStreamCamera] = useState("");
+    const [streamCamera,setStreamCamera] = useState(null);
+    const [imageIdentyfication,setImageIdentyfication] = useState(null);
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Wysyłam produkt:", product);
@@ -136,60 +137,58 @@ function AddProduct() {
         }
     };
 
+    const chooseImageForIdentyfiaction=(event)=>{
+        if (event.target.files && event.target.files[0]) {
+            const imageFile = event.target.files[0];
+            const imageUrl = URL.createObjectURL(imageFile);
+            setImageIdentyfication(imageUrl);
+            console.log(imageUrl);
+        }
+    }
 
+    const sendImageToFlask = async (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const response = await axios.post(`${API_URL}/upload_image`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            // Obsługa odpowiedzi
+            console.log(response.data);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
     const handleCameraClick = () => {
         setCameraOption(""); // Reset camera option on opening
         setShowCameraOptions(!showCameraOptions); // Toggle visibility of camera options
     };
 
-    const cameraControl=()=>{
-
-        // Znajdź produkt o danym ID i zwiększ jego ilość
-        console.log('poszlo cameraControl')
-        axios.get(`${API_URL}/start_camera`
-            .then((response) => {
-                console.log(response.data)
-                setStreamCamera(`${API_URL}/stream_camera`);
-                toast.success(`start_food_identification!`);
-
-
-            })
-            .catch((error) => {
-                console.error(`pojawił się error podczas camera_control: ${error}`);
-            }));
-    };
-    const startCameraIdentifyMany=()=>{
-
-        // Znajdź produkt o danym ID i zwiększ jego ilość
-        console.log('poszlo start')
+    const cameraControl = () => {
         axios.post(`${API_URL}/start_camera`)
             .then((response) => {
-                console.log(response.data)
-
-                toast.success(`start_camera!`);
-
-
+                console.log(response.data);
+                toast.success('Camera started!');
+                setStreamCamera(`${API_URL}/stream_camera`);
             })
             .catch((error) => {
-                console.error(`pojawił się error podczas start_camera: ${error}`);
+                console.error(`Error starting camera: ${error}`);
             });
     };
 
-
-    const identifyMany = () => {
-        // Znajdź produkt o danym ID i zwiększ jego ilość
-        console.log('poszlo identify')
-        axios.get(`${API_URL}/stream_camera`)
+    const stopCamera = () => {
+        axios.post(`${API_URL}/stop_camera`)
             .then((response) => {
-                console.log(response.data)
-
-                toast.success(`identyfikacja zakonczona!`);
-
-
+                console.log(response.data);
+                toast.success('Camera stopped!');
+                setStreamCamera(null);
             })
             .catch((error) => {
-                console.error(`pojawił się error podczas identyfikacji: ${error}`);
+                console.error(`Error stopping camera: ${error}`);
             });
     };
 
@@ -255,7 +254,7 @@ function AddProduct() {
                         <div className="image-options">
 
                             <label className="addPhotoFromDir">
-                                <label><h5> zdjęcie: </h5></label>
+                                <label><h5> dodaj zdjęcie: </h5></label>
                                 {!image && <Icon className="addPhotoFromDirIcon" icon="arcticons:photo-pro"/>}
                                 {imagePreview && (
                                     <img
@@ -275,27 +274,27 @@ function AddProduct() {
 
                             <label className="addPhotoFromDir">
 
-                                    <label><h5> kamera: </h5></label>
+                                    <label><h5> identyfikuj </h5></label>
                                 <div className="cameraOptions" style={{ display: showCameraOptions ? 'block' : 'none' }}>
                                     <div className="cameraOptionsRelative">
-                                    <div className="leftCameraOption" >
-                                        <label><h5>jeden</h5></label>
-                                        <Icon icon="ic:twotone-exposure-plus-1" />
+                                        {streamCamera ? <div><img src={streamCamera}/><div onClick={stopCamera} className="stopCameraButton">stop camera</div></div> :<div className="leftCameraOption" onClick={cameraControl}>
+                                        <><label><h5>jeden</h5></label>
+                                        <Icon icon="ic:twotone-exposure-plus-1" /></>
 
                                     </div>
-
-                                    <div className="rightCameraOption" onClick={cameraControl} >
+                                        }
+                                    <div className="rightCameraOption"  >
                                         <label><h5>wiele</h5></label>
                                         <Icon icon="oui:ml-create-multi-metric-job" />
                                     </div>
-                                        <div>{<img className="identificationVideo" src={streamCamera} alt="streamCamera"/>}</div>
+                                        {/*<div>{<img className="identificationVideo" src={streamCamera} alt="streamCamera"/>}</div>*/}
                                     </div>
                                 </div>
 
 
                                 <Icon className="addPhotoFromDirIcon" icon="icon-park-twotone:camera-one" onClick={handleCameraClick} />
 
-                                <span> <h5>identyfikuj</h5> </span>
+                                <span> <h5>jedzenie</h5> </span>
 
                             </label>
                         </div>
@@ -310,8 +309,22 @@ function AddProduct() {
                     <div className="scanners">
 
                         <label className="scannerLabel">
-                            <Icon className="barcodeIcon" icon="material-symbols:barcode"/>
+                            {imageIdentyfication?<>
+                                <img src={imageIdentyfication}className="scannedFoodImage"/>
+                                <div className="sendButtonForFoodIdentyfication" onClick={()=>{sendImageToFlask(imageIdentyfication)}}>
+                                    wyslij
+                                </div>
+
+                            </> :<><Icon className="barcodeIcon" icon="material-symbols:barcode"/>
                             <span> <h5>Skanuj Barcode</h5> </span>
+                                <input
+                                    type="file"
+                                    id="file-input"
+                                    style={{display: 'none'}}
+                                    onChange={(e) => chooseImageForIdentyfiaction(e)}
+                                />
+
+                            </>}
                         </label>
 
                         <label onClick={handleQRCodeScan} className="scannerLabel">

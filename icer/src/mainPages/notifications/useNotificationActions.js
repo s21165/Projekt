@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_URL } from "../settings/config";
-import { ToastContainer, toast } from 'react-toastify';
+import {  toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 export const useNotificationActions = (data,setData,sessionId,refresh,setRefresh) => {
 

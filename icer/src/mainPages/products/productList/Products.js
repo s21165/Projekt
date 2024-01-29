@@ -28,7 +28,6 @@ function Products() {
     );
 
     return (<>
-        <ToastContainer />
 
         <ProductManager
             editingProduct={editingProduct}

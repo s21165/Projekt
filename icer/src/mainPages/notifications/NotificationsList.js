@@ -1,73 +1,72 @@
 import {useState} from "react";
-import {GetBorderStyle} from "../products/item/GetBorderStyle";
 import {Icon} from "@iconify/react";
+import {formatDate} from "../hooks/formatDate";
 
+//Funkcja listy powiadomień
+//elementy przekazane to dane powiadomień, wielkość listy, akcje możliwe na liście, pozycja listy.
 export function NotificationsList({data, small = false, action, left = false}) {
 
+    //zmienna określająca rozwinięte powiadomienie (ukazuje więcej informacji na jego temat)
     const [expandedProduct, setExpandedProduct] = useState(null);
-    const styl = GetBorderStyle(data, "current", 4);
+
+
     // Funkcja do przełączania rozwinięcia produktu
     const handleToggleExpand = (productId) => {
+        //jeśli rozwinięty to zwiń
         if (expandedProduct === productId) {
             setExpandedProduct(null);
         } else {
+            //jeśli zwinięty to rozwiń
             setExpandedProduct(productId);
         }
     }
 
-    const handleAlertClick = (productId) => {
-        // Logika obsługi alertu
-    };
-
-    const handleDeleteClick = (productId) => {
-        // Logika usuwania powiadomienia
-    };
+    //funkcja do odczytywania powiadomień
     const handleNotificationClick = (productId) => {
-        // Only mark notification as read if it's not currently expanded
+        // odczytuje powiadomienie jedynie kiedy rozwija listę
         if (expandedProduct !== productId) {
             action.handleReadNotification(productId);
         }
         handleToggleExpand(productId);
     };
 
+    //ustawia kolor ikony powiadomienia względem tego czy zostało ono odczytane
     const selectAlertColor = (notification) => {
         switch (notification) {
             case 0:
-                return 'black'; // example ratio
+                return 'black'; // odczytane
             case 1:
-                return 'red';
+                return 'red'; // nieodczytane
             default:
-                return 'black'; // default font size if none of the cases match
+                return 'black'; // w innym przypadku
         }
     }
 
     return (
 
         <>
+            {/* lista powiadomień z różnymi stylami względem zmiennych wejściowych*/}
             <div className={`notificationsList ${small ? "small" : ""} ${left ? "left" : ""}`}>
 
-
+                {/* mapowanie powiadomień i wyświetlanie ich*/}
                 {data && data.map(product => (
 
-                    <div className={"notificationProductDiv"} key={product.id} style={{border: styl}}
+                    /* poszczególne powiadomienie*/
+                    <div className={"notificationProductDiv"} key={product.id}>
 
-
-                    >
-
-                        <div
-                            className="notificationsNameDiv"
-
-                        >
+                        {/* kontener z powiadomieniem*/}
+                        <div className="notificationsNameDiv">
+                            {/* kontener z nazwą powiadomienia*/}
                             <h5 className="notificationText"
                                 onClick={() => {
                                     handleNotificationClick(product.id)
                                 }}
                             >{product.nazwa}</h5>
-                            <div className="notificationIcons"
-
-
-                            >
+                            {/* kontener z ikonami*/}
+                            <div className="notificationIcons">
+                                {/* kontener z ikoną powiadomienia*/}
                                 <div className="notificationAlertIconDiv">
+                                    {/*ikona powiadomienia ze zmianą styli względem tego czy powiadomienie zostało odczytane oraz wartości przekazanej 'small'*/}
                                     <Icon className="notificationAlertIcon"
                                           style={
                                               small
@@ -82,12 +81,13 @@ export function NotificationsList({data, small = false, action, left = false}) {
 
                                           icon="fluent:alert-16-regular"
                                           onClick={() => {
-                                              handleAlertClick(product.id)
                                               action.handleReadNotification(product.id)
                                           }}
                                     />
                                 </div>
+                                {/* kontener z ikoną powiadomienia*/}
                                 <div className="notificationDeleteIconDiv">
+                                    {/*ikona powiadomienia ze zmianą styli względem tego czy powiadomienie zostało odczytane oraz wartości przekazanej 'small'*/}
                                     <Icon className="notificationDeleteIcon"
                                           style={small ? {
                                               marginRight: "1vw",
@@ -101,6 +101,7 @@ export function NotificationsList({data, small = false, action, left = false}) {
 
                         </div>
 
+                        {/*klasa z rozwiniętymi informacjami na temat produktu*/}
                         <div className={`notificationsProductInfo ${expandedProduct === product.id ? "expanded" : ""}`}
                              style={small ? {backgroundColor: "rgba(255, 255, 255, 0.5)"} : {backgroundColor: "#deeffc"}}
 
@@ -111,15 +112,11 @@ export function NotificationsList({data, small = false, action, left = false}) {
                             >
                                 {expandedProduct === product.id && (
                                     <>
-                                        <p>Data
-                                            ważności: {new Date(product.data_waznosci).toISOString().split('T')[0]}</p>
-                                        <p>Ilość: {product.ilosc}</p>
-                                        <p>Cena: {product.cena}</p>
-                                        <p>Kalorie: {product.kalorie}</p>
-                                        <p>Tłuszcze: {product.tluszcze}</p>
-                                        <p>Węglowodany: {product.weglowodany}</p>
-                                        <p>Białko: {product.bialko}</p>
-                                        <p>Kategoria: {product.kategoria}</p>
+                                    {product.data_waznosci &&
+                                        <p>Data ważności: {formatDate(product.data_waznosci)}</p>}
+                                    {product.ilosc === 0 ? <p> Ilość: {product.ilosc}</p>: product.ilosc > 0 && <p> Ilość: {product.ilosc}</p>}
+                                    {product.cena && <p>Cena: {product.cena}</p>}
+                                    {product.kategoria &&<p>Kategoria: {product.kategoria}</p>}
                                     </>
                                 )}
                             </div>

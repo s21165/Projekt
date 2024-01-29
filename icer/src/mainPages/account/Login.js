@@ -1,31 +1,27 @@
-import React, { useContext, useState } from 'react';
-import axios from 'axios';
+import React, {useContext, useState} from 'react';
 import LoginForm from './LoginForm';
-import { AuthContext } from "./auth-context";
+import {AuthContext} from "./auth-context";
 import RegisterForm from "./RegisterForm";
-import {API_URL} from "../settings/config";
-import { useNavigate } from 'react-router-dom';
-import { useLogin } from './hooks/useLogin';
+import {useLogin} from './hooks/useLogin';
 import useRegister from "./hooks/useRegister";
-import {ToastContainer} from "react-toastify";
-const backendUrl = 'http://localhost:5000';
 
+
+//funkcja logowania
 function Login() {
+    //pobieramy informacje na temat aktualnego użytkownika
     const authContext = useContext(AuthContext);
+    // zmienna określająca podstronę logowanie bądź rejestracja
     const [mode, setMode] = useState('login');
     const handleLogin = useLogin();
     const handleRegister = useRegister();
 
-    return authContext.user ? (
-        <div>
-            <ToastContainer />
-        </div>
-    ) : (
+    //jeśli nie ma zalogowanego użytkownika to zwraca podstronę zależną od wartości mode
+    return (!authContext.user &&
         <div>
             {mode === 'login' ?
-                <LoginForm onSwitchToRegister={() => setMode('register')} onLogin={handleLogin} />
+                <LoginForm onSwitchToRegister={() => setMode('register')} onLogin={handleLogin}/>
                 :
-                <RegisterForm onSwitchToLogin={() => setMode('login')} onRegister={handleRegister} />
+                <RegisterForm onSwitchToLogin={() => setMode('login')} onRegister={handleRegister}/>
             }
         </div>
     );

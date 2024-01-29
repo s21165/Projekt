@@ -1,11 +1,9 @@
-// hooks/useLogin.js
-import { useContext } from 'react';
-import { BrowserRouter as Router,
-    Routes,
-    Route,useNavigate } from 'react-router-dom';
+// hook używany do logowania
+import {useContext} from 'react';
+import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
-import { AuthContext } from "../auth-context";
-import { API_URL } from "../../settings/config";
+import {AuthContext} from "../auth-context";
+import {API_URL} from "../../settings/config";
 import {toast} from "react-toastify";
 
 export const useLogin = () => {
@@ -15,7 +13,7 @@ export const useLogin = () => {
     const handleLogin = async (credentials) => {
         try {
             const response = await axios.post(`${API_URL}/login`, credentials);
-            const { data } = response;
+            const {data} = response;
             if (data && data.session_id) {
                 authContext.login({
                     username: credentials.username,
