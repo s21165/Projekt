@@ -1416,27 +1416,28 @@ def upload_predict():
     return render_template('index.html')
 
 
-# 4 routes for video food identification
+camera_status = "Not Started"
 @app.route('/stream_camera')
 def stream_camera():
     return Response(process_video(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-
 @app.route('/camera_control', methods=['GET'])
 def camera_control():
     return render_template('camera_control.html')
-
 
 @app.route('/start_camera', methods=['POST'])
 def start_camera_route():
     start_camera()
     return "Camera started."
 
-
 @app.route('/stop_camera', methods=['POST'])
 def stop_camera_route():
     stop_camera()
     return "Camera stopped."
+
+@app.route('/check_camera_status')
+def check_camera_status():
+    return jsonify({'status': camera_status})
 
 
 # @app.route('/generate_barcode', methods=['POST'])
