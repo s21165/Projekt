@@ -142,7 +142,7 @@ function Main() {
                                         </Link>
                                         <Link to="/GenerateQR">
                                             <div className="navDivMain">
-                                                {isIcon ? <h3>Generuj</h3> :
+                                                {isIcon ? <h3>generuj</h3> :
                                                     <Icon className="menuIcons" icon="solar:help-linear"/>}
                                             </div>
                                         </Link>
@@ -204,7 +204,7 @@ function Main() {
                                             </div>
                                         </button>
                                         <div className="navDivMain" onClick={handleLogout}>
-                                            {isIcon ? <h3>Wyloguj</h3> :
+                                            {isIcon ? <h3>wyloguj</h3> :
                                                 <Icon className="menuIcons" icon="grommet-icons:logout"/>}
                                         </div>
 

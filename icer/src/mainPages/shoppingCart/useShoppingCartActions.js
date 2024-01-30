@@ -28,6 +28,24 @@ export const useShoppingCartActions = ()=>{
             });
     };
 
+    const removeAllFromCart = () => {
+        console.log('poszlo delete All')
+        // Znajdź produkt o danym ID i zwiększ jego ilość
+        axios.post(`${API_URL}/api/edit_shopping_cart`,
+            {sessionId:sessionId,
+                inCart:0
+            } )
+            .then((response) => {
+
+                toast.success(`Wszystkie produkty zostały usunięte z listy zakupów!`);
+
+
+            })
+            .catch((error) => {
+                console.error(`There was an error retrieving the data: ${error}`);
+            });
+    };
+
     const addToCart = (newFields) => {
         // Znajdź produkt o danym ID i zwiększ jego ilość
         console.log('poszlo add')
@@ -68,5 +86,5 @@ export const useShoppingCartActions = ()=>{
     };
 
 
-    return {removeFromCart, addToCart,addToCartFromProducts};
+    return {removeFromCart, addToCart,addToCartFromProducts,removeAllFromCart};
 };

@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
 
 import './editAccount.css';
@@ -7,6 +7,10 @@ import {AuthContext} from "./auth-context";
 import axios from "axios";
 import {API_URL} from "../settings/config";
 import {toast} from "react-toastify";
+import {handleImageChange} from "../products/pictures/handleImageChange";
+import {PictureGetter} from "../products/pictures/PictureGetter";
+import {AccountPictureGetter} from "./hooks/AccountPictureGetter";
+import {handleUserImageChange} from "./hooks/handleUserImageChange";
 
 
 function EditAccount(props) {
@@ -15,12 +19,17 @@ function EditAccount(props) {
     //przypisuję sesję aktualnego użytkownika do zmiennej
     const sessionId = user ? user.sessionId : null;
 
+    const [image,setImage] = useState('');
+    const [product,setProduct] = useState('');
+    const [pictureToSend,setPictureToSend]= useState('');
+    const [imagePreview,setImagePreview]= useState('');
     //ustawiamy podstawowe informacje formularza
     const [formData, setFormData] = useState({
         username: '',
         email: props.email,
         new_password: ''
     });
+    const picGetter = AccountPictureGetter(image,setImage,face)
     //asynchroniczna funkcja wywoływana podczas złożenia formularza - przyjmuje event
     const handleSubmit = async (event) => {
         // funkcja, która wstrzymuje automatyczne odświeżenie
@@ -36,6 +45,7 @@ function EditAccount(props) {
             //jeśli dostaje odpowiedź
             if (response.data.message)
                 //powiadomienie
+                changeUserPhoto();
                 toast.success('dane zostały zaktualizowane');
 
             // jeśli dostaje error
@@ -45,13 +55,38 @@ function EditAccount(props) {
 
         }
     };
+    const changeUserPhoto = () => {
+        console.log('poszlo change_user_photo')
+        // Znajdź produkt o danym ID i zwiększ jego ilość
+        axios.post(`${API_URL}/api/change_user_photo`,
+            {sessionId:sessionId,
+                pictureToSend
+            } )
+            .then((response) => {
+
+                toast.success(`Wszystkie produkty zostały usunięte z listy zakupów!`);
+            })
+            .catch((error) => {
+                console.error(`There was an error retrieving the data: ${error}`);
+            });
+    };
+
 
 
     return (
         <div className="accountContainer"> {/*kontener z informacjami o użytkowniku oraz z przyciskiem edycji konta*/}
             <div className="accountInfo"> {/*kontener ze zdjęciem oraz informacjami o użytkowniku*/}
                 <div className="accountPhoto"> {/*kontener ze zdjęciem użytkownika*/}
-                    <img src={face} alt="Your Image" className="accountPhotoImage"/> {/*zdjęcie użytkownika*/}
+
+                    <img src={picGetter} alt="Your Image" className="accountPhotoImage"/> {/*zdjęcie użytkownika*/}
+
+                    <input
+                        type="file"
+                        id="file-input2"
+
+                        onChange={(e) => handleUserImageChange(e, setImage, setPictureToSend, setImagePreview)}
+                    />
+
                 </div>
                 {/* formularz edycji konta */}
                 <form onSubmit={handleSubmit}>

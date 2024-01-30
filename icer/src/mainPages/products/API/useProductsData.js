@@ -24,6 +24,7 @@ export const useProductsData = ( filter) => {
                     return true;
                 });
                 setFilteredProducts(newFilteredProducts);
+                
             })
             .catch((error) => {
                 console.error(`There was an error retrieving the data: ${error}`);

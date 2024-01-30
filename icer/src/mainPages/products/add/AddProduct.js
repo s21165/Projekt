@@ -6,7 +6,7 @@ import {useContext} from 'react';
 import {AuthContext} from '../../account/auth-context';
 import {API_URL} from "../../settings/config";
 import {Icon} from "@iconify/react";
-import { toast} from 'react-toastify';
+import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {DecodeQrCode} from "../QR/DecodeQrCode";
 import {initializeProduct} from "../hooks/initializeProduct";
@@ -22,14 +22,18 @@ function AddProduct() {
     const [image, setImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
     const [product, setProduct] = useState(initializeProduct);
-    const [qrImage, setQrImage] = useState(null);
+    const [qrImage, setQrImage] = useState('');
     const [qrImagePreview, setQrImagePreview] = useState(null);
     const [qrData, setQrData] = useState(null);
     const [productBackpack, setProductBackpack] = useState([]);
     const [showCameraOptions, setShowCameraOptions] = useState(false); // New state variable
     const [cameraOption, setCameraOption] = useState("");
-    const [streamCamera,setStreamCamera] = useState(null);
-    const [imageIdentyfication,setImageIdentyfication] = useState(null);
+    const [oneIdCameraOptions, setOneIdCameraOptions] = useState(false);
+    const [streamCamera, setStreamCamera] = useState(null);
+    const [imageIdentyfication, setImageIdentyfication] = useState(null);
+    const [imageForIdentyficationURL, setImageForIdentyficationURL] = useState(null);
+
+
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Wysyłam produkt:", product);
@@ -52,12 +56,11 @@ function AddProduct() {
         }));
     };
     useEffect(() => {
-        const today = new Date().toISOString().split('T')[0];
-        setProduct((prevState) => ({
-            ...prevState,
-            data_waznosci: today,
-        }));
-    }, [refresh]);
+
+        console.log(imageForIdentyficationURL);
+        console.log(imageIdentyfication);
+
+    }, [refresh, imageIdentyfication]);
 
 
     const handleQRCodeScan = async () => {
@@ -100,7 +103,7 @@ function AddProduct() {
                         ilosc: parsedData.Amount,
                         data_waznosci: new Date().toISOString().split('T')[0],
                     }));
-                    setQrImage(null);
+                    setQrImage('');
                     setQrImagePreview(null);
 
                 }
@@ -137,13 +140,15 @@ function AddProduct() {
         }
     };
 
-    const chooseImageForIdentyfiaction=(event)=>{
+    const chooseImageForIdentyfiaction = (event) => {
         if (event.target.files && event.target.files[0]) {
             const imageFile = event.target.files[0];
-            const imageUrl = URL.createObjectURL(imageFile);
-            setImageIdentyfication(imageUrl);
-            console.log(imageUrl);
+            setImageIdentyfication(imageFile);
+            setImageForIdentyficationURL(URL.createObjectURL(imageFile));
+            setShowCameraOptions(false)
+            setOneIdCameraOptions(false)
         }
+
     }
 
     const sendImageToFlask = async (file) => {
@@ -156,8 +161,12 @@ function AddProduct() {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            // Obsługa odpowiedzi
+            setImageForIdentyficationURL(null)
             console.log(response.data);
+            if (response.data.prediction) {
+                console.log(response.data.prediction);
+            }
+
         } catch (error) {
             console.error('Error:', error);
         }
@@ -176,6 +185,7 @@ function AddProduct() {
                 setStreamCamera(`${API_URL}/stream_camera`);
             })
             .catch((error) => {
+                setStreamCamera(null);
                 console.error(`Error starting camera: ${error}`);
             });
     };
@@ -193,167 +203,191 @@ function AddProduct() {
     };
 
 
+    const showOneIdCameraOptions = () => {
+        setOneIdCameraOptions(!oneIdCameraOptions)
+    }
+
     return (
         <>
+            {streamCamera ?
+                <div className="rightCameraOptionUsed"><img className="rightCameraOptionView" src={streamCamera}/>
+                    <div onClick={stopCamera} className="stopCameraButton"><Icon className="stopCameraButtonIcon"
+                                                                                 icon="fluent-emoji-high-contrast:stop-button"
+                                                                                 style={{color: '#f50000'}}/></div>
+                </div> :
+                <>
 
-
-
-
-            <div className="productContainerDiv">
-                {productBackpack.length > 0 && <div className="backpackAddProductDiv" onClick={handleBackpackClick}>
-                    <img className="backpackAddProduct" src={groceryBag}/>
-                    <span className="backpackCounter">{productBackpack.length}</span>
-                </div>}
-                <div onClick={handleAddToBackpack}>
-                    czesc
-                    {productBackpack.map((product, index) => (
-                        <div key={index}>{product.nazwa} i inne dane...</div>
-                    ))}
-                </div>
-
-                <form onSubmit={handleSubmit} className="addProductForm">
-                    <label>
-                        <h5>Nazwa:</h5>
-                        <input type="text" name="nazwa" value={product.nazwa} onChange={handleChange}/>
-                    </label>
-                    <label>
-                        <h5>Cena:</h5>
-                        <input type="number" name="cena" value={product.cena} onChange={handleChange}/>
-                    </label>
-                    <label>
-                        <h5> Kalorie:</h5>
-                        <input type="number" name="kalorie" value={product.kalorie} onChange={handleChange}/>
-                    </label>
-                    <label>
-                        <h5> Tłuszcze:</h5>
-                        <input type="number" name="tluszcze" value={product.tluszcze} onChange={handleChange}/>
-                    </label>
-                    <label>
-                        <h5>Węglowodany:</h5>
-                        <input type="number" name="weglowodany" value={product.weglowodany} onChange={handleChange}/>
-                    </label>
-                    <label>
-                        <h5> Białko:</h5>
-                        <input type="number" name="bialko" value={product.bialko} onChange={handleChange}/>
-                    </label>
-                    <label>
-                        <h5>Kategoria:</h5>
-                        <input type="text" name="kategoria" value={product.kategoria} onChange={handleChange}/>
-                    </label>
-                    <label>
-                        <h5>Ilość:</h5>
-                        <input type="number" name="ilosc" value={product.ilosc} onChange={handleChange}/>
-                    </label>
-                    <label className="dataLabel">
-                        <h5>Data ważności:</h5>
-                        <input type="date" name="data_waznosci" className="dataInput" value={product.data_waznosci}
-                               onChange={handleChange}/>
-                    </label>
-                    <div className="addPhotoDiv">
-
-                        <div className="image-options">
-
-                            <label className="addPhotoFromDir">
-                                <label><h5> dodaj zdjęcie: </h5></label>
-                                {!image && <Icon className="addPhotoFromDirIcon" icon="arcticons:photo-pro"/>}
-                                {imagePreview && (
-                                    <img
-                                        src={imagePreview}
-                                        alt="Podgląd"
-                                        style={{maxWidth: '100px', maxHeight: '100px'}}
-                                    />
-                                )}
-                                <span> <h5> dodaj z urządzenia </h5> </span>
-                                <input
-                                    type="file"
-                                    id="file-input"
-                                    style={{display: 'none'}}
-                                    onChange={(e) => handleImageChange(e, setImage, setProduct, setImagePreview)}
-                                />
-                            </label>
-
-                            <label className="addPhotoFromDir">
-
-                                    <label><h5> identyfikuj </h5></label>
-                                <div className="cameraOptions" style={{ display: showCameraOptions ? 'block' : 'none' }}>
-                                    <div className="cameraOptionsRelative">
-                                        {streamCamera ? <div><img src={streamCamera}/><div onClick={stopCamera} className="stopCameraButton">stop camera</div></div> :<div className="leftCameraOption" onClick={cameraControl}>
-                                        <><label><h5>jeden</h5></label>
-                                        <Icon icon="ic:twotone-exposure-plus-1" /></>
-
-                                    </div>
-                                        }
-                                    <div className="rightCameraOption"  >
-                                        <label><h5>wiele</h5></label>
-                                        <Icon icon="oui:ml-create-multi-metric-job" />
-                                    </div>
-                                        {/*<div>{<img className="identificationVideo" src={streamCamera} alt="streamCamera"/>}</div>*/}
-                                    </div>
-                                </div>
-
-
-                                <Icon className="addPhotoFromDirIcon" icon="icon-park-twotone:camera-one" onClick={handleCameraClick} />
-
-                                <span> <h5>jedzenie</h5> </span>
-
-                            </label>
+                    {imageForIdentyficationURL && <div className="imageForIdentyficationURLDiv">
+                        <div className="imageForIdentyficationURLDivRelative">
+                            <img src={imageForIdentyficationURL} className="scannedFoodImage"/>
+                            <div className="sendButtonForFoodIdentyfication" onClick={() => {
+                                sendImageToFlask(imageIdentyfication)
+                            }}>
+                                <h2>
+                                identyfikuj
+                                </h2>
+                            </div>
+                        </div>
+                    </div>}
+                    <div className="productContainerDiv">
+                        {productBackpack.length > 0 &&
+                            <div className="backpackAddProductDiv" onClick={handleBackpackClick}>
+                                <img className="backpackAddProduct" src={groceryBag}/>
+                                <span className="backpackCounter">{productBackpack.length}</span>
+                            </div>}
+                        <div onClick={handleAddToBackpack}>
+                            czesc
+                            {productBackpack.map((product, index) => (
+                                <div key={index}>{product.nazwa} i inne dane...</div>
+                            ))}
                         </div>
 
-                    </div>
-                    <div className="AddProductButtonDiv">
-                        <button type="submit" className="addProductButton"><h4> Dodaj produkt </h4></button>
-                    </div>
-                    <div className="qrUploadDiv">
+                        <form onSubmit={handleSubmit} className="addProductForm">
+                            <label>
+                                <h5>Nazwa:</h5>
+                                <input type="text" name="nazwa" value={product.nazwa} onChange={handleChange}/>
+                            </label>
+                            <label>
+                                <h5>Cena:</h5>
+                                <input type="number" name="cena" value={product.cena} onChange={handleChange}/>
+                            </label>
+                            <label>
+                                <h5> Kalorie:</h5>
+                                <input type="number" name="kalorie" value={product.kalorie} onChange={handleChange}/>
+                            </label>
+                            <label>
+                                <h5> Tłuszcze:</h5>
+                                <input type="number" name="tluszcze" value={product.tluszcze} onChange={handleChange}/>
+                            </label>
+                            <label>
+                                <h5>Węglowodany:</h5>
+                                <input type="number" name="weglowodany" value={product.weglowodany}
+                                       onChange={handleChange}/>
+                            </label>
+                            <label>
+                                <h5> Białko:</h5>
+                                <input type="number" name="bialko" value={product.bialko} onChange={handleChange}/>
+                            </label>
+                            <label>
+                                <h5>Kategoria:</h5>
+                                <input type="text" name="kategoria" value={product.kategoria} onChange={handleChange}/>
+                            </label>
+                            <label>
+                                <h5>Ilość:</h5>
+                                <input type="number" name="ilosc" value={product.ilosc} onChange={handleChange}/>
+                            </label>
+                            <label className="dataLabel">
+                                <h5>Data ważności:</h5>
+                                <input type="date" name="data_waznosci" className="dataInput"
+                                       value={product.data_waznosci}
+                                       onChange={handleChange}/>
+                            </label>
+                            <div className="addPhotoDiv">
 
-                    </div>
-                    <div className="scanners">
+                                <div className="image-options">
 
-                        <label className="scannerLabel">
-                            {imageIdentyfication?<>
-                                <img src={imageIdentyfication}className="scannedFoodImage"/>
-                                <div className="sendButtonForFoodIdentyfication" onClick={()=>{sendImageToFlask(imageIdentyfication)}}>
-                                    wyslij
+                                    <label className="addPhotoFromDir">
+                                        <label><h5> dodaj zdjęcie: </h5></label>
+                                        {!image && <Icon className="addPhotoFromDirIcon" icon="arcticons:photo-pro"/>}
+                                        {imagePreview && (
+                                            <img
+                                                src={imagePreview}
+                                                alt="Podgląd"
+                                                style={{maxWidth: '100px', maxHeight: '100px'}}
+                                            />
+                                        )}
+                                        <span> <h5> dodaj z urządzenia </h5> </span>
+                                        <input
+                                            type="file"
+                                            id="file-input"
+                                            style={{display: 'none'}}
+                                            onChange={(e) => handleImageChange(e, setImage, setProduct, setImagePreview)}
+                                        />
+                                    </label>
+
+                                    <label className="addPhotoFromDir">
+
+                                        <label><h5> identyfikuj </h5></label>
+                                        <div className="cameraOptions"
+                                             style={{display: showCameraOptions ? 'flex' : 'none'}}>
+                                            <div className="cameraOptionsRelative">
+                                                <div className="leftCameraOption" onClick={showOneIdCameraOptions}>
+                                                    <label><h5>jeden</h5></label>
+                                                    {oneIdCameraOptions &&
+                                                        <div className="chooseFormOfId"
+                                                             onClick={event => event.stopPropagation()}>
+
+                                                            {!imageForIdentyficationURL && <>
+
+                                                                <input
+                                                                    type="file"
+                                                                    id="file-input"
+                                                                    style={{display: 'none'}}
+                                                                    onChange={(e) => chooseImageForIdentyfiaction(e)}
+                                                                />
+
+                                                            </>}
+
+                                                        </div>
+                                                    }
+                                                    <Icon icon="ic:twotone-exposure-plus-1"/>
+
+                                                </div>
+                                                <div className="rightCameraOption" onClick={cameraControl}>
+                                                    <label><h5>wiele</h5></label>
+                                                    <Icon icon="oui:ml-create-multi-metric-job"/>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+                                        <Icon className="addPhotoFromDirIcon" icon="icon-park-twotone:camera-one"
+                                              onClick={handleCameraClick}/>
+
+                                        <span> <h5>jedzenie</h5> </span>
+
+                                    </label>
                                 </div>
 
-                            </> :<><Icon className="barcodeIcon" icon="material-symbols:barcode"/>
-                            <span> <h5>Skanuj Barcode</h5> </span>
-                                <input
-                                    type="file"
-                                    id="file-input"
-                                    style={{display: 'none'}}
-                                    onChange={(e) => chooseImageForIdentyfiaction(e)}
-                                />
+                            </div>
+                            <div className="AddProductButtonDiv">
+                                <button type="submit" className="addProductButton"><h4> Dodaj produkt </h4></button>
+                            </div>
+                            <div className="qrUploadDiv">
 
-                            </>}
-                        </label>
+                            </div>
+                            <div className="scanners">
 
-                        <label onClick={handleQRCodeScan} className="scannerLabel">
+                                <label onClick={handleQRCodeScan} className="scannerLabel">
 
 
-                            {!qrImage && <Icon className="qrIcon" icon="bx:qr-scan"/>}
-                            {qrImagePreview && (
-                                <img
-                                    src={qrImagePreview}
-                                    alt="Podgląd"
-                                    style={{maxWidth: '100px', maxHeight: '100px'}}
-                                />
-                            )}
-                            <h5> Skanuj QR </h5>
-                            {!qrImage && <input
-                                type="file"
-                                id="file-input"
-                                style={{display: 'none'}}
-                                onChange={(e) => handleQRChange(e, setQrImage, setQrImagePreview)}
-                            />}
-                        </label>
+                                    {!qrImage && <Icon className="qrIcon" icon="bx:qr-scan"/>}
+                                    {qrImagePreview && (
+                                        <img
+                                            src={qrImagePreview}
+                                            alt="Podgląd"
+                                            style={{maxWidth: '100px', maxHeight: '100px'}}
+                                        />
+                                    )}
+                                    <h5> Skanuj QR </h5>
+                                    {!qrImage && <input
+                                        type="file"
+                                        id="file-input"
+                                        style={{display: 'none'}}
+                                        onChange={(e) => handleQRChange(e, setQrImage, setQrImagePreview)}
+                                    />}
+                                </label>
+
+                            </div>
+
+
+                        </form>
 
                     </div>
 
-
-                </form>
-
-            </div>
-
+                </>
+            }
         </>
     );
 }

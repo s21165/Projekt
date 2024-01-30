@@ -55,7 +55,7 @@ export function ShoppingCart() {
 
             </div>
             <div className="deleteAllButtonDiv">
-                <button className="handleDeleteAllCartButton"><h2>Usuń wszystkie</h2></button>
+                <button className="handleDeleteAllCartButton" onClick={shoppingCartActions.removeAllFromCart}><h2>Usuń wszystkie</h2></button>
             </div>
         </>
 

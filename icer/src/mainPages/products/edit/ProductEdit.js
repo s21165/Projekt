@@ -6,7 +6,7 @@ import {useOutsideClick} from "../hooks/useOutsideClick";
 import {useEditProduct} from "../hooks/useEditProduct";
 import {handleImageChange} from "../pictures/handleImageChange";
 
-function ProductEdit({product, handleEdit, setEditingProduct, productActions}) {
+function ProductEdit({product, handleEdit, setEditingProduct}) {
 
     const myDivRef = useRef(null);
     const {

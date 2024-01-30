@@ -52,7 +52,7 @@ function ProductItemMedium({data, useProduct,elementRef,rightButtonDivRef, anima
                 </div>
             ) : (
                 <div className={`card ${!info ? 'hidden' : ''}`}>
-                    <div className="productItemToListIconDiv" onClick={()=>{shoppingCartActions.addToCartFromProducts(data.id)}}><Icon className="productItemToListIcon" icon="fluent-mdl2:add-to-shopping-list" /></div>
+                    <div className="productItemToListIconDiv" onClick={()=>{shoppingCartActions.addToCartFromProducts(data.produktID)}}><Icon className="productItemToListIcon" icon="fluent-mdl2:add-to-shopping-list" /></div>
                     <div className="productCardInfoRow"><h2>{data.nazwa}</h2></div>
                     <div className="productCardInfoRow"><h3>Cena: {data.cena}</h3></div>
                     <div className="productCardInfoRow"><h3>Kalorie: {data.kalorie}</h3></div>
