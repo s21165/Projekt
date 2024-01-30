@@ -2,12 +2,13 @@ import React, {useRef} from 'react';
 import { Icon } from "@iconify/react";
 import {useOutsideClick} from "../hooks/useOutsideClick";
 import {formatDate} from "../../hooks/formatDate";
+import {useShoppingCartActions} from "../../shoppingCart/useShoppingCartActions";
 
 function ProductItemLarge({ data, useProduct,handleZero, handleRemove, handleEditClick, info, filter,setIsSelected}) {
     const myDivRef = useRef();
     useOutsideClick(myDivRef, () => setIsSelected(null));
 
-
+    const shoppingCartActions = useShoppingCartActions()
     return (
         <div ref={myDivRef} className="LargeProductItemContainer">
             {useProduct.showRemovalConfirmation ? (
@@ -22,7 +23,7 @@ function ProductItemLarge({ data, useProduct,handleZero, handleRemove, handleEdi
                 </div>
             ) : (
                 <div className="card" >
-                    <div className="productItemLargeToListIconDiv"><Icon className="productItemToListIcon" icon="fluent-mdl2:add-to-shopping-list" /></div>
+                    <div className="productItemLargeToListIconDiv" onClick={()=>{shoppingCartActions.addToCartFromProducts(data.produktID)}}><Icon className="productItemToListIcon" icon="fluent-mdl2:add-to-shopping-list" /></div>
                     <div className="productCardInfoRow"><h2>{data.nazwa}</h2></div>
                     <div className="productCardInfoRow"><h3>Cena: {data.cena}</h3></div>
                     <div className="productCardInfoRow"><h3>Kalorie: {data.kalorie}</h3></div>
