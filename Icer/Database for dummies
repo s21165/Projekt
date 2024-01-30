@@ -68,8 +68,11 @@ CREATE TABLE preferencje_uzytkownikow (
     wielkosc_lodowki VARCHAR(255) NOT NULL,
     wielkosc_strony_produktu VARCHAR(255) NOT NULL,
     widocznosc_informacji_o_produkcie BOOLEAN NOT NULL,
+    podstawowe_profilowe TINYINT(1) NOT NULL DEFAULT 0,
+    lokalizacja VARCHAR(255),
     FOREIGN KEY (UserID) REFERENCES Users(id)
 );
+
 
 
 create table Shopping(

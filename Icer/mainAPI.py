@@ -11,7 +11,7 @@ from flask_cors import CORS
 import uuid  # potrzebne do generowania unikalnych ID sesji
 
 from modules.database_connector import DatabaseConnector
-from modules.image_handler import handle_image_upload
+from modules.image_handler import handle_image_upload, change_user_profile
 from modules.product_data import ProductData
 from modules.value_manager import ProductManager
 
@@ -19,23 +19,20 @@ from modules.value_manager import ProductManager
 from flask_socketio import SocketIO
 from modules.advert_module.sharedres.shared import camera_status
 
-
 import os
 import threading
 import json
-from flask import Flask, request, render_template, send_file, redirect, url_for, send_from_directory, make_response, flash, jsonify
+from flask import Flask, request, render_template, send_file, redirect, url_for, send_from_directory, make_response, \
+    flash, jsonify
 from modules.foodIdent_module.foodIdent import load_and_prep_image, pred_and_plot, load_model
 from werkzeug.utils import secure_filename
 from modules.foodIdent_module.foodIdentVideo import start_camera, stop_camera, process_video
 from modules.bot_module.bot import get_bot_response
-from modules.scan_module.gen import generate_qr_code # ,generate_barcode
-from modules.scan_module.decoder import decode_qr_code # ,decode_barcode
-#from modules.scan_module.forms import BarcodeForm
+from modules.scan_module.gen import generate_qr_code  # ,generate_barcode
+from modules.scan_module.decoder import decode_qr_code  # ,decode_barcode
+# from modules.scan_module.forms import BarcodeForm
 from modules.advert_module.monitor import generate_frames
 import sys
-
-
-
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -66,6 +63,8 @@ db_connector.connect()
 product_manager = ProductManager(db_connector)
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -281,9 +280,9 @@ def subtract_product():
         if connection:
             connection.close()
 
+
 @app.route('/remove_product_for_user', methods=['POST'])
 def remove_product_for_user():
-
     try:
         # Tworzenie instancji klasy DatabaseConnector
         db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
@@ -340,12 +339,12 @@ def remove_product_for_user():
             connection.close()
         db_connector.disconnect()  # Zamknięcie połączenia z bazą danych
 
+
 @app.route('/api/add_product', methods=['POST'])
 def add_product():
     try:
         # Tworzenie instancji klasy DatabaseConnector
         db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
-
 
         # Łączenie z bazą danych
         db_connector.connect()
@@ -400,7 +399,6 @@ def add_product():
 
         # Uruchomienie funkcji run_daily_procedure po dodaniu produktu
 
-
         connection.commit()
         cursor.close()
 
@@ -436,8 +434,6 @@ def edit_product(product_id):
             connection.close()
             return response, status_code
 
-
-
         # Aktualizacja produktu w bazie danych
         db_connector.update_product(product_id, data, user_id)
 
@@ -452,6 +448,7 @@ def edit_product(product_id):
 
     except Exception as error:
         return jsonify({"error": str(error)}), 500
+
 
 @app.route('/api/shoppingList', methods=['POST', 'GET'])
 def get_icer_shopping():
@@ -527,7 +524,6 @@ def get_icer_shopping():
             cursor.close()
 
 
-
 @app.route('/api/edit_shopping_cart', methods=['POST'])
 def edit_shopping_cart():
     try:
@@ -555,12 +551,11 @@ def edit_shopping_cart():
         # Pobranie ID produktu z żądania
         product_id = data.get('productID')
 
-
-
         if product_id is None:
             # Sprawdzenie, czy dostarczono wymagane dane (nazwa, cena, ilość)
             if 'nazwa' not in data or 'cena' not in data or 'ilosc' not in data:
-                return jsonify({"error": "Product ID not provided, and missing required data (nazwa, cena, ilosc)"}), 400
+                return jsonify(
+                    {"error": "Product ID not provided, and missing required data (nazwa, cena, ilosc)"}), 400
             product_id = product_manager.dodaj_produkt(data['nazwa'], data['cena'])
 
             # Dodanie nowego produktu do koszyka
@@ -605,8 +600,6 @@ def edit_shopping_cart():
                 with db_connector.get_connection().cursor() as cursor:
                     cursor.execute(insert_query, (user_id, product_id, in_cart_value))
 
-
-
         # Zatwierdzenie zmian w bazie danych
         db_connector.get_connection().commit()
 
@@ -616,8 +609,6 @@ def edit_shopping_cart():
         return jsonify({"error": str(error)}), 500
     finally:
         db_connector.disconnect()
-
-
 
 
 @app.route('/api/Icer/get_notifications', methods=['POST'])
@@ -765,7 +756,6 @@ def get_products_with_red_flag():
     finally:
         if cursor:
             cursor.close()
-
 
 
 @app.route('/api/Icer', methods=['POST'])
@@ -974,16 +964,6 @@ def delete_all_notification():
             connection.close()
 
 
-# Pobieranie danych produktów
-@app.route('/api/products', methods=['GET'])
-def get_products():
-    # Tworzenie instancji klasy ProductData
-    product_data = ProductData(db_connector.get_connection())
-    products = product_data.fetch_products()
-    return jsonify(products)
-
-
-
 # Endpoint do aktualizacji preferencji użytkownika
 @app.route('/api/update_preferences', methods=['POST'])
 def update_preferences():
@@ -1029,14 +1009,18 @@ def update_preferences():
                 SET wielkosc_lodowki = %s, wielkosc_strony_produktu = %s, widocznosc_informacji_o_produkcie = %s
                 WHERE UserID = %s
             """
-            cursor.execute(update_preferences_query, (data['wielkosc_lodowki'], data['wielkosc_strony_produktu'], data['widocznosc_informacji_o_produkcie'], user_id))
+            cursor.execute(update_preferences_query, (
+            data['wielkosc_lodowki'], data['wielkosc_strony_produktu'], data['widocznosc_informacji_o_produkcie'],
+            user_id))
         else:
             # Tworzenie nowego wpisu w tabeli preferencje_uzytkownikow
             insert_preferences_query = """
                 INSERT INTO preferencje_uzytkownikow (UserID, wielkosc_lodowki, wielkosc_strony_produktu, widocznosc_informacji_o_produkcie)
                 VALUES (%s, %s, %s, %s)
             """
-            cursor.execute(insert_preferences_query, (user_id, data['wielkosc_lodowki'], data['wielkosc_strony_produktu'], data['widocznosc_informacji_o_produkcie']))
+            cursor.execute(insert_preferences_query, (
+            user_id, data['wielkosc_lodowki'], data['wielkosc_strony_produktu'],
+            data['widocznosc_informacji_o_produkcie']))
 
         connection.commit()
         cursor.close()
@@ -1045,8 +1029,6 @@ def update_preferences():
 
     except Exception as error:
         return jsonify({"error": str(error)}), 500
-
-
 
 
 # Endpoint do pobierania preferencji użytkownika
@@ -1083,6 +1065,31 @@ def get_user_preferences():
             return jsonify(preferences)
         else:
             return jsonify({"error": "Preferences not found."}), 404
+
+    except Exception as error:
+        return jsonify({"error": str(error)}), 500
+
+
+# Endpoint do zmiany zdjęcia użytkownika
+@app.route('/api/change_user_photo', methods=['POST'])
+def change_user_photo():
+    try:
+        # Tworzenie instancji klasy DatabaseConnector
+        db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+
+        # Łączenie z bazą danych
+        db_connector.connect()
+
+        # Pobranie danych obrazu z zapytania
+        data = request.get_json()
+        image_data_base64 = data['image_data_base64']
+        user_id = data['user_id']
+        replace_existing = data.get('replace_existing', False)
+
+        # Wywołanie funkcji do zmiany zdjęcia użytkownika
+        response = change_user_profile(db_connector, user_id, image_data_base64, replace_existing)
+
+        return response
 
     except Exception as error:
         return jsonify({"error": str(error)}), 500
@@ -1182,7 +1189,6 @@ def check_user(username, password):
 
 @app.route('/api/edit_user', methods=['POST'])
 def edit_user():
-    print("test")
     # Sprawdzanie, czy użytkownik jest zalogowany
     if 'username' not in session:
         return jsonify({"error": "Musisz być zalogowany, aby edytować dane."})
