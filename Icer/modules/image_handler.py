@@ -59,7 +59,7 @@ def handle_image_upload(db_connector, image_data_base64, user_id, product_id, re
         return jsonify({"error": f"Unexpected error: {str(error)}"}), 500
 
 
-def change_user_profile(db_connector, user_id, image_data_base64, replace_existing=False):
+def change_user_profile(db_connector, user_id, image_data_base64):
     try:
         # Odkodowanie danych obrazu z Base64
         image_data = base64.b64decode(image_data_base64.split(",")[1])
@@ -81,8 +81,13 @@ def change_user_profile(db_connector, user_id, image_data_base64, replace_existi
         connection = db_connector.get_connection()
         cursor = connection.cursor()
 
-        # Jeśli replace_existing jest ustawione na True, to usuń aktualne zdjęcie użytkownika
-        if replace_existing:
+        # Sprawdzenie, czy wartość podstawowe_profilowe wynosi 1
+        check_profile_query = "SELECT podstawowe_profilowe FROM preferencje_uzytkownikow WHERE UserID = %s"
+        cursor.execute(check_profile_query, (user_id,))
+        profile_result = cursor.fetchone()
+
+        if profile_result and profile_result['podstawowe_profilowe'] == 1:
+            # Usunięcie aktualnego zdjęcia użytkownika
             delete_query = "UPDATE preferencje_uzytkownikow SET lokalizacja = NULL WHERE UserID = %s"
             cursor.execute(delete_query, (user_id,))
             connection.commit()
@@ -94,7 +99,7 @@ def change_user_profile(db_connector, user_id, image_data_base64, replace_existi
             VALUES (%s, %s, %s)
             ON DUPLICATE KEY UPDATE lokalizacja = VALUES(lokalizacja)
         """
-        cursor.execute(insert_query, (user_id, 0, image_name))
+        cursor.execute(insert_query, (user_id, 1, image_name))
         connection.commit()
 
         cursor.close()
