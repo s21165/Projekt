@@ -548,57 +548,62 @@ def edit_shopping_cart():
         if response:
             return response, status_code
 
-        # Pobranie ID produktu z żądania
-        product_id = data.get('productID')
+        # Pobranie wartości in_cart z żądania (1 lub 0)
+        in_cart_value = data.get('inCart')
 
-        if product_id is None:
-            # Sprawdzenie, czy dostarczono wymagane dane (nazwa, cena, ilość)
-            if 'nazwa' not in data or 'cena' not in data or 'ilosc' not in data:
-                return jsonify(
-                    {"error": "Product ID not provided, and missing required data (nazwa, cena, ilosc)"}), 400
-            product_id = product_manager.dodaj_produkt(data['nazwa'], data['cena'])
-
-            # Dodanie nowego produktu do koszyka
-            insert_query = "INSERT INTO Shopping (UserID, produktID, in_cart) VALUES (%s, %s, %s)"
-            with db_connector.get_connection().cursor() as cursor:
-                cursor.execute(insert_query, (user_id, product_id, 1))
-
-                add_icer_query = """
-                            INSERT INTO Icer (UserID, produktID, ilosc, data_dodania)
-                            VALUES (%s, %s, %s, NOW())
-                        """
-            with db_connector.get_connection().cursor() as cursor:
-                cursor.execute(add_icer_query, (user_id, product_id, data['ilosc']))
-
-
-
-        else:
-            # Pobranie wartości in_cart z żądania (1 lub 0)
-            in_cart_value = data.get('inCart')
-
-            if in_cart_value not in [0, 1]:
-                return jsonify({"error": "Invalid inCart value"}), 400
-
-            # Uzyskanie połączenia z bazą danych
-            db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
-            db_connector.connect()
-
-            # Sprawdzenie, czy produkt już istnieje w koszyku
-            check_product_query = "SELECT id FROM Shopping WHERE UserID = %s AND produktID = %s"
-            with db_connector.get_connection().cursor() as cursor:
-                cursor.execute(check_product_query, (user_id, product_id))
-                existing_product = cursor.fetchone()
-
-            if existing_product:
-                # Aktualizacja wartości in_cart
-                update_query = "UPDATE Shopping SET in_cart = %s WHERE UserID = %s AND produktID = %s"
+        if in_cart_value == 0:
+            # Jeśli nie przekazano żadnego produktu, usuń wszystkie produkty z koszyka
+            if 'productID' not in data:
+                delete_query = "DELETE FROM Shopping WHERE UserID = %s"
                 with db_connector.get_connection().cursor() as cursor:
-                    cursor.execute(update_query, (in_cart_value, user_id, product_id))
+                    cursor.execute(delete_query, (user_id,))
             else:
+                # Usuwanie pojedynczego produktu z koszyka
+                product_id = data.get('productID')
+                delete_query = "DELETE FROM Shopping WHERE UserID = %s AND produktID = %s"
+                with db_connector.get_connection().cursor() as cursor:
+                    cursor.execute(delete_query, (user_id, product_id))
+        else:
+            # Dodawanie lub aktualizowanie koszyka
+            product_id = data.get('productID')
+
+            if product_id is None:
+                # Sprawdzenie, czy dostarczono wymagane dane (nazwa, cena, ilość)
+                if 'nazwa' not in data or 'cena' not in data or 'ilosc' not in data:
+                    return jsonify({"error": "Product ID not provided, and missing required data (nazwa, cena, ilosc)"}), 400
+                product_id = product_manager.dodaj_produkt(data['nazwa'], data['cena'])
+
                 # Dodanie nowego produktu do koszyka
                 insert_query = "INSERT INTO Shopping (UserID, produktID, in_cart) VALUES (%s, %s, %s)"
                 with db_connector.get_connection().cursor() as cursor:
-                    cursor.execute(insert_query, (user_id, product_id, in_cart_value))
+                    cursor.execute(insert_query, (user_id, product_id, 1))
+
+                    add_icer_query = """
+                        INSERT INTO Icer (UserID, produktID, ilosc, data_dodania)
+                        VALUES (%s, %s, %s, NOW())
+                    """
+                    cursor.execute(add_icer_query, (user_id, product_id, data['ilosc']))
+
+            else:
+                if in_cart_value not in [0, 1]:
+                    return jsonify({"error": "Invalid inCart value"}), 400
+
+                # Sprawdzenie, czy produkt już istnieje w koszyku
+                check_product_query = "SELECT id FROM Shopping WHERE UserID = %s AND produktID = %s"
+                with db_connector.get_connection().cursor() as cursor:
+                    cursor.execute(check_product_query, (user_id, product_id))
+                    existing_product = cursor.fetchone()
+
+                if existing_product:
+                    # Aktualizacja wartości in_cart
+                    update_query = "UPDATE Shopping SET in_cart = %s WHERE UserID = %s AND produktID = %s"
+                    with db_connector.get_connection().cursor() as cursor:
+                        cursor.execute(update_query, (in_cart_value, user_id, product_id))
+                else:
+                    # Dodanie nowego produktu do koszyka
+                    insert_query = "INSERT INTO Shopping (UserID, produktID, in_cart) VALUES (%s, %s, %s)"
+                    with db_connector.get_connection().cursor() as cursor:
+                        cursor.execute(insert_query, (user_id, product_id, in_cart_value))
 
         # Zatwierdzenie zmian w bazie danych
         db_connector.get_connection().commit()
