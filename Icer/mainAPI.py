@@ -782,28 +782,14 @@ def get_icer():
         if not cursor:
             raise Exception("Failed to create a cursor for the database.")
 
-        data = request.get_json()
 
-        # Upewnienie się co do sesji
-        received_session_id = data.get('sessionId', None)
-        if not received_session_id:
-            raise ValueError("Session ID not provided")
+        # Sprawdzenie, czy użytkownik jest zalogowany
+        user_id, username, response, status_code = DatabaseConnector.get_user_id_by_username(cursor, session)
 
-        # Jeśli użytkownik nie jest zalogowany
-        if 'username' not in session:
-            raise PermissionError("User not logged in")
-
-        # Pobranie ID aktualnie zalogowanego użytkownika
-        username = session['username']
-
-        user_query = "SELECT id FROM Users WHERE username = %s"
-        cursor.execute(user_query, (username,))
-        user_result = cursor.fetchone()
-        if not user_result:
-            raise LookupError("User not found")
+        if response:
+            return response, status_code
 
         # Modyfikacja zapytania SQL, aby pokazywać wszystkie informacje o produkcie
-        user_id = user_result['id']
         query = """
             SELECT Icer.id, Icer.UserID, Icer.produktID, Icer.ilosc, 
             Icer.data_waznosci, Icer.trzecia_wartosc, Icer.default_photo,
@@ -1057,7 +1043,7 @@ def get_user_preferences():
 
         # Pobieranie preferencji użytkownika
         get_preferences_query = """
-            SELECT wielkosc_lodowki, wielkosc_strony_produktu, widocznosc_informacji_o_produkcie
+            SELECT wielkosc_lodowki, wielkosc_strony_produktu, widocznosc_informacji_o_produkcie, lokalizacja_zdj, podstawowe_profilowe
             FROM preferencje_uzytkownikow
             WHERE UserID = %s
         """
@@ -1067,6 +1053,14 @@ def get_user_preferences():
         cursor.close()
 
         if preferences:
+            # Zwracanie preferencji wraz ze ścieżką do zdjęcia profilowego
+            if preferences['podstawowe_profilowe'] == 1:
+                profile_photo_path = os.path.join("D:/repo_na_test/Projekt-PWAAdi/icer/src/data", "face.jpg")
+            else:
+                profile_photo_path = preferences['lokalizacja_zdj']
+
+            preferences['profile_photo'] = profile_photo_path
+
             return jsonify(preferences)
         else:
             return jsonify({"error": "Preferences not found."}), 404

@@ -81,12 +81,12 @@ def change_user_profile(db_connector, user_id, image_data_base64):
         connection = db_connector.get_connection()
         cursor = connection.cursor()
 
-        # Sprawdzenie, czy wartość podstawowe_profilowe wynosi 1
+        # Sprawdzenie, czy wartość podstawowe_profilowe wynosi 0
         check_profile_query = "SELECT podstawowe_profilowe FROM preferencje_uzytkownikow WHERE UserID = %s"
         cursor.execute(check_profile_query, (user_id,))
         profile_result = cursor.fetchone()
 
-        if profile_result and profile_result['podstawowe_profilowe'] == 1:
+        if profile_result and profile_result['podstawowe_profilowe'] == 0:
             # Usunięcie aktualnego zdjęcia użytkownika
             delete_query = "UPDATE preferencje_uzytkownikow SET lokalizacja = NULL WHERE UserID = %s"
             cursor.execute(delete_query, (user_id,))
