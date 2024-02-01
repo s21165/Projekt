@@ -1357,15 +1357,14 @@ def video_feed():
 @app.route('/start_camera_monitoring', methods=['POST'])
 def start_camera_monitoring_route():
     global camera_thread
-
-    # Check if the camera thread does not exist or is not alive
     if camera_thread is None or not camera_thread.is_alive():
-        # Start the camera monitoring in a new thread
         camera_thread = threading.Thread(target=generate_frames)
         camera_thread.start()
-
-    # Redirect to the 'display_video' route after starting the camera monitoring
-    return redirect(url_for('display_video'))
+    data = request.json.get('dane')
+    print(data)
+    # Emit data to the frontend
+    socketio.emit('update_status', {'data': data})
+    return {'status': 'Data received'}
 
 
 @app.route('/display_video')
