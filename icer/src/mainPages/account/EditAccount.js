@@ -11,6 +11,7 @@ import {handleImageChange} from "../products/pictures/handleImageChange";
 import {PictureGetter} from "../products/pictures/PictureGetter";
 import {AccountPictureGetter} from "./hooks/AccountPictureGetter";
 import {handleUserImageChange} from "./hooks/handleUserImageChange";
+import settingsContext from "../settings/SettingsContext";
 
 
 function EditAccount(props) {
@@ -18,7 +19,7 @@ function EditAccount(props) {
     const {user} = useContext(AuthContext);
     //przypisuję sesję aktualnego użytkownika do zmiennej
     const sessionId = user ? user.sessionId : null;
-
+    const {profilePicture} = useContext(settingsContext);
     const [image,setImage] = useState('');
     const [product,setProduct] = useState('');
     const [pictureToSend,setPictureToSend]= useState('');
@@ -60,7 +61,7 @@ function EditAccount(props) {
         // Znajdź produkt o danym ID i zwiększ jego ilość
         axios.post(`${API_URL}/api/change_user_photo`,
             {sessionId:sessionId,
-                pictureToSend
+                image_data_base64:pictureToSend
             } )
             .then((response) => {
 

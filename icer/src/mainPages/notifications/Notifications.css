@@ -1,4 +1,5 @@
 
+/*Lista powiadomień na stronie powiadomień*/
 .notificationsList {
     position:relative;
     width: 100%;
@@ -6,28 +7,31 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /*tworzy cień*/
     max-height:89vh; /* Przykładowa maksymalna wysokość */
     overflow-y: auto; /* Umożliwienie przewijania */
 }
+
+/*"mała" lista powiadomień, która znajduje się na głównej stronie*/
 .notificationsList.small {
-    position:absolute;
+    background: transparent;
+    position:absolute; /*W konkretnym punkcie względem rodzica*/
     top:4vh;
     right:1vw;
     width: 25%;
-    border-radius:5px ;
+    border-radius:5px;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-
     padding: 2px;
 
 }
+/*kontener, który posiada dużą listę*/
 .notificationListForBig{
     position:relative;
     display:flex;
-    height:88vh;
+    height:88vh; /* określona wielkość aby było miejsce na przyciski funkcyjne*/
 
     margin: 1vh 1vw 0 1vh;
     justify-content: center;
@@ -37,7 +41,7 @@
 }
 
 
-
+/*"mała" lista powiadomień, która znajduje się na głównej stronie z lewej strony*/
 .notificationsList.small.left {
     background: transparent;
     position:absolute;
@@ -52,27 +56,30 @@
 
 
 }
+/*kontener, w którym znajduje się element listy*/
 .notificationProductDiv {
     width: 100%;
     margin-bottom: 1px;
-    background-color: rgba(255, 255, 255, 0.5); /* Przeźroczystość */
+    background-color: rgba(255, 255, 255, 0.5); /* kolor oraz przeźroczystość */
 
 }
-
+/* kontener z powiadomieniem*/
 .notificationsNameDiv {
     width: 100%;
-    display: flex; /* Użycie Flexbox */
-    justify-content: space-between;
+    display: flex;
+    justify-content: space-between; /*ustawia elementy w równej odległości od siebie*/
     background-color: #7fb0d5;
     cursor: pointer;
     padding: 10px 0 10px 0;
     border-bottom: 1px solid gray;
-    text-align: center;
+    text-align: center; /* ustawia tekst na środku */
 
     border-radius: 10px;
-    align-items: center;
+    align-items: center; /* ustawia elementy na środku */
     height:10vh;
 }
+
+/* kontener z tekstem*/
 .notificationText {
 
     position:relative;
@@ -82,52 +89,56 @@
     width:100%;
     text-align: center;
     margin:0;
-    justify-content: center;
+    justify-content: center; /* ustawia kontent na środku */
 }
 
+/* nadanie styli dla paragrafów klasy notificationsList*/
 .notificationsList p {
 
     margin: 5px 0;
-
     text-align: center;
     width: 100%;
     border-radius: 10px;
     overflow: hidden;
-    transition: max-height 3s ease-in-out; /* Dodanie animacji */
+    transition: max-height 3s ease-in-out; /* Dodanie animacji w ramach zmiany wysokości elementu*/
 
 }
 
-/* Styl dla rozwiniętego produktu */
+/* Styl dla paragrafu rozwiniętego powiadomienia */
 .notificationProductDiv.expanded p {
-    max-height: 500px; /* Przykładowa wartość, można dostosować */
+    max-height: 500px; /* maksymalna wielkość rozwiniętego kontenera z informacjami  */
 
 
 }
+
+/* klasa z dodatkowymi informacjami na temat produktu */
 .notificationsProductInfo {
 
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    max-height: 0; /*wysokość elementu = 0 czyli element niewidoczny*/
+    overflow: hidden; /* Tekst, który będzie wystawał poza element zostanie ukryty */
+    opacity: 0; /* przeźroczystość ustawiona na 0 czyli element niewidoczny*/
+    transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out; /*animacja do wysokości oraz przeźroczystości elementu*/
 
 }
 
-
+/* klasa z dodatkowymi informacjami na temat produktu - rozwinięta*/
 .notificationsProductInfo.expanded {
-    max-height: 500px; /* Możesz dostosować tę wartość w zależności od potrzeb */
-    opacity: 1;
-    transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    max-height: 500px; /* maksymalna wysokość elementu */
+    opacity: 1; /* przeźroczystość ustawiona na 1 czyli element bez przeźroczystości - w pełni widoczny */
+    transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;/*animacja do wysokości oraz przeźroczystości elementu*/
 
 }
 
+/* kontener z ikonami*/
 .notificationIcons{
     position:relative;
     display: flex;
     height:100%;
     align-items: center;
-    justify-content:flex-end;
+    justify-content:flex-end; /* ustawiane są na końcu kontenera */
 
 }
+/* style kontenerów ikon powiadomienia oraz usuwania powiadomień */
 .notificationAlertIconDiv, .notificationDeleteIconDiv{
     position:relative;
     display: flex;
@@ -137,19 +148,18 @@
     align-items: center;
 
 }
+/* styl ikony usuwania powiadomień */
 .notificationDeleteIconDiv{
-    z-index: 101;
+    z-index: 101; /* ma na celu wyświetlać element przed innymi, zakrywać inne elementy, dzięki temu przycisk usuwania jest na wierzchu */
 }
+/*ikona powiadomienia oraz usuwania powiadomień*/
 .notificationAlertIcon, .notificationDeleteIcon{
     height:3vh;
     display:flex;
     justify-content: space-between;
     width:3vw;
 }
-.notificationAlertIcon{
-    color:red;
 
-}
 .spaceBetweenButtonsAndNotifications{
     position:sticky;
     bottom:1vh;

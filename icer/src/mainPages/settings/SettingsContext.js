@@ -13,6 +13,7 @@ export const SettingsProvider = ({ children }) => {
     const productsSizeElementsArray = ['bardzo male', 'male', 'srednie', 'duze', 'bardzo duze']; // Przykładowa tablica
     const { user } = useContext(AuthContext);
     const sessionId = user ? user.sessionId : null;
+    const [profilePicture,setProfilePicture] = useState('');
 
     useEffect(() => {
         if (sessionId) {
@@ -22,6 +23,7 @@ export const SettingsProvider = ({ children }) => {
                     updateSetting('fridgeSizeElements', wielkosc_lodowki);
                     updateSetting('productsSizeElements', wielkosc_strony_produktu);
                     updateSetting('infoProducts', widocznosc_informacji_o_produkcie);
+                    console.log(response.data)
                 })
                 .catch((error) => {
                     console.error(`There was an error retrieving the data: ${error}`);

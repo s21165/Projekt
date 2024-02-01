@@ -67,7 +67,7 @@ export function NotificationsList({data, small = false, action, left = false}) {
                                 {/* kontener z ikoną powiadomienia*/}
                                 <div className="notificationAlertIconDiv">
                                     {/*ikona powiadomienia ze zmianą styli względem tego czy powiadomienie zostało odczytane oraz wartości przekazanej 'small'*/}
-                                    <Icon className="notificationAlertIcon"
+                                    <Icon
                                           style={
                                               small
                                                   ? {
@@ -101,17 +101,17 @@ export function NotificationsList({data, small = false, action, left = false}) {
 
                         </div>
 
-                        {/*klasa z rozwiniętymi informacjami na temat produktu*/}
+                        {/*klasa z rozwiniętymi informacjami na temat produktu, nadję im style w zależności od tego gdzie lista jest wyświetlana*/}
                         <div className={`notificationsProductInfo ${expandedProduct === product.id ? "expanded" : ""}`}
                              style={small ? {backgroundColor: "rgba(255, 255, 255, 0.5)"} : {backgroundColor: "#deeffc"}}
 
-                        >
+                        >   {/* nadję im style w zależności od tego gdzie lista jest wyświetlana*/}
                             <div className="notificationsContent"
                                  style={small ? {marginRight: 0} : {marginRight: "12vw"}}
 
-                            >
+                            >   {/*logika związana z rozwijaniem listy*/}
                                 {expandedProduct === product.id && (
-                                    <>
+                                    <>{/*po spełnieniu warunku wyświetla element z dodatkowymi informacjami o produkcie*/}
                                     {product.data_waznosci &&
                                         <p>Data ważności: {formatDate(product.data_waznosci)}</p>}
                                     {product.ilosc === 0 ? <p> Ilość: {product.ilosc}</p>: product.ilosc > 0 && <p> Ilość: {product.ilosc}</p>}

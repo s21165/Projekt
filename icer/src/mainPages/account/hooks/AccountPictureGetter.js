@@ -7,7 +7,7 @@ export const AccountPictureGetter=(image, setImage, photo)=>{
         try {
             if (!photo){  throw 'zdjęcie nie istnieje'
 
-                setImage(noImage);
+
             }else
 
                 setImage(require(`../../../data/userProfilePicture/${photo}`));

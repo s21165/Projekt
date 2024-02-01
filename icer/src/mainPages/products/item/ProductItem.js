@@ -67,7 +67,8 @@ function ProductItem({
 
     useEffect(()=>{
 
-    },[info])
+    },[getFridgeSizeIndex,
+        getProductsSizeIndex,infoProducts])
 
 
     try {
