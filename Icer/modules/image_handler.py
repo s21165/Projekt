@@ -82,26 +82,35 @@ def change_user_profile(db_connector, user_id, image_data_base64):
         cursor = connection.cursor()
 
         # Sprawdzenie, czy wartość podstawowe_profilowe wynosi 0
-        check_profile_query = "SELECT podstawowe_profilowe FROM preferencje_uzytkownikow WHERE UserID = %s"
+        check_profile_query = "SELECT podstawowe_profilowe, lokalizacja_zdj FROM preferencje_uzytkownikow WHERE UserID = %s"
         cursor.execute(check_profile_query, (user_id,))
         profile_result = cursor.fetchone()
 
-        if profile_result and profile_result[0] == 0:
-            # Usunięcie aktualnego zdjęcia użytkownika
-            delete_query = "UPDATE preferencje_uzytkownikow SET lokalizacja_zdj = NULL WHERE UserID = %s"
-            cursor.execute(delete_query, (user_id,))
-            connection.commit()
+        if profile_result:
+            if profile_result[0] == 0:
+                # Usunięcie poprzedniego zdjęcia użytkownika z serwera
+                previous_image_location = profile_result[1]
+                if previous_image_location:
+                    previous_image_path = os.path.join(images_folder, previous_image_location)
+                    if os.path.exists(previous_image_path):
+                        os.remove(previous_image_path)
+                update_query = "UPDATE preferencje_uzytkownikow SET lokalizacja_zdj = %s WHERE UserID = %s"
+                cursor.execute(update_query, (image_name, user_id))
 
-        # Zapis informacji o zdjęciu do bazy danych w tabeli preferencje_uzytkownikow
-        insert_query = """
-            INSERT INTO preferencje_uzytkownikow 
-            (UserID, podstawowe_profilowe, lokalizacja_zdj)
-            VALUES (%s, %s, %s)
-            ON DUPLICATE KEY UPDATE lokalizacja_zdj = VALUES(lokalizacja_zdj)
-        """
-        cursor.execute(insert_query, (user_id, 0, image_name))
+            elif profile_result[0] == 1:
+                # Update lokalizacji zdjęcia użytkownika
+                update_query = "UPDATE preferencje_uzytkownikow SET lokalizacja_zdj = %s WHERE UserID = %s"
+                cursor.execute(update_query, (image_name, user_id))
+        else:
+            # Brak wpisu dla tego użytkownika, wstaw nowy wpis
+            insert_query = """
+                INSERT INTO preferencje_uzytkownikow 
+                (UserID, podstawowe_profilowe, lokalizacja_zdj)
+                VALUES (%s, %s, %s)
+            """
+            cursor.execute(insert_query, (user_id, 0, image_name))
+
         connection.commit()
-
         cursor.close()
 
         return jsonify({"message": "User profile image changed successfully"})
