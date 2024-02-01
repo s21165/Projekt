@@ -1,38 +1,29 @@
-import base64
+import json
 import os
 import threading
-from flask import session, jsonify, request
+import uuid  # potrzebne do generowania unikalnych ID sesji
+import requests
 import bcrypt
 from apscheduler.schedulers.background import BackgroundScheduler
-from flask import Flask, Response, render_template, redirect, url_for, make_response
+from flask import Flask, request, render_template, redirect, url_for, make_response, \
+    flash, jsonify, session
+from flask import Response
 from flask import current_app
-from flask import send_file
 from flask_cors import CORS
-import uuid  # potrzebne do generowania unikalnych ID sesji
-
-from modules.database_connector import DatabaseConnector
-from modules.image_handler import handle_image_upload, change_user_profile
-from modules.product_data import ProductData
-from modules.value_manager import ProductManager
-
 ### from flask_socketio import Namespace
 from flask_socketio import SocketIO
-from modules.advert_module.sharedres.shared import camera_status
-
-import os
-import threading
-import json
-from flask import Flask, request, render_template, send_file, redirect, url_for, send_from_directory, make_response, \
-    flash, jsonify
-from modules.foodIdent_module.foodIdent import load_and_prep_image, pred_and_plot, load_model
 from werkzeug.utils import secure_filename
-from modules.foodIdent_module.foodIdentVideo import start_camera, stop_camera, process_video
-from modules.bot_module.bot import get_bot_response
-from modules.scan_module.gen import generate_qr_code  # ,generate_barcode
-from modules.scan_module.decoder import decode_qr_code  # ,decode_barcode
+
 # from modules.scan_module.forms import BarcodeForm
 from modules.advert_module.monitor import generate_frames
-import sys
+from modules.bot_module.bot import get_bot_response
+from modules.database_connector import DatabaseConnector
+from modules.foodIdent_module.foodIdent import pred_and_plot, load_model
+from modules.foodIdent_module.foodIdentVideo import start_camera, stop_camera, process_video
+from modules.image_handler import handle_image_upload, change_user_profile
+from modules.scan_module.decoder import decode_qr_code  # ,decode_barcode
+from modules.scan_module.gen import generate_qr_code  # ,generate_barcode
+from modules.value_manager import ProductManager
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -1095,6 +1086,56 @@ def change_user_photo():
     except Exception as error:
         return jsonify({"error": str(error)}), 500
 
+    @app.route('/api/update_food_list', methods=['GET'])
+    def update_food_list():
+        try:
+            # Wczytaj zawartość pliku JSON
+            with open('D:/repo/Projekt/Icer/modules/foodIdent_module/food_list.json', 'r') as file:
+                food_list = json.load(file)
+
+            # Tworzenie instancji klasy DatabaseConnector
+            db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+            # Łączenie z bazą danych
+            db_connector.connect()
+
+            connection = db_connector.get_connection()
+            cursor = connection.cursor(dictionary=True)
+
+            # Pobieranie danych produktów z bazy danych
+            select_query = """
+                SELECT nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria
+                FROM Produkty
+                WHERE podstawowe = 1 AND nazwa IN (%s)
+            """
+            # Wykonaj zapytanie z uwzględnieniem listy produktów z pliku JSON
+            cursor.execute(select_query, (','.join(['%s'] * len(food_list)), food_list))
+            products = cursor.fetchall()
+
+            cursor.close()
+            connection.close()
+
+            # Utwórz listę słowników na podstawie wyników zapytania
+            updated_food_list = []
+            for product in products:
+                updated_food_list.append({
+                    "nazwa": product['nazwa'],
+                    "cena": float(product['cena']),
+                    "kalorie": int(product['kalorie']),
+                    "tluszcze": float(product['tluszcze']),
+                    "weglowodany": float(product['weglowodany']),
+                    "bialko": float(product['bialko']),
+                    "kategoria": product['kategoria']
+                })
+
+            # Zapisz zaktualizowane produkty do pliku JSON
+            with open('D:/repo/Projekt/Icer/modules/foodIdent_module/food_list.json', 'w') as file:
+                json.dump(updated_food_list, file, indent=4)
+
+            return jsonify({"message": "Food list updated successfully!"})
+
+        except Exception as error:
+            return jsonify({"error": str(error)}), 500
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -1443,6 +1484,7 @@ def start_camera_route():
 @app.route('/stop_camera', methods=['POST'])
 def stop_camera_route():
     stop_camera()
+    requests.post('http://localhost:5000/api/update_food_list')
     return "Camera stopped."
 
 
