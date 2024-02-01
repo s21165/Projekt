@@ -176,7 +176,10 @@ DELIMITER //
 
 # szybkie tworzenie bazy danych
 
-CREATE PROCEDURE CreateAllTablesAndProcedures()
+DELIMITER //
+
+-- Tworzenie procedury CreateAllTablesAndProcedures
+CREATE PROCEDURE CreateAllTables()
 BEGIN
     -- Wyłączenie bezpiecznego trybu aktualizacji SQL
     SET SQL_SAFE_UPDATES = 0;
@@ -247,7 +250,7 @@ BEGIN
         wielkosc_strony_produktu VARCHAR(255) NOT NULL,
         widocznosc_informacji_o_produkcie BOOLEAN NOT NULL,
         podstawowe_profilowe TINYINT(1) NOT NULL DEFAULT 0,
-        lokalizacja VARCHAR(255),
+        lokalizacja_zdj VARCHAR(255),
         FOREIGN KEY (UserID) REFERENCES Users(id)
     );
 
@@ -259,76 +262,95 @@ BEGIN
     in_cart TINYINT(0) DEFAULT 0,
     ilosc INT
     );
+END //
 
-    -- Tworzenie procedury ModifyProductQuantity
-    CREATE PROCEDURE ModifyProductQuantity(IN p_icerID INT, IN p_userID INT, IN p_action ENUM('add', 'subtract', 'zero', 'remove'))
-    BEGIN
-        DECLARE current_quantity INT;
+-- Tworzenie procedury ModifyProductQuantity
+CREATE PROCEDURE ModifyProductQuantity(IN p_icerID INT, IN p_userID INT, IN p_action ENUM('add', 'subtract', 'zero', 'remove'))
+BEGIN
+    DECLARE current_quantity INT;
 
-        -- Pobieranie aktualnej ilości produktu dla danego wpisu (bazując na ID z tabeli Icer)
-        SELECT ilosc INTO current_quantity FROM Icer WHERE id = p_icerID AND UserID = p_userID;
+    -- Pobieranie aktualnej ilości produktu dla danego wpisu (bazując na ID z tabeli Icer)
+    SELECT ilosc INTO current_quantity FROM Icer WHERE id = p_icerID AND UserID = p_userID;
 
-        -- Zaktualizowanie ilości w zależności od wybranej akcji
-        IF p_action = 'add' THEN
-            SET current_quantity = current_quantity + 1;
-        ELSEIF p_action = 'subtract' AND current_quantity > 0 THEN
-            SET current_quantity = current_quantity - 1;
-        ELSEIF p_action = 'zero' THEN
-            SET current_quantity = 0;
-        ELSEIF p_action = 'remove' THEN
-            DELETE FROM Icer WHERE id = p_icerID AND UserID = p_userID;
-        END IF;
+    -- Zaktualizowanie ilości w zależności od wybranej akcji
+    IF p_action = 'add' THEN
+        SET current_quantity = current_quantity + 1;
+    ELSEIF p_action = 'subtract' AND current_quantity > 0 THEN
+        SET current_quantity = current_quantity - 1;
+    ELSEIF p_action = 'zero' THEN
+        SET current_quantity = 0;
+    ELSEIF p_action = 'remove' THEN
+        DELETE FROM Icer WHERE id = p_icerID AND UserID = p_userID;
+    END IF;
 
-        -- Aktualizacja ilości produktu dla danego wpisu w tabeli Icer
-        UPDATE Icer SET ilosc = current_quantity WHERE id = p_icerID AND UserID = p_userID;
-    END //
+    -- Aktualizacja ilości produktu dla danego wpisu w tabeli Icer
+    UPDATE Icer SET ilosc = current_quantity WHERE id = p_icerID AND UserID = p_userID;
+END //
 
-    -- Tworzenie procedury UpdateTrzeciaWartosc
-    CREATE PROCEDURE UpdateTrzeciaWartosc()
-    BEGIN
-        -- Flagowanie produktów, które już wygasły
-        UPDATE Icer
-        SET trzecia_wartosc = 0
-        WHERE DATE(data_waznosci) < DATE(NOW());
+-- Tworzenie procedury UpdateTrzeciaWartosc
+CREATE PROCEDURE UpdateTrzeciaWartosc()
+BEGIN
+    -- Flagowanie produktów, które już wygasły
+    UPDATE Icer
+    SET trzecia_wartosc = 0
+    WHERE DATE(data_waznosci) < DATE(NOW());
 
-        -- Flagowanie produktów z 1 dniem do końca ważności
-        UPDATE Icer
-        SET trzecia_wartosc = 1
-        WHERE DATE(data_waznosci) = DATE(NOW());
+    -- Flagowanie produktów z 1 dniem do końca ważności
+    UPDATE Icer
+    SET trzecia_wartosc = 1
+    WHERE DATE(data_waznosci) = DATE(NOW());
 
-        -- Flagowanie produktów z 3 dniami do końca ważności
-        UPDATE Icer
-        SET trzecia_wartosc = 2
-        WHERE DATE(data_waznosci) BETWEEN DATE(NOW()) AND DATE(NOW() + INTERVAL 3 DAY);
+    -- Flagowanie produktów z 3 dniami do końca ważności
+    UPDATE Icer
+    SET trzecia_wartosc = 2
+    WHERE DATE(data_waznosci) BETWEEN DATE(NOW()) AND DATE(NOW() + INTERVAL 3 DAY);
 
-        -- Flagowanie produktów z pomiędzy 3 a 7 dni do końca ważności
-        UPDATE Icer
-        SET trzecia_wartosc = 3
-        WHERE DATE(data_waznosci) > DATE(NOW() + INTERVAL 3 DAY) AND DATE(data_waznosci) <= DATE(NOW() + INTERVAL 7 DAY);
+    -- Flagowanie produktów z pomiędzy 3 a 7 dni do końca ważności
+    UPDATE Icer
+    SET trzecia_wartosc = 3
+    WHERE DATE(data_waznosci) > DATE(NOW() + INTERVAL 3 DAY) AND DATE(data_waznosci) <= DATE(NOW() + INTERVAL 7 DAY);
 
-        -- Flagowanie produktów z ponad 7 dni do końca ważności ale mniej niż miesiąc
-        UPDATE Icer
-        SET trzecia_wartosc = 4
-        WHERE DATE(data_waznosci) > DATE(NOW() + INTERVAL 7 DAY);
-    END //
+    -- Flagowanie produktów z ponad 7 dni do końca ważności ale mniej niż miesiąc
+    UPDATE Icer
+    SET trzecia_wartosc = 4
+    WHERE DATE(data_waznosci) > DATE(NOW() + INTERVAL 7 DAY);
+END //
 
-    -- Tworzenie procedury Updatenotification
-    CREATE PROCEDURE Updatenotification()
-    BEGIN
+-- Tworzenie procedury Updatenotification
+DELIMITER //
+
+DELIMITER //
+
+CREATE PROCEDURE Updatenotification()
+BEGIN
+    -- Sprawdzenie, czy procedura została wykonana już dzisiaj
+    DECLARE last_exec_date DATE;
+    SELECT DATE(exec_time) INTO last_exec_date FROM information_schema.events WHERE event_name = 'daily_notification_event';
+    IF last_exec_date != CURDATE() THEN
         -- Ustawienie powiadomienia na 1, gdy trzecia_wartosc jest mniejsza lub równa 2 oraz ilość produktu wynosi 0
         UPDATE Icer
         SET powiadomienie = 1
         WHERE trzecia_wartosc <= 2 OR ilosc = 0;
-    END //
 
-    -- Tworzenie eventu daily_notification_event
-    CREATE EVENT IF NOT EXISTS daily_notification_event
-    ON SCHEDULE EVERY 1 DAY
-    DO
-    BEGIN
-        CALL Updatenotification();
-        CALL
+        -- Ustawienie daty ostatniego wykonania procedury na dzisiaj
+        UPDATE information_schema.events SET exec_time = NOW() WHERE event_name = 'daily_notification_event';
+    END IF;
+END //
 
--- Wywołanie procedury tworzącej tabele i procedury
-CALL CreateAllTablesAndProcedures
+DELIMITER ;
 
+DELIMITER //
+
+CREATE EVENT IF NOT EXISTS daily_notification_event
+ON SCHEDULE EVERY 1 DAY
+DO
+BEGIN
+    CALL Updatenotification();
+    CALL UpdateTrzeciaWartosc();
+END //
+
+DELIMITER ;
+
+
+
+CALL CreateAllTables();

@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ad3a8541-c869-49c8-9153-a52a878e269b" name="Changes" comment="clean up">
+    <list default="true" id="ad3a8541-c869-49c8-9153-a52a878e269b" name="Changes" comment="update notification once a day">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Icer/Database for dummies" beforeDir="false" afterPath="$PROJECT_DIR$/Icer/Database for dummies" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,7 +106,7 @@
       <workItem from="1706371718782" duration="4580000" />
       <workItem from="1706620198153" duration="14529000" />
       <workItem from="1706728160910" duration="5539000" />
-      <workItem from="1706789023540" duration="7086000" />
+      <workItem from="1706789023540" duration="8463000" />
     </task>
     <task id="LOCAL-00001" summary="Change user photo">
       <created>1706636453202</created>
@@ -165,7 +164,14 @@
       <option name="project" value="LOCAL" />
       <updated>1706796239290</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="update notification once a day">
+      <created>1706796769436</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1706796769436</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -178,7 +184,8 @@
     <MESSAGE value="show profile photo" />
     <MESSAGE value="add data to scanned food." />
     <MESSAGE value="clean up" />
-    <option name="LAST_COMMIT_MESSAGE" value="clean up" />
+    <MESSAGE value="update notification once a day" />
+    <option name="LAST_COMMIT_MESSAGE" value="update notification once a day" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
