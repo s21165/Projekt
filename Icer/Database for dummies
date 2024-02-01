@@ -247,7 +247,8 @@ BEGIN
     id INT AUTO_INCREMENT PRIMARY KEY,
     UserID INT,
     produktID INT,
-    in_cart TINYINT(0) DEFAULT 0
+    in_cart TINYINT(0) DEFAULT 0,
+    ilosc INT
     );
 
     -- Tworzenie procedury ModifyProductQuantity
