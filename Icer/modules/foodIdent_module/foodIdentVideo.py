@@ -84,21 +84,30 @@ def pred_and_plot(model, img, class_names, food_list):
     return food_list
    
 
+
 def process_video():
     global camera_running
 
-    # Try to open the webcam
-    cap = cv2.VideoCapture(0)
+    def find_first_available_camera(max_checks=10):
+        for i in range(max_checks):
+            cap = cv2.VideoCapture(i)
+            if cap.isOpened():
+                cap.release()
+                return i
+        return -1
 
-    # Check if the camera is opened successfully
+    camera_id = find_first_available_camera()
+    if camera_id == -1:
+        return "No available cameras found"
+
+    cap = cv2.VideoCapture(camera_id)
     if not cap.isOpened():
-        print("Camera not detected")
-        return
+        return f"Camera with ID {camera_id} could not be opened"
 
     cap.set(cv2.CAP_PROP_CONVERT_RGB, 1.0)  # Ensure frames are in RGB format
     cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))  # Set the codec
 
-    target_frame_rate = 2  # Target frame rate (2 frames per second)
+    target_frame_rate = 5  # Target frame rate (2 frames per second)
     frame_interval = int(1000 / target_frame_rate)  # Interval in milliseconds
 
     last_processed_time = time.time()
@@ -136,20 +145,23 @@ def process_video():
             last_processed_time = current_time
 
     cap.release()
-
+    # Normal termination of the camera process
+    return "Camera Stopped"  
       
 def start_camera():
-    global camera_running, camera_thread
+    global camera_running, camera_thread, camera_status
 
     if not camera_running:
         camera_running = True
+        camera_status = None  # Reset the status
         camera_thread = threading.Thread(target=process_video)
         camera_thread.start()
 
 def stop_camera():
-    global camera_running, camera_thread
+    global camera_running, camera_thread, camera_status
 
     if camera_running:
         camera_running = False
         camera_thread.join()
+        camera_status = "Stopped"
 
