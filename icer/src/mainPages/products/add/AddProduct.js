@@ -1,14 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import axios from 'axios';
 import "./AddProduct.css";
-
-import {useContext} from 'react';
 import {AuthContext} from '../../account/auth-context';
 import {API_URL} from "../../settings/config";
 import {Icon} from "@iconify/react";
 import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {DecodeQrCode} from "../QR/DecodeQrCode";
 import {initializeProduct} from "../hooks/initializeProduct";
 import {submitProduct} from "../API/submitProduct";
 import {handleImageChange} from "../pictures/handleImageChange";
@@ -224,7 +221,7 @@ function AddProduct() {
                                 sendImageToFlask(imageIdentyfication)
                             }}>
                                 <h2>
-                                identyfikuj
+                                    identyfikuj
                                 </h2>
                             </div>
                         </div>

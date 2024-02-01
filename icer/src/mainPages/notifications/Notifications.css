@@ -159,25 +159,27 @@
     justify-content: space-between;
     width:3vw;
 }
-
+/*kontener służący za przerwę między elementami*/
 .spaceBetweenButtonsAndNotifications{
-    position:sticky;
+    position:sticky; /*przyklejony do wskazanej wysokości*/
     bottom:1vh;
     height:0.5vh;
 
 }
+/* kontener z przyciskami */
 .manageButtons {
-    position: sticky;
+    position: sticky; /*przyklejony do wskazanej wysokości*/
     bottom: 0; /* Przyklejenie do dołu kontenera */
     display: flex;
     height:10vh;
-    justify-content: space-around;
+    justify-content: space-around; /* elementy mają równą przestrzeń w okół siebie */
 
     margin: 0 1vw 0.5vh 1vh;
 
     align-items: center;
 
 }
+/* przyciski "odczytaj wszystkie" i  "usuń wszystkie"*/
 .handleReadAllButton,.handleDeleteAllButton{
     position: relative;
 
@@ -186,10 +188,12 @@
     height:100%;
     border-radius: 10px;
 }
+/* przyciski "odczytaj wszystkie" - dodatkowy margines z prawej strony*/
 .handleReadAllButton{
     margin-right:1vw;
 }
+/* przyciski "odczytaj wszystkie" i  "usuń wszystkie" podczas najechania na element*/
 .handleReadAllButton:hover,.handleDeleteAllButton:hover{
 
-    background-color: #38729d;
+    background-color: #38729d; /* zmiana koloru tła */
 }

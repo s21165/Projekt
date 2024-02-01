@@ -79,7 +79,13 @@ function EditAccount(props) {
             <div className="accountInfo"> {/*kontener ze zdjęciem oraz informacjami o użytkowniku*/}
                 <div className="accountPhoto"> {/*kontener ze zdjęciem użytkownika*/}
 
-                    <img src={picGetter} alt="Your Image" className="accountPhotoImage"/> {/*zdjęcie użytkownika*/}
+                    {imagePreview ? (/*Jeśli wybrane zostało zdjęcie do zmiany to pokaż jego podgląd zamiast zdjęcia użytkownika*/
+                        <img
+                            src={imagePreview}
+                            alt="Podgląd"
+                            className="accountPhotoImage"
+                        />
+                    ):<img src={picGetter} alt="Your Image" className="accountPhotoImage"/>  }{/*zdjęcie użytkownika*/}
 
                     <input
                         type="file"

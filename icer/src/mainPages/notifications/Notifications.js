@@ -36,9 +36,9 @@ export function Notifications({small, left}) {
                         <div className="spaceBetweenButtonsAndNotifications"></div> {/*element tworzący przestrzeń między kontenerami*/}
                         <div className="manageButtons">  {/* kontener z przyciskami */}
                             <button onClick={notificationActions.handleReadAllNotifications}
-                                    className="handleReadAllButton"><h2>Odczytaj wszystkie</h2></button>
+                                    className="handleReadAllButton"><h2>odczytaj wszystkie</h2></button>
                             <button onClick={notificationActions.handleRemoveAllNotifications}
-                                    className="handleDeleteAllButton"><h2>Usuń wszystkie</h2></button>
+                                    className="handleDeleteAllButton"><h2>usuń wszystkie</h2></button>
                         </div>
                     </>}
         </>

@@ -8,7 +8,7 @@ export const handleUserImageChange = (e, setImage, setPictureToSend, setImagePre
         // Conversion of image to Base64
         const reader = new FileReader();
         reader.onloadend = () => {
-            setPictureToSend({image_data_base64: reader.result});
+            setPictureToSend(reader.result);
         };
         reader.readAsDataURL(file);
     }
