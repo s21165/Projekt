@@ -483,7 +483,7 @@ def get_icer_shopping():
         # Modyfikacja zapytania SQL, aby pokazywać wszystkie informacje o produkcie
         user_id = user_result['id']
         query = """
-            SELECT Icer.id, Icer.UserID, Icer.produktID, Icer.ilosc,
+            SELECT Icer.id, Icer.UserID, Icer.produktID, Shopping.ilosc,
                    Produkty.nazwa, Produkty.cena, Produkty.kalorie,
                    Produkty.tluszcze, Produkty.weglowodany,
                    Produkty.bialko,Produkty.kategoria
@@ -565,15 +565,15 @@ def edit_shopping_cart():
                 product_id = product_manager.dodaj_produkt(data['nazwa'], data['cena'])
 
                 # Dodanie nowego produktu do koszyka
-                insert_query = "INSERT INTO Shopping (UserID, produktID, in_cart) VALUES (%s, %s, %s)"
+                insert_query = "INSERT INTO Shopping (UserID, produktID, in_cart, ilosc) VALUES (%s, %s, %s, %s)"
                 with db_connector.get_connection().cursor() as cursor:
-                    cursor.execute(insert_query, (user_id, product_id, 1))
+                    cursor.execute(insert_query, (user_id, product_id, 1, data["ilosc"]))
 
                     add_icer_query = """
                         INSERT INTO Icer (UserID, produktID, ilosc, data_dodania)
                         VALUES (%s, %s, %s, NOW())
                     """
-                    cursor.execute(add_icer_query, (user_id, product_id, data['ilosc']))
+                    cursor.execute(add_icer_query, (user_id, product_id, 0))
 
             else:
                 if in_cart_value not in [0, 1]:
@@ -592,9 +592,9 @@ def edit_shopping_cart():
                         cursor.execute(update_query, (in_cart_value, user_id, product_id))
                 else:
                     # Dodanie nowego produktu do koszyka
-                    insert_query = "INSERT INTO Shopping (UserID, produktID, in_cart) VALUES (%s, %s, %s)"
+                    insert_query = "INSERT INTO Shopping (UserID, produktID, in_cart, ilosc) VALUES (%s, %s, %s, %s)"
                     with db_connector.get_connection().cursor() as cursor:
-                        cursor.execute(insert_query, (user_id, product_id, in_cart_value))
+                        cursor.execute(insert_query, (user_id, product_id, in_cart_value, data['ilosc']))
 
         # Zatwierdzenie zmian w bazie danych
         db_connector.get_connection().commit()
