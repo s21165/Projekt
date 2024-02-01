@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ad3a8541-c869-49c8-9153-a52a878e269b" name="Changes" comment="update notification once a day">
+    <list default="true" id="ad3a8541-c869-49c8-9153-a52a878e269b" name="Changes" comment="update profile photo reciving new values">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Icer/Database for dummies" beforeDir="false" afterPath="$PROJECT_DIR$/Icer/Database for dummies" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Icer/mainAPI.py" beforeDir="false" afterPath="$PROJECT_DIR$/Icer/mainAPI.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Icer/modules/image_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/Icer/modules/image_handler.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,7 +107,8 @@
       <workItem from="1706620198153" duration="14529000" />
       <workItem from="1706728160910" duration="5539000" />
       <workItem from="1706789023540" duration="10147000" />
-      <workItem from="1706801516953" duration="5366000" />
+      <workItem from="1706801516953" duration="5607000" />
+      <workItem from="1706808168080" duration="712000" />
     </task>
     <task id="LOCAL-00001" summary="Change user photo">
       <created>1706636453202</created>
@@ -196,7 +194,8 @@
     <MESSAGE value="add data to scanned food." />
     <MESSAGE value="clean up" />
     <MESSAGE value="update notification once a day" />
-    <option name="LAST_COMMIT_MESSAGE" value="update notification once a day" />
+    <MESSAGE value="update profile photo reciving new values" />
+    <option name="LAST_COMMIT_MESSAGE" value="update profile photo reciving new values" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -228,18 +227,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Icer/modules/image_handler.py</url>
-          <line>106</line>
-          <option name="timeStamp" value="12" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Icer/modules/image_handler.py</url>
           <line>61</line>
           <option name="timeStamp" value="13" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>1135</line>
-          <option name="timeStamp" value="14" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Icer/modules/image_handler.py</url>
@@ -250,11 +239,6 @@
           <url>file://$PROJECT_DIR$/Icer/modules/image_handler.py</url>
           <line>67</line>
           <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>1080</line>
-          <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Icer/modules/image_handler.py</url>
@@ -281,11 +265,21 @@
           <line>88</line>
           <option name="timeStamp" value="22" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
+          <line>1134</line>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Icer/modules/image_handler.py</url>
+          <line>108</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Projekt$image_handler.coverage" NAME="image_handler Coverage Results" MODIFIED="1706637585277" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Icer/modules" />
-    <SUITE FILE_PATH="coverage/Projekt$mainAPI.coverage" NAME="mainAPI Coverage Results" MODIFIED="1706807497917" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Icer" />
+    <SUITE FILE_PATH="coverage/Projekt$mainAPI.coverage" NAME="mainAPI Coverage Results" MODIFIED="1706808841124" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Icer" />
   </component>
 </project>
