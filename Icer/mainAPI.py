@@ -1354,19 +1354,26 @@ def video_feed():
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
+@app.route('/receive_data', methods=['POST'])
+def receive_data():
+    data = request.json
+    print("Received data:", data)
+    # Here you can process the data as needed
+    return jsonify({"status": "Data received successfully"})
+
 @app.route('/start_camera_monitoring', methods=['POST'])
 def start_camera_monitoring_route():
     global camera_thread
-
-    # Check if the camera thread does not exist or is not alive
     if camera_thread is None or not camera_thread.is_alive():
-        # Start the camera monitoring in a new thread
         camera_thread = threading.Thread(target=generate_frames)
         camera_thread.start()
+    data = request.json.get('dane')
+    print(data)
+    # Emit data to the frontend
+    socketio.emit('update_status', {'data': data})
+    return {'status': 'Data received'}
 
-    # Redirect to the 'display_video' route after starting the camera monitoring
-    return redirect(url_for('display_video'))
-
+    
 
 @app.route('/display_video')
 def display_video():
@@ -1416,27 +1423,28 @@ def upload_predict():
     return render_template('index.html')
 
 
-# 4 routes for video food identification
+camera_status = "Not Started"
 @app.route('/stream_camera')
 def stream_camera():
     return Response(process_video(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-
 @app.route('/camera_control', methods=['GET'])
 def camera_control():
     return render_template('camera_control.html')
-
 
 @app.route('/start_camera', methods=['POST'])
 def start_camera_route():
     start_camera()
     return "Camera started."
 
-
 @app.route('/stop_camera', methods=['POST'])
 def stop_camera_route():
     stop_camera()
     return "Camera stopped."
+
+@app.route('/check_camera_status')
+def check_camera_status():
+    return jsonify({'status': camera_status})
 
 
 # @app.route('/generate_barcode', methods=['POST'])
