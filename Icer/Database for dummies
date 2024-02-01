@@ -79,7 +79,8 @@ create table Shopping(
 id INT AUTO_INCREMENT PRIMARY KEY,
 UserID INT,
 produktID INT,
-in_cart TINYINT(0) DEFAULT 0);
+in_cart TINYINT(0) DEFAULT 0),
+ilosc INT;
 
 
 DELIMITER //
@@ -147,6 +148,14 @@ DELIMITER //
 
 CREATE PROCEDURE Updatenotification()
 BEGIN
+    -- Sprawdzenie, czy procedura została wykonana już dzisiaj
+    DECLARE last_exec_date DATE;
+    SELECT DATE(exec_time) INTO last_exec_date FROM information_schema.events WHERE event_name = 'daily_notification_event';
+    IF last_exec_date = CURDATE() THEN
+        -- Jeśli procedura została już wykonana dzisiaj, zakończ jej wykonanie
+        LEAVE Updatenotification;
+    END IF;
+
     -- Ustawienie powiadomienia na 1, gdy trzecia_wartosc jest mniejsza lub równa 2 oraz ilość produktu wynosi 0
     UPDATE Icer
     SET powiadomienie = 1
