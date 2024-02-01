@@ -1354,6 +1354,13 @@ def video_feed():
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
+@app.route('/receive_data', methods=['POST'])
+def receive_data():
+    data = request.json
+    print("Received data:", data)
+    # Here you can process the data as needed
+    return jsonify({"status": "Data received successfully"})
+
 @app.route('/start_camera_monitoring', methods=['POST'])
 def start_camera_monitoring_route():
     global camera_thread
@@ -1366,6 +1373,7 @@ def start_camera_monitoring_route():
     socketio.emit('update_status', {'data': data})
     return {'status': 'Data received'}
 
+    
 
 @app.route('/display_video')
 def display_video():
