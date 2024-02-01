@@ -1074,12 +1074,11 @@ def change_user_photo():
 
         # Pobranie danych obrazu z zapytania
         data = request.get_json()
-        image_data_base64 = data['image_data_base64']
+        image_data = data['image_data_base64']
         user_id, username, response, status_code = DatabaseConnector.get_user_id_by_username(cursor, session)
-        replace_existing = data.get('replace_existing', False)
 
         # Wywołanie funkcji do zmiany zdjęcia użytkownika
-        response = change_user_profile(db_connector, user_id, image_data_base64, replace_existing)
+        response = change_user_profile(db_connector, user_id, image_data)
 
         return response
 

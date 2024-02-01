@@ -40,7 +40,7 @@ def handle_image_upload(db_connector, image_data_base64, user_id, product_id, re
             connection.commit()
 
         # Zapis informacji o zdjęciu do bazy danych w tabeli UserPhotos
-        insert_query = "INSERT INTO UserPhotos (produktID, userID, lokalizacja) VALUES (%s, %s, %s)"
+        insert_query = "INSERT INTO UserPhotos (produktID, userID, lokalizacja_zdj) VALUES (%s, %s, %s)"
         cursor.execute(insert_query, (product_id, user_id, image_name))
         connection.commit()
 
@@ -86,20 +86,20 @@ def change_user_profile(db_connector, user_id, image_data_base64):
         cursor.execute(check_profile_query, (user_id,))
         profile_result = cursor.fetchone()
 
-        if profile_result and profile_result['podstawowe_profilowe'] == 0:
+        if profile_result and profile_result[0] == 0:
             # Usunięcie aktualnego zdjęcia użytkownika
-            delete_query = "UPDATE preferencje_uzytkownikow SET lokalizacja = NULL WHERE UserID = %s"
+            delete_query = "UPDATE preferencje_uzytkownikow SET lokalizacja_zdj = NULL WHERE UserID = %s"
             cursor.execute(delete_query, (user_id,))
             connection.commit()
 
         # Zapis informacji o zdjęciu do bazy danych w tabeli preferencje_uzytkownikow
         insert_query = """
             INSERT INTO preferencje_uzytkownikow 
-            (UserID, podstawowe_profilowe, lokalizacja)
+            (UserID, podstawowe_profilowe, lokalizacja_zdj)
             VALUES (%s, %s, %s)
-            ON DUPLICATE KEY UPDATE lokalizacja = VALUES(lokalizacja)
+            ON DUPLICATE KEY UPDATE lokalizacja_zdj = VALUES(lokalizacja_zdj)
         """
-        cursor.execute(insert_query, (user_id, 1, image_name))
+        cursor.execute(insert_query, (user_id, 0, image_name))
         connection.commit()
 
         cursor.close()

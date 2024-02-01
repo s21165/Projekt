@@ -243,16 +243,16 @@ BEGIN
     );
 
     -- Tworzenie tabeli preferencje_uzytkownikow
-    CREATE TABLE IF NOT EXISTS preferencje_uzytkownikow (
-        id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-        UserID INT NOT NULL,
-        wielkosc_lodowki VARCHAR(255) NOT NULL,
-        wielkosc_strony_produktu VARCHAR(255) NOT NULL,
-        widocznosc_informacji_o_produkcie BOOLEAN NOT NULL,
-        podstawowe_profilowe TINYINT(1) NOT NULL DEFAULT 0,
-        lokalizacja_zdj VARCHAR(255),
-        FOREIGN KEY (UserID) REFERENCES Users(id)
-    );
+    CREATE TABLE preferencje_uzytkownikow (
+      id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+      UserID INT NOT NULL,
+      wielkosc_lodowki VARCHAR(255) NOT NULL DEFAULT 'srednie',
+      wielkosc_strony_produktu VARCHAR(255) NOT NULL DEFAULT 'srednie',
+      widocznosc_informacji_o_produkcie BOOLEAN NOT NULL DEFAULT 1,
+      podstawowe_profilowe TINYINT(1) NOT NULL DEFAULT 1,
+      lokalizacja_zdj VARCHAR(255),
+      FOREIGN KEY (UserID) REFERENCES Users(id)
+);
 
     -- Tworzenie tabeli Shopping
     CREATE TABLE IF NOT EXISTS Shopping(
@@ -263,6 +263,7 @@ BEGIN
     ilosc INT
     );
 END //
+
 
 -- Tworzenie procedury ModifyProductQuantity
 CREATE PROCEDURE ModifyProductQuantity(IN p_icerID INT, IN p_userID INT, IN p_action ENUM('add', 'subtract', 'zero', 'remove'))
