@@ -40,7 +40,7 @@ def handle_image_upload(db_connector, image_data_base64, user_id, product_id, re
             connection.commit()
 
         # Zapis informacji o zdjęciu do bazy danych w tabeli UserPhotos
-        insert_query = "INSERT INTO UserPhotos (produktID, userID, lokalizacja_zdj) VALUES (%s, %s, %s)"
+        insert_query = "INSERT INTO UserPhotos (produktID, userID, lokalizacja) VALUES (%s, %s, %s)"
         cursor.execute(insert_query, (product_id, user_id, image_name))
         connection.commit()
 
