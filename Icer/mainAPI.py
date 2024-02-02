@@ -1087,57 +1087,56 @@ def change_user_photo():
     except Exception as error:
         return jsonify({"error": str(error)}), 500
 
-    @app.route('/api/update_food_list', methods=['GET'])
-    def update_food_list():
-        try:
-            # Wczytaj zawartość pliku JSON
-            with open('D:/repo/Projekt/Icer/modules/foodIdent_module/food_list.json', 'r') as file:
-                food_list = json.load(file)
 
-            # Tworzenie instancji klasy DatabaseConnector
-            db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
-            # Łączenie z bazą danych
-            db_connector.connect()
+@app.route('/api/update_food_list', methods=['GET'])
+def update_food_list():
+    try:
+        # Wczytaj zawartość pliku JSON
+        with open('D:/repo/Projekt/Icer/modules/foodIdent_module/food_list.json', 'r') as file:
+            food_list = json.load(file)
 
-            connection = db_connector.get_connection()
-            cursor = connection.cursor(dictionary=True)
+        # Tworzenie instancji klasy DatabaseConnector
+        db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+        # Łączenie z bazą danych
+        db_connector.connect()
 
-            # Pobieranie danych produktów z bazy danych
-            select_query = """
-                    SELECT nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria
-                    FROM Produkty
-                    WHERE podstawowe = 1 AND nazwa IN (%s)
-                """
-            # Wykonaj zapytanie z uwzględnieniem listy produktów z pliku JSON
-            cursor.execute(select_query, (','.join(['%s'] * len(food_list)), food_list))
-            products = cursor.fetchall()
+        connection = db_connector.get_connection()
+        cursor = connection.cursor(dictionary=True)
 
-            cursor.close()
-            connection.close()
+        # Pobieranie danych produktów z bazy danych
+        select_query = """
+                SELECT nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria
+                FROM Produkty
+                WHERE podstawowe = 1 AND nazwa IN (%s)
+            """
+        # Wykonaj zapytanie z uwzględnieniem listy produktów z pliku JSON
+        cursor.execute(select_query, (','.join(['%s'] * len(food_list)), food_list))
+        products = cursor.fetchall()
 
-            # Utwórz listę słowników na podstawie wyników zapytania
-            updated_food_list = []
-            for product in products:
-                updated_food_list.append({
-                    "nazwa": product['nazwa'],
-                    "cena": float(product['cena']),
-                    "kalorie": int(product['kalorie']),
-                    "tluszcze": float(product['tluszcze']),
-                    "weglowodany": float(product['weglowodany']),
-                    "bialko": float(product['bialko']),
-                    "kategoria": product['kategoria']
-                })
+        cursor.close()
+        connection.close()
 
-            # Zapisz zaktualizowane produkty do pliku JSON
-            with open('D:/repo/Projekt/Icer/modules/foodIdent_module/food_list.json', 'w') as file:
-                json.dump(updated_food_list, file, indent=4)
+        # Utwórz listę słowników na podstawie wyników zapytania
+        updated_food_list = []
+        for product in products:
+            updated_food_list.append({
+                "nazwa": product['nazwa'],
+                "cena": float(product['cena']),
+                "kalorie": int(product['kalorie']),
+                "tluszcze": float(product['tluszcze']),
+                "weglowodany": float(product['weglowodany']),
+                "bialko": float(product['bialko']),
+                "kategoria": product['kategoria']
+            })
 
-            return jsonify({"message": "Food list updated successfully!"})
+        # Zapisz zaktualizowane produkty do pliku JSON
+        with open('D:/repo/Projekt/Icer/modules/foodIdent_module/food_list.json', 'w') as file:
+            json.dump(updated_food_list, file, indent=4)
 
-        except Exception as error:
-            return jsonify({"error": str(error)}), 500
+        return jsonify({"message": "Food list updated successfully!"})
 
-
+    except Exception as error:
+        return jsonify({"error": str(error)}), 500
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -1153,8 +1152,6 @@ def login():
             session['session_id'] = session_id  # Przechowywanie ID sesji
             print("sesja" + session['session_id'] + "sessionid: " + session_id)
             return jsonify({"message": "Login successful", "session_id": session_id})
-
-
         else:
             return jsonify({"message": "Invalid credentials"}), 401
     else:
@@ -1422,7 +1419,7 @@ def start_camera_monitoring_route():
     socketio.emit('update_status', {'data': data})
     return {'status': 'Data received'}
 
-    
+
 
 @app.route('/display_video')
 def display_video():
@@ -1489,15 +1486,27 @@ def upload_predict():
 camera_status = "Not Started"
 @app.route('/stream_camera')
 def stream_camera():
-    return Response(process_video(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    # Przykładowe pobranie nazwy użytkownika, należy ją dostosować do Twojego kodu
+    username = session.get('username', 'Guest')
+    return Response(process_video(username), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/camera_control', methods=['GET'])
 def camera_control():
     return render_template('camera_control.html')
 
+
 @app.route('/start_camera', methods=['POST'])
 def start_camera_route():
-    start_camera()
+    # Pobierz nazwę użytkownika z sesji
+    username = session.get('username', None)
+
+    # Sprawdź, czy nazwa użytkownika została pobrana poprawnie
+    if username is None:
+        return jsonify({"error": "Username not found in session"}), 400
+
+    # Wywołaj funkcję pred_and_plot, przekazując nazwę użytkownika
+    start_camera(username)
+
     return "Camera started."
 
 @app.route('/stop_camera', methods=['POST'])
