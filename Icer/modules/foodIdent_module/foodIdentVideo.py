@@ -66,7 +66,22 @@ def load_and_prep_image(filename, img_shape=224):
     return img
 
 
-def pred_and_plot(models, img, class_names, food_list):
+def pred_and_plot(models, img, class_names, food_list, session):
+    # Connect to the database
+    db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
+    db_connector.connect()
+    connection = db_connector.get_connection()
+    if not connection:
+        raise ConnectionError("Failed to establish a connection with the database.")
+    cursor = connection.cursor(dictionary=True)
+    if not cursor:
+        raise Exception("Failed to create a cursor for the database.")
+
+    # Retrieve the username of the logged-in user
+    user_id, username, response, status_code = DatabaseConnector.get_user_id_by_username(cursor, session)
+    if response:
+        return response, status_code  # Assuming this handles errors or redirects
+
     img_tensor = tf.convert_to_tensor(img, dtype=tf.float32)
     if len(img_tensor.shape) == 3:
         img_tensor = tf.expand_dims(img_tensor, axis=0)
@@ -77,7 +92,7 @@ def pred_and_plot(models, img, class_names, food_list):
 
     with ThreadPoolExecutor(max_workers=len(models)) as executor:
         futures = {executor.submit(model_predict, model, img_tensor): model for model in models}
-        
+
         for future in as_completed(futures):
             try:
                 pred, pred_class_index = future.result()
@@ -88,17 +103,17 @@ def pred_and_plot(models, img, class_names, food_list):
             except Exception as e:
                 print(f"Error in model prediction: {e}")
 
+    # Logic to determine the predicted class remains the same...
     # Determine the class with the most votes
     max_votes = max(votes.values())
     winners = [class_name for class_name, vote in votes.items() if vote == max_votes]
 
-    # If there's a tie or no majority, use the highest average probability from detailed_predictions
     if len(winners) != 1:
         avg_probabilities = {class_name: 0 for class_name in class_names}
         for pred, _, pred_class_name in detailed_predictions:
             avg_probabilities[pred_class_name] += np.max(pred)
         for class_name in avg_probabilities:
-            avg_probabilities[class_name] /= len(models)
+            avg_probabilities[class_name] /= votes.values().count(max_votes)  # Adjust this line if needed
         pred_class = max(avg_probabilities, key=avg_probabilities.get)
     else:
         pred_class = winners[0]
@@ -109,16 +124,12 @@ def pred_and_plot(models, img, class_names, food_list):
         food_list.append(pred_class)
 
     current_dir = os.path.dirname(__file__)
-
-    # Calculate the absolute path to the 'static/scanned' directory
-    project_root = os.path.abspath(os.path.join(current_dir, '..', '..'))  # Adjust '..' as needed
+    project_root = os.path.abspath(os.path.join(current_dir, '..', '..'))
     save_dir = os.path.join(project_root, 'static', 'scanned')
-
-    # Create the directory if it doesn't exist
     os.makedirs(save_dir, exist_ok=True)
 
-    # Specify the file path within the 'static/scanned' directory
-    json_file_path = os.path.join(save_dir, 'food_list.json')
+    # Use the username to name the JSON file
+    json_file_path = os.path.join(save_dir, f'{username}_food_list.json')
 
     # Save the food_list to the specified file path
     with open(json_file_path, 'w') as json_file:

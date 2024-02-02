@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import json
+from modules.database_connector import DatabaseConnector
 
 def load_and_prep_image(filename, img_shape=224):
   # Read the image file
@@ -19,47 +20,38 @@ def load_and_prep_image(filename, img_shape=224):
 
   # Return the preprocessed image
   return img
-  
 
-def pred_and_plot(model, filename, class_names):
+
+def pred_and_plot(model, filename, class_names,username):
     # Load and preprocess the image
     img = load_and_prep_image(filename)
-    
+
     # Make a prediction using the model
     pred = model.predict(tf.expand_dims(img, axis=0))
     print("Prediction array:", pred)
 
     pred_class = None
     if pred is not None and len(pred) > 0:
-        # Get the maximum probability from the prediction
-        max_pred_value = np.max(pred)
-
-        # Check if the maximum probability is above the threshold
-        if max_pred_value >= 0.60:
-            # Get the predicted class index
-            pred_class_index = tf.argmax(pred, axis=1).numpy()[0]
-            
-            # Get the corresponding class name from class_names list
-            pred_class = class_names[pred_class_index]
+        max_pred_value = np.max(pred)  # Get the maximum probability from the prediction
+        if max_pred_value >= 0.60:  # Check if the max probability is above the threshold
+            pred_class_index = tf.argmax(pred, axis=1).numpy()[0]  # Get the predicted class index
+            pred_class = class_names[pred_class_index]  # Get the corresponding class name
         else:
             print("Prediction confidence is too low.")
 
+
+
     # Get the directory of the current script
     current_dir = os.path.dirname(__file__)
-
-    # Calculate the absolute path to the 'static/scanned' directory
     project_root = os.path.abspath(os.path.join(current_dir, '..', '..'))  # Adjust '..' as needed
     save_dir = os.path.join(project_root, 'static', 'scanned')
+    os.makedirs(save_dir, exist_ok=True)  # Create the directory if it doesn't exist
 
-    # Create the directory if it doesn't exist
-    os.makedirs(save_dir, exist_ok=True)
+    # Use the username to name the JSON file
+    json_file_path = os.path.join(save_dir, f'{username}_prediction_result.json')
 
-    # Specify the file path within the 'static/scanned' directory
-    json_file_path = os.path.join(save_dir, 'prediction_result.json')
-
-    # Save the prediction result to a JSON file
+    # Save the prediction result to the specified file path
     prediction_result = {"predicted_class": pred_class}
-
     with open(json_file_path, 'w') as json_file:
         json.dump(prediction_result, json_file, indent=4)
 

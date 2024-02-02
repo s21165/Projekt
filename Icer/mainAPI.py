@@ -25,6 +25,8 @@ from modules.scan_module.decoder import decode_qr_code  # ,decode_barcode
 from modules.scan_module.gen import generate_qr_code  # ,generate_barcode
 from modules.value_manager import ProductManager
 
+
+
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -1102,10 +1104,10 @@ def change_user_photo():
 
             # Pobieranie danych produktów z bazy danych
             select_query = """
-                SELECT nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria
-                FROM Produkty
-                WHERE podstawowe = 1 AND nazwa IN (%s)
-            """
+                    SELECT nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria
+                    FROM Produkty
+                    WHERE podstawowe = 1 AND nazwa IN (%s)
+                """
             # Wykonaj zapytanie z uwzględnieniem listy produktów z pliku JSON
             cursor.execute(select_query, (','.join(['%s'] * len(food_list)), food_list))
             products = cursor.fetchall()
@@ -1136,13 +1138,13 @@ def change_user_photo():
             return jsonify({"error": str(error)}), 500
 
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         data = request.get_json()
         username = data['username']
         password = data['password']
-        print("funkcja login")
         # Sprawdzanie, czy użytkownik istnieje w bazie danych
         if check_user(username, password):
             # Utworzenie sesji dla zalogowanego użytkownika
@@ -1431,6 +1433,20 @@ def display_video():
 @app.route('/upload_image', methods=['GET', 'POST'])
 def upload_predict():
     # Check if the request method is POST
+
+    # Uzyskanie połączenia z bazą danych
+    connection = db_connector.get_connection()
+    if not connection:
+        raise ConnectionError("Failed to establish a connection with the database.")
+
+    cursor = connection.cursor(dictionary=True)
+    if not cursor:
+        raise Exception("Failed to create a cursor for the database.")
+
+    # Sprawdzenie, czy użytkownik jest zalogowany
+    user_id, username, response, status_code = DatabaseConnector.get_user_id_by_username(cursor, session)
+
+
     if request.method == 'POST':
         # Check if 'file' is in the request files
         if 'file' not in request.files:
@@ -1454,7 +1470,7 @@ def upload_predict():
             file.save(file_path)
 
             # Make a prediction using the uploaded image
-            pred_class = pred_and_plot(model, file_path, class_names)
+            pred_class = pred_and_plot(model, file_path, class_names,username)
 
             # Generate the URL for the saved image
             image_url = url_for('static', filename='uploads/' + filename)

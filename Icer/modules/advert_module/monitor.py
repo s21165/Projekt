@@ -3,7 +3,7 @@ import numpy as np
 import winsound
 import time
 import requests
-from mainAPI import socketio
+#from mainAPI import socketio
 
 
 
