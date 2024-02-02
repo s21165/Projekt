@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import cv2
 import os
 import json
@@ -15,17 +16,35 @@ with open(json_file_path, 'r') as json_file:
 class_names = data.get('class_names', [])
 
 
-def load_model(model_path):
+def load_models(model_paths):
+    models = []
     current_directory = os.path.dirname(os.path.abspath(__file__))
-    model_file_path = os.path.join(current_directory, model_path)
-    model = tf.keras.models.load_model(model_file_path)
-    return model
+    
+    for model_path in model_paths:
+        model_file_path = os.path.join(current_directory, model_path)
+        model = tf.keras.models.load_model(model_file_path)
+        models.append(model)
+    
+    return models
 
-model = load_model('model3.h5')  
+model_paths = ["model_1.h5", "model_2.h5"]
+models = load_models(model_paths) 
 
 # Global variables to control the camera thread
 camera_thread = None
 camera_running = False
+
+def predict_with_model(model, img_tensor):
+    pred = model.predict(img_tensor)
+    pred_class_index = tf.argmax(pred, axis=1).numpy()[0]
+    return pred, pred_class_index
+    
+def model_predict(model, img_tensor):
+    # Predict and return both the prediction and class index
+    pred = model.predict(img_tensor)
+    pred_class_index = tf.argmax(pred, axis=1).numpy()[0]
+    return pred, pred_class_index
+    
 
 def load_and_prep_image(filename, img_shape=224):
     # Read the image file
@@ -47,37 +66,61 @@ def load_and_prep_image(filename, img_shape=224):
     return img
 
 
-def pred_and_plot(model, img, class_names, food_list):
-    # Ensure img is a tensor
+def pred_and_plot(models, img, class_names, food_list):
     img_tensor = tf.convert_to_tensor(img, dtype=tf.float32)
-
-    # Check if the tensor needs to be expanded to include batch dimension
     if len(img_tensor.shape) == 3:
         img_tensor = tf.expand_dims(img_tensor, axis=0)
 
-    # Make a prediction using the model
-    pred = model.predict(img_tensor)
+    votes = {class_name: 0 for class_name in class_names}
+    probabilities = []
+    detailed_predictions = []
 
-    # Get the index and value of the highest probability in the prediction array
-    pred_class_index = tf.argmax(pred, axis=1).numpy()[0]
-    max_pred_value = np.max(pred)
+    with ThreadPoolExecutor(max_workers=len(models)) as executor:
+        futures = {executor.submit(model_predict, model, img_tensor): model for model in models}
+        
+        for future in as_completed(futures):
+            try:
+                pred, pred_class_index = future.result()
+                pred_class_name = class_names[pred_class_index]
+                votes[pred_class_name] += 1
+                probabilities.append(np.max(pred))
+                detailed_predictions.append((pred, pred_class_index, pred_class_name))
+            except Exception as e:
+                print(f"Error in model prediction: {e}")
 
-    if max_pred_value >= 0.60:
-        # Get the corresponding class name from class_names list
-        pred_class = class_names[pred_class_index]
+    # Determine the class with the most votes
+    max_votes = max(votes.values())
+    winners = [class_name for class_name, vote in votes.items() if vote == max_votes]
 
-        # Check if this food item is not already in the list
-        if pred_class not in food_list:
-            # Add to the list
-            food_list.append(pred_class)
+    # If there's a tie or no majority, use the highest average probability from detailed_predictions
+    if len(winners) != 1:
+        avg_probabilities = {class_name: 0 for class_name in class_names}
+        for pred, _, pred_class_name in detailed_predictions:
+            avg_probabilities[pred_class_name] += np.max(pred)
+        for class_name in avg_probabilities:
+            avg_probabilities[class_name] /= len(models)
+        pred_class = max(avg_probabilities, key=avg_probabilities.get)
+    else:
+        pred_class = winners[0]
 
-    # Get the directory of the current script
+    max_pred_value = max(probabilities)
+
+    if max_pred_value >= 0.70 and pred_class not in food_list:
+        food_list.append(pred_class)
+
     current_dir = os.path.dirname(__file__)
 
-    # Specify the path to write the JSON file in the current directory
-    json_file_path = os.path.join(current_dir, 'food_list.json')
+    # Calculate the absolute path to the 'static/scanned' directory
+    project_root = os.path.abspath(os.path.join(current_dir, '..', '..'))  # Adjust '..' as needed
+    save_dir = os.path.join(project_root, 'static', 'scanned')
 
-    # Save the food list to a JSON file
+    # Create the directory if it doesn't exist
+    os.makedirs(save_dir, exist_ok=True)
+
+    # Specify the file path within the 'static/scanned' directory
+    json_file_path = os.path.join(save_dir, 'food_list.json')
+
+    # Save the food_list to the specified file path
     with open(json_file_path, 'w') as json_file:
         json.dump(food_list, json_file, indent=4)
 
@@ -107,7 +150,7 @@ def process_video():
     cap.set(cv2.CAP_PROP_CONVERT_RGB, 1.0)  # Ensure frames are in RGB format
     cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))  # Set the codec
 
-    target_frame_rate = 5  # Target frame rate (2 frames per second)
+    target_frame_rate = 4  # Target frame rate
     frame_interval = int(1000 / target_frame_rate)  # Interval in milliseconds
 
     last_processed_time = time.time()
@@ -122,16 +165,17 @@ def process_video():
             if not ret:
                 break
 
-            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            resized_frame = cv2.resize(frame, (224, 224))
-            preprocessed_frame = resized_frame / 255.0
-            preprocessed_frame = preprocessed_frame.reshape((1, 224, 224, 3))
+            # Save the captured frame as a temporary file to use with load_and_prep_image
+            temp_filename = 'temp_frame.jpg'
+            cv2.imwrite(temp_filename, frame)  # Save the frame
+            preprocessed_frame = load_and_prep_image(temp_filename)
 
-            # Make a food recognition prediction
-            predicted_class = pred_and_plot(model, preprocessed_frame, class_names, food_list)
+            # Make a food recognition prediction using the ensemble of models
+            predicted_food_list = pred_and_plot(models, preprocessed_frame, class_names, food_list)
 
             # Display the result on the frame
-            display_text = f'Food: {predicted_class}' if predicted_class else 'Food: Uncertain'
+            # Adjust this part as necessary to display your desired text
+            display_text = f'Food: {predicted_food_list[-1]}' if predicted_food_list else 'Food: Uncertain'
             cv2.putText(frame, display_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
             # Convert the frame to JPEG format
@@ -146,7 +190,7 @@ def process_video():
 
     cap.release()
     # Normal termination of the camera process
-    return "Camera Stopped"  
+    return "Camera Stopped"
       
 def start_camera():
     global camera_running, camera_thread, camera_status
@@ -165,3 +209,119 @@ def stop_camera():
         camera_thread.join()
         camera_status = "Stopped"
 
+
+
+
+
+
+
+# def load_model(model_path):
+    # current_directory = os.path.dirname(os.path.abspath(__file__))
+    # model_file_path = os.path.join(current_directory, model_path)
+    # model = tf.keras.models.load_model(model_file_path)
+    # return model
+
+# model = load_model('model3.h5')  
+
+
+# def pred_and_plot(model, img, class_names, food_list):
+
+    # img_tensor = tf.convert_to_tensor(img, dtype=tf.float32)
+
+
+    # if len(img_tensor.shape) == 3:
+        # img_tensor = tf.expand_dims(img_tensor, axis=0)
+
+
+    # pred = model.predict(img_tensor)
+
+
+    # pred_class_index = tf.argmax(pred, axis=1).numpy()[0]
+    # max_pred_value = np.max(pred)
+
+    # if max_pred_value >= 0.60:
+
+        # pred_class = class_names[pred_class_index]
+
+
+        # if pred_class not in food_list:
+
+            # food_list.append(pred_class)
+
+
+    # current_dir = os.path.dirname(__file__)
+
+
+    # json_file_path = os.path.join(current_dir, 'food_list.json')
+
+
+    # with open(json_file_path, 'w') as json_file:
+        # json.dump(food_list, json_file, indent=4)
+
+    # return food_list
+    
+    
+    
+    
+    # def process_video():
+    # global camera_running
+
+    # def find_first_available_camera(max_checks=10):
+        # for i in range(max_checks):
+            # cap = cv2.VideoCapture(i)
+            # if cap.isOpened():
+                # cap.release()
+                # return i
+        # return -1
+
+    # camera_id = find_first_available_camera()
+    # if camera_id == -1:
+        # return "No available cameras found"
+
+    # cap = cv2.VideoCapture(camera_id)
+    # if not cap.isOpened():
+        # return f"Camera with ID {camera_id} could not be opened"
+
+    # cap.set(cv2.CAP_PROP_CONVERT_RGB, 1.0)  # Ensure frames are in RGB format
+    # cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))  # Set the codec
+
+    # target_frame_rate = 5  # Target frame rate (2 frames per second)
+    # frame_interval = int(1000 / target_frame_rate)  # Interval in milliseconds
+
+    # last_processed_time = time.time()
+
+    # while camera_running:
+        # current_time = time.time()
+        # elapsed_time = current_time - last_processed_time
+
+        # if elapsed_time * 1000 >= frame_interval:
+            # ret, frame = cap.read()
+
+            # if not ret:
+                # break
+
+            # frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            # resized_frame = cv2.resize(frame, (224, 224))
+            # preprocessed_frame = resized_frame / 255.0
+            # preprocessed_frame = preprocessed_frame.reshape((1, 224, 224, 3))
+
+
+            # predicted_class = pred_and_plot(model, preprocessed_frame, class_names, food_list)
+
+
+            # display_text = f'Food: {predicted_class}' if predicted_class else 'Food: Uncertain'
+            # cv2.putText(frame, display_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
+
+            # ret, buffer = cv2.imencode('.jpg', frame)
+            # frame = buffer.tobytes()
+
+
+            # yield (b'--frame\r\n'
+                   # b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+            # last_processed_time = current_time
+
+    # cap.release()
+
+    # return "Camera Stopped"  
