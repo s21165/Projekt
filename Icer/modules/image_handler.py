@@ -99,8 +99,8 @@ def change_user_profile(db_connector, user_id, image_data_base64):
 
             elif profile_result[0] == 1:
                 # Update lokalizacji zdjęcia użytkownika
-                update_query = "UPDATE preferencje_uzytkownikow SET lokalizacja_zdj = %s WHERE UserID = %s"
-                cursor.execute(update_query, (image_name, user_id))
+                update_query = "UPDATE preferencje_uzytkownikow SET lokalizacja_zdj = %s, podstawowe_profilowe=%s WHERE UserID = %s"
+                cursor.execute(update_query, (image_name, 0, user_id))
         else:
             # Brak wpisu dla tego użytkownika, wstaw nowy wpis
             insert_query = """
