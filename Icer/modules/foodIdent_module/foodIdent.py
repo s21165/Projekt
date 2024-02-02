@@ -47,15 +47,22 @@ def pred_and_plot(model, filename, class_names):
     # Get the directory of the current script
     current_dir = os.path.dirname(__file__)
 
-    # Specify the path to write the JSON file in the current directory
-    json_file_path = os.path.join(current_dir, 'prediction_result.json')
+    # Calculate the absolute path to the 'static/scanned' directory
+    project_root = os.path.abspath(os.path.join(current_dir, '..', '..'))  # Adjust '..' as needed
+    save_dir = os.path.join(project_root, 'static', 'scanned')
+
+    # Create the directory if it doesn't exist
+    os.makedirs(save_dir, exist_ok=True)
+
+    # Specify the file path within the 'static/scanned' directory
+    json_file_path = os.path.join(save_dir, 'prediction_result.json')
 
     # Save the prediction result to a JSON file
     prediction_result = {"predicted_class": pred_class}
-    
+
     with open(json_file_path, 'w') as json_file:
         json.dump(prediction_result, json_file, indent=4)
-    
+
     return pred_class
 
 
