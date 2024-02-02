@@ -7,6 +7,7 @@ import {AuthProvider} from "./mainPages/account/auth-context";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
+//rejestracja serviceWorker - pozwala na PWA(Progressive Web Application)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register(`${process.env.PUBLIC_URL}/sw.js`).then(registration => {
@@ -16,11 +17,13 @@ if ('serviceWorker' in navigator) {
         });
     });
 }
+//tworzenie podstawy - "korzenia"
 const root = ReactDOM.createRoot(document.getElementById('root'));
+//renderuje drzewo elementów:
 root.render(
-  <React.StrictMode>
-      <AuthProvider>
-            <App />
+  <React.StrictMode>{/* jest narzędziem do wskazywania potencjalnych problemów w aplikacji*/}
+      <AuthProvider>{/* Jest to komponent kontekstowy, który dostarcza logikę i stan uwierzytelniania dla pozostałych komponentów w drzewie*/}
+            <App /> {/* główny komponent aplikacji */}
       </AuthProvider>
   </React.StrictMode>
 );

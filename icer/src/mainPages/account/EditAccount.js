@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 import './editAccount.css';
 import face from "../../data/face.jpg";
@@ -12,6 +12,7 @@ import {PictureGetter} from "../products/pictures/PictureGetter";
 import {AccountPictureGetter} from "./hooks/AccountPictureGetter";
 import {handleUserImageChange} from "./hooks/handleUserImageChange";
 import settingsContext from "../settings/SettingsContext";
+import SettingsContext from "../settings/SettingsContext";
 
 
 function EditAccount(props) {
@@ -19,18 +20,21 @@ function EditAccount(props) {
     const {user} = useContext(AuthContext);
     //przypisuję sesję aktualnego użytkownika do zmiennej
     const sessionId = user ? user.sessionId : null;
-    const {profilePicture} = useContext(settingsContext);
+    const {profilePicture,defaultProfile,refresh,setRefresh} = useContext(SettingsContext);
     const [image,setImage] = useState('');
     const [product,setProduct] = useState('');
     const [pictureToSend,setPictureToSend]= useState('');
     const [imagePreview,setImagePreview]= useState('');
+    const navigate = useNavigate()
+
     //ustawiamy podstawowe informacje formularza
     const [formData, setFormData] = useState({
         username: '',
         email: props.email,
         new_password: ''
     });
-    const picGetter = AccountPictureGetter(image,setImage,face)
+    const picGetter = AccountPictureGetter(image,setImage, defaultProfile , profilePicture)
+
     //asynchroniczna funkcja wywoływana podczas złożenia formularza - przyjmuje event
     const handleSubmit = async (event) => {
         // funkcja, która wstrzymuje automatyczne odświeżenie
@@ -44,11 +48,12 @@ function EditAccount(props) {
                 sessionId: sessionId
             });
             //jeśli dostaje odpowiedź
-            if (response.data.message)
+            if (response.data)
                 //powiadomienie
                 changeUserPhoto();
                 toast.success('dane zostały zaktualizowane');
-
+                setRefresh(!refresh);
+                navigate('/Konto')
             // jeśli dostaje error
         } catch (error) {
             //powiadomienie

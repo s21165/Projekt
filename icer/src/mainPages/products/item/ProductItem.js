@@ -34,7 +34,7 @@ function ProductItem({
     const {getFridgeSizeIndex,
         getProductsSizeIndex,infoProducts} = useContext(SettingsContext)
 
-    const picGetter = PictureGetter(image,setImage,data.zdjecie_lokalizacja)
+    const picGetter = PictureGetter(image,setImage,data?.zdjecie_lokalizacja)
     const mediumProductsCountSetting =getProductsSizeIndex();
     const smallProductsCountSetting =getFridgeSizeIndex();
     const styl = GetBorderStyle(data, filter, 2);

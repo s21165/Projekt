@@ -13,25 +13,28 @@ export const SettingsProvider = ({ children }) => {
     const productsSizeElementsArray = ['bardzo male', 'male', 'srednie', 'duze', 'bardzo duze']; // Przykładowa tablica
     const { user } = useContext(AuthContext);
     const sessionId = user ? user.sessionId : null;
-    const [profilePicture,setProfilePicture] = useState('');
-
+    const [profilePicture,setProfilePicture] = useState(localStorage.getItem('photo'));
+    const [defaultProfile,setDefaultProfile] = useState(localStorage.getItem('defaultPhoto'));
+    const [refresh,setRefresh] = useState(false);
     useEffect(() => {
         if (sessionId) {
             axios.get(`${API_URL}/api/get_user_preferences`, { params: { sessionId } })
                 .then((response) => {
-                    const { wielkosc_lodowki, wielkosc_strony_produktu, widocznosc_informacji_o_produkcie } = response.data;
+
+                    const { wielkosc_lodowki, wielkosc_strony_produktu, widocznosc_informacji_o_produkcie
+                    ,profile_photo, podstawowe_profilowe} = response.data;
                     updateSetting('fridgeSizeElements', wielkosc_lodowki);
                     updateSetting('productsSizeElements', wielkosc_strony_produktu);
                     updateSetting('infoProducts', widocznosc_informacji_o_produkcie);
-                    setProfilePicture(response.data.profile_photo)
-                    console.log(profilePicture)
-                    console.log(response.data.profile_photo)
+                    updateSetting('photo', profile_photo);
+                    updateSetting('defaultPhoto', podstawowe_profilowe);
+                    console.log(profile_photo)
                 })
                 .catch((error) => {
                     console.error(`There was an error retrieving the data: ${error}`);
                 });
         }
-    }, [sessionId,fridgeSizeElements,productsSizeElements,infoProducts]);
+    }, [sessionId,fridgeSizeElements,productsSizeElements,infoProducts, refresh]);
 
 
     const updateSetting = (key, value) => {
@@ -45,6 +48,12 @@ export const SettingsProvider = ({ children }) => {
                 break;
             case 'infoProducts':
                 setInfoProducts(value);
+                break;
+            case 'photo':
+                setProfilePicture(value);
+                break;
+            case 'defaultPhoto':
+                setDefaultProfile(value);
                 break;
             default:
             // Handle unknown keys
@@ -65,7 +74,7 @@ export const SettingsProvider = ({ children }) => {
             fridgeSizeElements, setFridgeSizeElements,
             productsSizeElements, setProductsSizeElements,
             infoProducts, setInfoProducts, getFridgeSizeIndex,
-            getProductsSizeIndex,profilePicture
+            getProductsSizeIndex,profilePicture, defaultProfile, refresh,setRefresh
         }}>
             {children}
         </SettingsContext.Provider>
