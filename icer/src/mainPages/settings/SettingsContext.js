@@ -23,7 +23,9 @@ export const SettingsProvider = ({ children }) => {
                     updateSetting('fridgeSizeElements', wielkosc_lodowki);
                     updateSetting('productsSizeElements', wielkosc_strony_produktu);
                     updateSetting('infoProducts', widocznosc_informacji_o_produkcie);
-                    console.log(response.data)
+                    setProfilePicture(response.data.profile_photo)
+                    console.log(profilePicture)
+                    console.log(response.data.profile_photo)
                 })
                 .catch((error) => {
                     console.error(`There was an error retrieving the data: ${error}`);
@@ -63,7 +65,7 @@ export const SettingsProvider = ({ children }) => {
             fridgeSizeElements, setFridgeSizeElements,
             productsSizeElements, setProductsSizeElements,
             infoProducts, setInfoProducts, getFridgeSizeIndex,
-            getProductsSizeIndex
+            getProductsSizeIndex,profilePicture
         }}>
             {children}
         </SettingsContext.Provider>

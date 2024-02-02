@@ -41,11 +41,6 @@ function AddProduct() {
     };
     const handleChange = (e) => {
 
-        if (image) { //jeśli jest już jakieś zdjęcie to je usuń przed próbą wybrania kolejnego
-            URL.revokeObjectURL(image);
-            setImage(null);
-            setImagePreview(null);
-        }
         const {name, value} = e.target;
         setProduct((prevState) => ({
             ...prevState,
@@ -54,8 +49,6 @@ function AddProduct() {
     };
     useEffect(() => {
 
-        console.log(imageForIdentyficationURL);
-        console.log(imageIdentyfication);
 
     }, [refresh, imageIdentyfication]);
 

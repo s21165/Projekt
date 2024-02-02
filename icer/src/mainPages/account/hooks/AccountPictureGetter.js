@@ -5,6 +5,7 @@ import noImage from "../../../data/userProfilePicture/face.jpg";
 //przyjmuje obraz, ustawienie obrazu, zdjęcie - z serwera
 export const AccountPictureGetter=(image, setImage, photo)=>{
 
+
     useEffect(()=>{
         try {
             //jeśli nie ma zdjęcia w bazie danych to wyrzuca komunikat
@@ -14,12 +15,12 @@ export const AccountPictureGetter=(image, setImage, photo)=>{
             }else
                 //jeśli jest zdjęcie w bazie danych to ustawia je jako image z folderu zdjęć profilu użytkownika
                 setImage(require(`../../../data/userProfilePicture/${photo}`));
-
+                console.log(photo)
         } catch (e) {
             // w razie erroru pokazuje komunikat z serwera w konsoli
             console.error("Nie udało się załadować obrazu: ", e);
             // Ustaw domyślny obraz
-            setImage(noImage);
+
         }
     },[photo]); // ma się wykonywać ponownie jeśli zmieniony zostaje parametr photo
     return(image) // zwraca zmienną image
