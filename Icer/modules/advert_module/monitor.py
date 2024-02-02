@@ -3,7 +3,7 @@ import numpy as np
 import winsound
 import time
 import requests
-from mainAPI import socketio
+
 
 
 
@@ -48,7 +48,7 @@ def display_warning_image(image):
 # Function to start camera monitoring
 def generate_frames():
     global camera_status
-    from Icer.mainAPI import socketio
+    from mainAPI import socketio
     video_ended = False
 
     # Try to initialize the webcam

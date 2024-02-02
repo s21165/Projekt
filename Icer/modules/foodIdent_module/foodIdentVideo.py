@@ -7,6 +7,9 @@ import time
 import threading
 import numpy as np
 
+# Define a global lock
+file_lock = threading.Lock()
+
 # Global variable to store recognized food items
 food_list = []
 
@@ -66,7 +69,11 @@ def load_and_prep_image(filename, img_shape=224):
     return img
 
 
-def pred_and_plot(models, img, class_names, food_list):
+# Zmodyfikowana definicja funkcji pred_and_plot
+def pred_and_plot(models, img, class_names, food_list, username):
+    # Connect to the database
+
+
     img_tensor = tf.convert_to_tensor(img, dtype=tf.float32)
     if len(img_tensor.shape) == 3:
         img_tensor = tf.expand_dims(img_tensor, axis=0)
@@ -77,7 +84,7 @@ def pred_and_plot(models, img, class_names, food_list):
 
     with ThreadPoolExecutor(max_workers=len(models)) as executor:
         futures = {executor.submit(model_predict, model, img_tensor): model for model in models}
-        
+
         for future in as_completed(futures):
             try:
                 pred, pred_class_index = future.result()
@@ -88,17 +95,17 @@ def pred_and_plot(models, img, class_names, food_list):
             except Exception as e:
                 print(f"Error in model prediction: {e}")
 
+    # Logic to determine the predicted class remains the same...
     # Determine the class with the most votes
     max_votes = max(votes.values())
     winners = [class_name for class_name, vote in votes.items() if vote == max_votes]
 
-    # If there's a tie or no majority, use the highest average probability from detailed_predictions
     if len(winners) != 1:
         avg_probabilities = {class_name: 0 for class_name in class_names}
         for pred, _, pred_class_name in detailed_predictions:
             avg_probabilities[pred_class_name] += np.max(pred)
         for class_name in avg_probabilities:
-            avg_probabilities[class_name] /= len(models)
+            avg_probabilities[class_name] /= list(votes.values()).count(max_votes)  # Adjust this line if needed
         pred_class = max(avg_probabilities, key=avg_probabilities.get)
     else:
         pred_class = winners[0]
@@ -109,26 +116,24 @@ def pred_and_plot(models, img, class_names, food_list):
         food_list.append(pred_class)
 
     current_dir = os.path.dirname(__file__)
-
-    # Calculate the absolute path to the 'static/scanned' directory
-    project_root = os.path.abspath(os.path.join(current_dir, '..', '..'))  # Adjust '..' as needed
+    project_root = os.path.abspath(os.path.join(current_dir, '..', '..'))
     save_dir = os.path.join(project_root, 'static', 'scanned')
-
-    # Create the directory if it doesn't exist
     os.makedirs(save_dir, exist_ok=True)
 
-    # Specify the file path within the 'static/scanned' directory
-    json_file_path = os.path.join(save_dir, 'food_list.json')
+    # Use the username to name the JSON file
+    json_file_path = os.path.join(save_dir, f'{username}_food_list.json')
 
     # Save the food_list to the specified file path
-    with open(json_file_path, 'w') as json_file:
-        json.dump(food_list, json_file, indent=4)
+    # Save the food_list to the specified file path
+    with file_lock:
+        with open(json_file_path, 'w') as json_file:
+            json.dump(food_list, json_file, indent=4)
 
     return food_list
-   
 
 
-def process_video():
+# Modyfikacja funkcji process_video, aby przekazała nazwę użytkownika
+def process_video(username):
     global camera_running
 
     def find_first_available_camera(max_checks=10):
@@ -171,7 +176,7 @@ def process_video():
             preprocessed_frame = load_and_prep_image(temp_filename)
 
             # Make a food recognition prediction using the ensemble of models
-            predicted_food_list = pred_and_plot(models, preprocessed_frame, class_names, food_list)
+            predicted_food_list = pred_and_plot(models, preprocessed_frame, class_names, food_list, username)
 
             # Display the result on the frame
             # Adjust this part as necessary to display your desired text
@@ -186,19 +191,14 @@ def process_video():
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
-            last_processed_time = current_time
 
-    cap.release()
-    # Normal termination of the camera process
-    return "Camera Stopped"
-      
-def start_camera():
+def start_camera(username):
     global camera_running, camera_thread, camera_status
 
     if not camera_running:
         camera_running = True
         camera_status = None  # Reset the status
-        camera_thread = threading.Thread(target=process_video)
+        camera_thread = threading.Thread(target=process_video, args=(username,))  # Przekazanie nazwy użytkownika jako argument
         camera_thread.start()
 
 def stop_camera():

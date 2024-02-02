@@ -1,60 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AutoImportSettings">
-    <option name="autoReloadType" value="SELECTIVE" />
-  </component>
   <component name="ChangeListManager">
-    <list default="true" id="ad3a8541-c869-49c8-9153-a52a878e269b" name="Changes" comment="changed values">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Icer/mainAPI.py" beforeDir="false" afterPath="$PROJECT_DIR$/Icer/mainAPI.py" afterDir="false" />
-    </list>
+    <list default="true" id="1ea189cc-219c-4978-a52b-9b08d868a2c4" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ComposerSettings">
-    <execution />
-  </component>
-  <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="MarkdownSettingsMigration">
-    <option name="stateVersion" value="1" />
-  </component>
-  <component name="ProjectId" id="2T3iyQeu8d5hlANN8DrfP3822nZ" />
-  <component name="ProjectViewState">
-    <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showLibraryContents" value="true" />
-  </component>
   <component name="PropertiesComponent">
-    <property name="DatabaseDriversLRU" value="mysql" />
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="restartRequiresConfirmation" value="false" />
   </component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\repo\Projekt\Icer\modules\foodIdent_module" />
-    </key>
-  </component>
   <component name="RunManager" selected="Python.mainAPI">
-    <configuration name="image_handler" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="Projekt" />
+    <configuration name="foodIdentVideo" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Icer/modules" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Icer/modules/foodIdent_module" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Icer/modules/image_handler.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Icer/modules/foodIdent_module/foodIdentVideo.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -64,7 +34,6 @@
       <method v="2" />
     </configuration>
     <configuration name="mainAPI" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="Projekt" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -75,6 +44,7 @@
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Icer/mainAPI.py" />
       <option name="PARAMETERS" value="" />
@@ -85,271 +55,76 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Python.mainAPI" />
+      <item itemvalue="Python.foodIdentVideo" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.mainAPI" />
-        <item itemvalue="Python.image_handler" />
+        <item itemvalue="Python.foodIdentVideo" />
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
-    <task active="true" id="Default" summary="Default task">
-      <changelist id="ad3a8541-c869-49c8-9153-a52a878e269b" name="Changes" comment="" />
-      <created>1690278418682</created>
-      <option name="number" value="Default" />
-      <option name="presentableId" value="Default" />
-      <updated>1690278418682</updated>
-      <workItem from="1690278419677" duration="1892000" />
-      <workItem from="1690302644038" duration="604000" />
-      <workItem from="1690303503661" duration="2352000" />
-      <workItem from="1706371461693" duration="243000" />
-      <workItem from="1706371718782" duration="4580000" />
-      <workItem from="1706620198153" duration="14529000" />
-      <workItem from="1706728160910" duration="5539000" />
-      <workItem from="1706789023540" duration="10147000" />
-      <workItem from="1706801516953" duration="5607000" />
-      <workItem from="1706808168080" duration="2275000" />
-      <workItem from="1706816824811" duration="2411000" />
-      <workItem from="1706889627912" duration="9820000" />
-    </task>
-    <task id="LOCAL-00001" summary="Change user photo">
-      <created>1706636453202</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1706636453202</updated>
-    </task>
-    <task id="LOCAL-00002" summary="Change user photo">
-      <created>1706637047668</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1706637047668</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Change user photo">
-      <created>1706637256009</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1706637256009</updated>
-    </task>
-    <task id="LOCAL-00004" summary="delete all from shopping cart">
-      <created>1706644383786</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1706644383786</updated>
-    </task>
-    <task id="LOCAL-00005" summary="show profile photo">
-      <created>1706731126327</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1706731126327</updated>
-    </task>
-    <task id="LOCAL-00006" summary="add data to scanned food.">
-      <created>1706793816642</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1706793816642</updated>
-    </task>
-    <task id="LOCAL-00007" summary="clean up">
-      <created>1706795987964</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1706795987964</updated>
-    </task>
-    <task id="LOCAL-00008" summary="clean up">
-      <created>1706796239290</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1706796239290</updated>
-    </task>
-    <task id="LOCAL-00009" summary="update notification once a day">
-      <created>1706796769436</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1706796769436</updated>
-    </task>
-    <task id="LOCAL-00010" summary="update notification once a day">
-      <created>1706798327951</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1706798327951</updated>
-    </task>
-    <task id="LOCAL-00011" summary="update profile photo reciving new values">
-      <created>1706809204867</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1706809204867</updated>
-    </task>
-    <task id="LOCAL-00012" summary="update profile photo reciving new values">
-      <created>1706893332114</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1706893332114</updated>
-    </task>
-    <task id="LOCAL-00013" summary="changed values">
-      <created>1706896005078</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1706896005078</updated>
-    </task>
-    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="Changes" />
-    <MESSAGE value="Change user photo" />
-    <MESSAGE value="delete all from shopping cart" />
-    <MESSAGE value="show profile photo" />
-    <MESSAGE value="add data to scanned food." />
-    <MESSAGE value="clean up" />
-    <MESSAGE value="update notification once a day" />
-    <MESSAGE value="update profile photo reciving new values" />
-    <MESSAGE value="changed values" />
-    <option name="LAST_COMMIT_MESSAGE" value="changed values" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>800</line>
-          <option name="timeStamp" value="3" />
+          <url>file://$PROJECT_DIR$/Icer/modules/foodIdent_module/foodIdent.py</url>
+          <line>24</line>
+          <option name="timeStamp" value="50" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>560</line>
-          <option name="timeStamp" value="5" />
+          <line>1430</line>
+          <option name="timeStamp" value="52" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>476</line>
-          <option name="timeStamp" value="8" />
+          <line>1469</line>
+          <option name="timeStamp" value="53" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Icer/modules/foodIdent_module/foodIdent.py</url>
+          <line>50</line>
+          <option name="timeStamp" value="57" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Icer/modules/foodIdent_module/foodIdent.py</url>
+          <line>57</line>
+          <option name="timeStamp" value="58" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Icer/modules/foodIdent_module/foodIdentVideo.py</url>
+          <line>123</line>
+          <option name="timeStamp" value="61" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Icer/modules/foodIdent_module/foodIdentVideo.py</url>
+          <line>115</line>
+          <option name="timeStamp" value="62" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>475</line>
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Icer/modules/image_handler.py</url>
-          <line>61</line>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Icer/modules/image_handler.py</url>
-          <line>64</line>
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Icer/modules/image_handler.py</url>
-          <line>67</line>
-          <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Icer/modules/image_handler.py</url>
-          <line>16</line>
-          <option name="timeStamp" value="18" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Icer/modules/image_handler.py</url>
-          <line>36</line>
-          <option name="timeStamp" value="19" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Icer/modules/image_handler.py</url>
-          <line>84</line>
-          <option name="timeStamp" value="20" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Icer/modules/image_handler.py</url>
-          <line>91</line>
-          <option name="timeStamp" value="27" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Icer/modules/image_handler.py</url>
-          <line>92</line>
-          <option name="timeStamp" value="28" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Icer/modules/image_handler.py</url>
-          <line>95</line>
-          <option name="timeStamp" value="29" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Icer/modules/image_handler.py</url>
-          <line>94</line>
-          <option name="timeStamp" value="30" />
+          <line>1514</line>
+          <option name="timeStamp" value="63" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>364</line>
-          <option name="timeStamp" value="32" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>310</line>
-          <option name="timeStamp" value="33" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Icer/modules/image_handler.py</url>
-          <line>55</line>
-          <option name="timeStamp" value="34" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>251</line>
-          <option name="timeStamp" value="36" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>137</line>
-          <option name="timeStamp" value="37" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>173</line>
-          <option name="timeStamp" value="43" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>82</line>
-          <option name="timeStamp" value="44" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>84</line>
-          <option name="timeStamp" value="45" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>95</line>
-          <option name="timeStamp" value="46" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>1048</line>
-          <option name="timeStamp" value="49" />
+          <line>1091</line>
+          <option name="timeStamp" value="64" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Projekt$image_handler.coverage" NAME="image_handler Coverage Results" MODIFIED="1706818591086" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Icer/modules" />
-    <SUITE FILE_PATH="coverage/Projekt$mainAPI.coverage" NAME="mainAPI Coverage Results" MODIFIED="1706901419784" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Icer" />
+    <SUITE FILE_PATH="coverage/Projekt$mainAPI.coverage" NAME="mainAPI Coverage Results" MODIFIED="1706912279582" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Icer" />
   </component>
 </project>
