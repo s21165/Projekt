@@ -96,26 +96,16 @@ def add_to_product():
     try:
         # Upewnienie się co do sesji
         data = request.get_json()
-        received_session_id = data.get('sessionId', None)
-        if not received_session_id:
-            raise ValueError("Session ID not provided")
-
-        # Sprawdzenie, czy użytkownik jest zalogowany
-        if 'username' not in session:
-            raise PermissionError("User not logged in")
-
+        # Upewnienie się co do sesji
+        data = request.get_json()
         connection = db_connector.get_connection()
         cursor = connection.cursor(dictionary=True)
 
-        username = session['username']
+        # Sprawdzenie, czy użytkownik jest zalogowany
+        user_id, username, response, status_code = DatabaseConnector.get_user_id_by_username(cursor, session)
 
-        # Pobranie ID użytkownika na podstawie nazwy użytkownika
-        user_query = "SELECT id FROM Users WHERE username = %s"
-        cursor.execute(user_query, (username,))
-        user_result = cursor.fetchone()
-
-        if not user_result:
-            raise LookupError("User not found")
+        if response:
+            return response, status_code
 
         user_id = user_result['id']
 
@@ -163,28 +153,14 @@ def reset_product_quantity():
     try:
         # Upewnienie się co do sesji
         data = request.get_json()
-        received_session_id = data.get('sessionId', None)
-        if not received_session_id:
-            raise ValueError("Session ID not provided")
-
-        # Sprawdzenie, czy użytkownik jest zalogowany
-        if 'username' not in session:
-            raise PermissionError("User not logged in")
-
         connection = db_connector.get_connection()
         cursor = connection.cursor(dictionary=True)
 
-        username = session['username']
+        # Sprawdzenie, czy użytkownik jest zalogowany
+        user_id, username, response, status_code = DatabaseConnector.get_user_id_by_username(cursor, session)
 
-        # Pobranie ID użytkownika na podstawie nazwy użytkownika
-        user_query = "SELECT id FROM Users WHERE username = %s"
-        cursor.execute(user_query, (username,))
-        user_result = cursor.fetchone()
-
-        if not user_result:
-            raise LookupError("User not found")
-
-        user_id = user_result['id']
+        if response:
+            return response, status_code
 
         # Pobieranie informacji o produkcie
         id_produktu = data['id_produktu']
@@ -443,23 +419,14 @@ def edit_product(product_id):
 
 @app.route('/api/shoppingList', methods=['POST', 'GET'])
 def get_icer_shopping():
-    # Tworzenie instancji klasy DatabaseConnector
-    db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
-
-    # Łączenie z bazą danych
-    db_connector.connect()
-
     try:
+        # Tworzenie instancji klasy DatabaseConnector
+        db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 
-        # Uzyskanie połączenia z bazą danych
-        connection = db_connector.get_connection()
-        if not connection:
-            raise ConnectionError("Failed to establish a connection with the database.")
+        # Łączenie z bazą danych
+        db_connector.connect()
 
-        cursor = connection.cursor(dictionary=True)
-        if not cursor:
-            raise Exception("Failed to create a cursor for the database.")
-
+        # Pobranie danych z żądania
         data = request.get_json()
 
         # Upewnienie się co do sesji
@@ -472,21 +439,16 @@ def get_icer_shopping():
             raise PermissionError("User not logged in")
 
         # Pobranie ID aktualnie zalogowanego użytkownika
-        username = session['username']
-
-        user_query = "SELECT id FROM Users WHERE username = %s"
-        cursor.execute(user_query, (username,))
-        user_result = cursor.fetchone()
-        if not user_result:
-            raise LookupError("User not found")
+        connection = db_connector.get_connection()
+        cursor = connection.cursor(dictionary=True)
+        user_id, username, response, status_code = DatabaseConnector.get_user_id_by_username(cursor, session)
 
         # Modyfikacja zapytania SQL, aby pokazywać wszystkie informacje o produkcie
-        user_id = user_result['id']
         query = """
             SELECT Icer.id, Icer.UserID, Icer.produktID, Shopping.ilosc,
                    Produkty.nazwa, Produkty.cena, Produkty.kalorie,
                    Produkty.tluszcze, Produkty.weglowodany,
-                   Produkty.bialko,Produkty.kategoria
+                   Produkty.bialko, Produkty.kategoria
             FROM Icer
             INNER JOIN Produkty ON Icer.produktID = Produkty.id
             LEFT JOIN Shopping ON Icer.produktID = Shopping.produktID
@@ -501,10 +463,6 @@ def get_icer_shopping():
         return jsonify({"error": str(ve)}), 400
     except PermissionError as pe:
         return jsonify({"error": str(pe)}), 401
-    except LookupError as le:
-        return jsonify({"error": str(le)}), 404
-    except ConnectionError as ce:
-        return jsonify({"error": str(ce)}), 500
     except Exception as error:
         # Tutaj możemy logować błąd w bardziej szczegółowy sposób
         current_app.logger.error(f"Unexpected error: {error}")
@@ -1547,4 +1505,7 @@ def logout():
 
 
 if __name__ == '__main__':
+    # Wywołaj funkcję `update_food_list` bezpośrednio
+
+    # Uruchom aplikację na serwerze Flask
     app.run(host='0.0.0.0')
