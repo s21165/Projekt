@@ -1,19 +1,12 @@
 import cv2
-import requests
+import numpy as np
 import winsound
 import time
-from .sharedres.shared import camera_status
 
-def print_and_send(data):
-    print(data)
-    api_endpoint = "http://192.168.0.130:5000/start_camera_monitoring"
-    try:
-        response = requests.post(api_endpoint, json={'dane': data})
-        response.raise_for_status()
-    except requests.RequestException as e:
-        print(f"Błąd wysyłania danych: {e}")
+
 # Function to detect faces and eyes in an image
 def detect_faces_and_eyes(image):
+    # Convert the image to grayscale
     gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # Load Haar cascades for face and eye detection
@@ -28,10 +21,12 @@ def detect_faces_and_eyes(image):
 
 # Function to play an audio warning
 def play_audio_warning():
+    # Play a beep sound for 500 milliseconds
     winsound.Beep(440, 500)
 
 # Function to display a warning image
 def display_warning_image(image):
+    # Display a warning image with the title 'ACHTUNG' and wait for user interaction
     cv2.imshow('ACHTUNG', image)
     cv2.waitKey(-1)
     cv2.destroyWindow('ACHTUNG')
@@ -104,7 +99,3 @@ def generate_frames():
     if cap1.isOpened():
         cap1.release()
     cap2.release()
-
-
-#if __name__ == '__main__':
-#    start_camera_monitoring()
