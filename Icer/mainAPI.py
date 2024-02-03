@@ -1162,8 +1162,12 @@ def update_food_list():
         # Zwróć zaktualizowany plik JSON jako odpowiedź
         with open(user_food_list_path, 'r') as file:
             updated_food_list_content = json.load(file)
+            # Usuń plik
+            os.remove(user_food_list_path)
 
         return jsonify(updated_food_list_content)
+
+
 
     except Exception as error:
         return jsonify({"error": str(error)}), 500
