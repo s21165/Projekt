@@ -1,56 +1,56 @@
+import os
+import json
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import numpy as np
-import os
-import json
 from modules.database_connector import DatabaseConnector
 
 def load_and_prep_image(filename, img_shape=224):
-  # Read the image file
-  img = tf.io.read_file(filename)
+    # Funkcja do wczytywania i przygotowywania obrazu
+    # Wczytanie pliku obrazu
+    img = tf.io.read_file(filename)
 
-  # Decode the image into a tensor with 3 channels (RGB)
-  img = tf.image.decode_image(img, channels=3)
+    # Dekodowanie obrazu do tensora z 3 kanałami (RGB)
+    img = tf.image.decode_image(img, channels=3)
 
-  # Resize the image to the specified img_shape
-  img = tf.image.resize(img, size=[img_shape, img_shape])
+    # Zmiana rozmiaru obrazu do określonego rozmiaru img_shape
+    img = tf.image.resize(img, size=[img_shape, img_shape])
 
-  # Normalize the image pixel values to the range [0, 1]
-  img = img / 255.
+    # Normalizacja wartości pikseli obrazu do zakresu [0, 1]
+    img = img / 255.
 
-  # Return the preprocessed image
-  return img
+    # Zwraca przygotowany obraz
+    return img
 
 
-def pred_and_plot(model, filename, class_names,username):
-    # Load and preprocess the image
+def pred_and_plot(model, filename, class_names, username):
+    # Funkcja do przewidywania i rysowania wyników
+    # Wczytanie i przygotowanie obrazu
     img = load_and_prep_image(filename)
 
-    # Make a prediction using the model
+    # Wykonanie predykcji za pomocą modelu
     pred = model.predict(tf.expand_dims(img, axis=0))
-    print("Prediction array:", pred)
+    print("Tablica predykcji:", pred)
 
     pred_class = None
     if pred is not None and len(pred) > 0:
-        max_pred_value = np.max(pred)  # Get the maximum probability from the prediction
-        if max_pred_value >= 0.60:  # Check if the max probability is above the threshold
-            pred_class_index = tf.argmax(pred, axis=1).numpy()[0]  # Get the predicted class index
-            pred_class = class_names[pred_class_index]  # Get the corresponding class name
+        max_pred_value = np.max(pred)  # Pobranie maksymalnej prawdopodobieństwa z predykcji
+        if max_pred_value >= 0.60:  # Sprawdzenie, czy maksymalne prawdopodobieństwo jest powyżej progu
+            pred_class_index = tf.argmax(pred, axis=1).numpy()[0]  # Pobranie indeksu przewidzianej klasy
+            pred_class = class_names[pred_class_index]  # Pobranie odpowiadającej nazwy klasy
         else:
-            print("Prediction confidence is too low.")
+            print("Zbyt niska pewność predykcji.")
 
-
-
-    # Get the directory of the current script
+    # Pobranie katalogu bieżącego skryptu
     current_dir = os.path.dirname(__file__)
-    project_root = os.path.abspath(os.path.join(current_dir, '..', '..'))  # Adjust '..' as needed
+    project_root = os.path.abspath(os.path.join(current_dir, '..', '..')) # Do góry
     save_dir = os.path.join(project_root, 'static', 'scanned')
-    os.makedirs(save_dir, exist_ok=True)  # Create the directory if it doesn't exist
+    os.makedirs(save_dir, exist_ok=True)  # Utworzenie katalogu, jeśli nie istnieje
 
-    # Use the username to name the JSON file
+    # Użycie nazwy użytkownika do nazwania pliku JSON
     json_file_path = os.path.join(save_dir, f'{username}_prediction_result.json')
 
-    # Save the prediction result to the specified file path
+    # Zapis wyników predykcji pod określoną ścieżką do pliku
     prediction_result = {"predicted_class": pred_class}
     with open(json_file_path, 'w') as json_file:
         json.dump(prediction_result, json_file, indent=4)
@@ -58,7 +58,7 @@ def pred_and_plot(model, filename, class_names,username):
     return pred_class
 
 
-#Loading trained model    
+# Wczytanie wytrenowanego modelu
 def load_model(model_path):
     current_directory = os.path.dirname(os.path.abspath(__file__))
     model_file_path = os.path.join(current_directory, model_path)

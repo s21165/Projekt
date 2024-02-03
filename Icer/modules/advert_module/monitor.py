@@ -5,10 +5,8 @@ import time
 import requests
 
 
-
-
-
 def print_and_send(data):
+    # Funkcja do drukowania danych i wysyłania ich za pomocą API
     print(data)
     api_endpoint = "http://192.168.0.130:5000/start_camera_monitoring"
     try:
@@ -17,72 +15,71 @@ def print_and_send(data):
     except requests.RequestException as e:
         print(f"Błąd wysyłania danych: {e}")
 
-
-# Function to detect faces and eyes in an image
+# Funkcja do wykrywania twarzy i oczu na obrazie
 def detect_faces_and_eyes(image):
-    # Convert the image to grayscale
+    # Konwersja obrazu na odcienie szarości
     gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-    # Load Haar cascades for face and eye detection
+    # Wczytanie kaskad Haara do detekcji twarzy i oczu
     face_classifier = cv2.CascadeClassifier('modules/advert_module/haarcascade_frontalface_default.xml')
     eye_classifier = cv2.CascadeClassifier('modules/advert_module/haarcascade_eye.xml')
 
-    # Detect faces and eyes in the image
+    # Wykrywanie twarzy i oczu na obrazie
     detected_faces = face_classifier.detectMultiScale(gray_img, scaleFactor=1.2, minNeighbors=5, minSize=(20, 20))
     detected_eyes = eye_classifier.detectMultiScale(gray_img, scaleFactor=1.2, minNeighbors=4, minSize=(10, 10))
 
     return detected_faces, detected_eyes
 
-# Function to play an audio warning
+# Funkcja do odtwarzania ostrzeżenia dźwiękowego
 def play_audio_warning():
-    # Play a beep sound for 500 milliseconds
+    # Odtwarzanie dźwięku 'beep' przez 500 milisekund
     winsound.Beep(440, 500)
 
-# Function to display a warning image
+# Funkcja do wyświetlania obrazka ostrzeżenia
 def display_warning_image(image):
-    # Display a warning image with the title 'ACHTUNG' and wait for user interaction
+    # Wyświetlenie obrazka ostrzeżenia z tytułem 'ACHTUNG' i oczekiwaniem na interakcję użytkownika
     cv2.imshow('ACHTUNG', image)
     cv2.waitKey(-1)
     cv2.destroyWindow('ACHTUNG')
 
-# Function to start camera monitoring
+# Funkcja do rozpoczęcia monitoringu kamery
 def generate_frames():
     global camera_status
     from mainAPI import socketio
     video_ended = False
 
-    # Try to initialize the webcam
-    cap1 = cv2.VideoCapture(0)  # Webcam
+    # Próba zainicjowania kamery internetowej
+    cap1 = cv2.VideoCapture(0)  # Kamera internetowa
 
-    # Check if the webcam is accessible
+    # Sprawdzenie dostępności kamery internetowej
     if cap1.isOpened():
-        cap2 = cv2.VideoCapture('modules/advert_module/videoplayback.mp4')  # Default video file
+        cap2 = cv2.VideoCapture('modules/advert_module/videoplayback.mp4')  # Domyślny plik wideo
     else:
-        cap2 = cv2.VideoCapture('modules/advert_module/videoplaybackalt.mp4')  # Alternate video file
+        cap2 = cv2.VideoCapture('modules/advert_module/videoplaybackalt.mp4')  # Alternatywny plik wideo
 
-    img2 = cv2.imread('modules/advert_module/image.jpg')  # Warning image
+    img2 = cv2.imread('modules/advert_module/image.jpg') 
     beep = 0
 
-    # Get the frame rate of the video file
+    # Pobranie liczby klatek na sekundę z pliku wideo
     fps = cap2.get(cv2.CAP_PROP_FPS)
-    if fps < 1:  # Fallback for undetected frame rate
-        fps = 30  # Assume standard frame rate
+    if fps < 1:  # Wartość domyślna w przypadku braku wykrytej liczby klatek na sekundę
+        fps = 30  # Przyjęcie standardowej liczby klatek na sekundę
 
-    frame_duration = 1.0 / fps  # Calculate frame duration in seconds
+    frame_duration = 1.0 / fps  # Obliczenie długości trwania klatki w sekundach
 
     while True:
         ret1, frame = cap2.read()
         if not ret1:
-            video_ended = True  # End of video file or error
+            video_ended = True  # Koniec pliku wideo lub błąd
 
         if cap1.isOpened():
             ret, img = cap1.read()
             if not ret:
-                continue  # Skip if webcam frame is not ready
+                continue  # Pominięcie, jeśli klatka z kamery internetowej nie jest gotowa
 
-            # Detect faces and eyes
+            # Wykrywanie twarzy i oczu
             detected_faces, detected_eyes = detect_faces_and_eyes(img)
-            # ... Draw rectangles logic (optional for streaming) ...
+            # ... Logika rysowania prostokątów (opcjonalna przy przesyłaniu strumieniowym) ...
 
             if len(detected_eyes) == 0 and len(detected_faces) == 0:
                 if beep == 5:
@@ -93,17 +90,17 @@ def generate_frames():
             else:
                 beep = 0
 
-            # Check if video has ended
+            # Sprawdzenie, czy plik wideo został zakończony
             if video_ended:
                 camera_status = 'finished'
                 socketio.emit('update_status', {'new_value': camera_status})
                 print_and_send(camera_status)
-                break  # Exit loop after sending end signal
+                break  # Wyjście z pętli po wysłaniu sygnału zakończenia
 
-        # Convert image to JPEG format
+        # Konwersja obrazu na format JPEG
         ret, buffer = cv2.imencode('.jpg', frame)
         if not ret:
-            continue  # Skip if frame encoding fails
+            continue  # Pominięcie, jeśli nie uda się zakodować klatki
 
         frame_bytes = buffer.tobytes()
         time.sleep(frame_duration)
@@ -112,4 +109,5 @@ def generate_frames():
 
     if cap1.isOpened():
         cap1.release()
-    cap2.release()
+   
+
