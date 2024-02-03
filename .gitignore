@@ -21,3 +21,4 @@ Icer/modules/scan_module/__pycache__/decoder.cpython-311.pyc
 Icer/modules/foodIdent_module/__pycache__/foodIdentVideo.cpython-311.pyc
 Icer/modules/advert_module/__pycache__/monitor.cpython-311.pyc
 Icer/modules/foodIdent_module/__pycache__/foodIdentVideo.cpython-311.pyc
+*.pyc

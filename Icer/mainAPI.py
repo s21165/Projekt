@@ -32,8 +32,8 @@ CORS(app, supports_credentials=True)
 socketio = SocketIO(app, cors_allowed_origins="*")
 app.config['BARCODE_FOLDER'] = os.path.join(app.static_folder, 'barcodes')
 app.config['QR_CODE_FOLDER'] = os.path.join(app.static_folder, 'qrcodes')
-app.config['SECRET_KEY'] = 'key'  # Replace with a strong secret key later
-
+app.config['SECRET_KEY'] = 'key'  # Replace with a strong secret key
+# app.config['BARCODE_FOLDER'] = 'static/barcodes
 
 # Loading model
 model = load_model('model3.h5')
@@ -1088,12 +1088,13 @@ def change_user_photo():
         return jsonify({"error": str(error)}), 500
 
 
-@app.route('/api/update_food_list', methods=['GET'])
+@app.route('/api/update_food_list', methods=['GET', 'POST'])
 def update_food_list():
     try:
-        # Wczytaj zawartość pliku JSON
-        with open('D:/repo/Projekt/Icer/modules/foodIdent_module/food_list.json', 'r') as file:
-            food_list = json.load(file)
+        # Pobierz nazwę użytkownika z sesji lub z argumentów
+        username = session.get('username', 'root')  # Domyślnie root, do testow, pozniej bd trzeba to wywalic
+        project_path = os.path.dirname(os.path.abspath(__file__))
+        user_food_list_path = os.path.join(project_path, 'static', 'scanned', f'{username}_food_list.json')
 
         # Tworzenie instancji klasy DatabaseConnector
         db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
@@ -1103,14 +1104,26 @@ def update_food_list():
         connection = db_connector.get_connection()
         cursor = connection.cursor(dictionary=True)
 
+        # Wczytaj zawartość pliku JSON
+        with open(user_food_list_path, 'r') as file:
+            food_list = json.load(file)
+
         # Pobieranie danych produktów z bazy danych
         select_query = """
                 SELECT nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria
                 FROM Produkty
-                WHERE podstawowe = 1 AND nazwa IN (%s)
+                WHERE podstawowy = 1 AND nazwa IN ({})
             """
+
+        # Tworzenie ciągu znaków '?' do zastąpienia w zapytaniu SQL
+        placeholders = ', '.join(['%s' for _ in range(len(food_list))])
+
+        # Wypełnienie zapytania SQL odpowiednią liczbą znaków '?'
+        formatted_query = select_query.format(placeholders)
+
         # Wykonaj zapytanie z uwzględnieniem listy produktów z pliku JSON
-        cursor.execute(select_query, (','.join(['%s'] * len(food_list)), food_list))
+        cursor.execute(formatted_query, tuple(food_list))
+
         products = cursor.fetchall()
 
         cursor.close()
@@ -1130,13 +1143,18 @@ def update_food_list():
             })
 
         # Zapisz zaktualizowane produkty do pliku JSON
-        with open('D:/repo/Projekt/Icer/modules/foodIdent_module/food_list.json', 'w') as file:
+        with open(user_food_list_path, 'w') as file:
             json.dump(updated_food_list, file, indent=4)
 
-        return jsonify({"message": "Food list updated successfully!"})
+        # Zwróć zaktualizowany plik JSON jako odpowiedź
+        with open(user_food_list_path, 'r') as file:
+            updated_food_list_content = json.load(file)
+
+        return jsonify(updated_food_list_content)
 
     except Exception as error:
         return jsonify({"error": str(error)}), 500
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -1275,50 +1293,38 @@ def edit_user():
 @app.route('/', methods=['GET', 'POST'])
 def index():
     bot_response = ""
-    # Inicjalizuj pusty ciąg znaków dla odpowiedzi bota.
-
+    # barcode_form = BarcodeForm()  # For barcode form
     if request.method == 'POST':
-        # Sprawdź, czy metoda żądania to POST, co zazwyczaj oznacza przesłanie danych z formularza.
-        
         user_input = request.form['user_input']
-        # Pobierz dane wejściowe użytkownika z przesłanego formularza.
-
         bot_response = get_bot_response(user_input)
-        # Wywołaj funkcję (get_bot_response) w celu wygenerowania odpowiedzi na podstawie danych wejściowych użytkownika.
-
     response = make_response(render_template('index.html', bot_response=bot_response, ))
-    # Wygeneruj odpowiedź, renderując szablon 'index.html' i przekazując odpowiedź bota jako zmienną.
-
     response.headers['Content-Type'] = 'text/html; charset=utf-8'
-    # Ustaw nagłówek Content-Type, aby określić, że odpowiedź jest w formacie HTML.
-
     return response
-    # Zwróć wygenerowaną odpowiedź do klienta.
 
 
 @app.route('/get_response', methods=['POST'])
 def get_response():
-    # Pobierz dane wejściowe użytkownika z żądania JSON
+    # Get the user input from the JSON request data
     user_input = request.json.get('user_input')
 
-    # Sprawdź, czy istnieje prawidłowe dane wejściowe użytkownika
+    # Check if a valid user input exists
     if user_input:
-        # Pobierz odpowiedź od bota na podstawie danych wejściowych użytkownika
+        # Get a response from the bot based on the user input
         response = get_bot_response(user_input)
 
-        # Utwórz odpowiedź JSON zawierającą odpowiedź bota
+        # Create a JSON response containing the bot's response
         response_data = {'response': response}
 
-        # Zwróć odpowiedź JSON z kodem stanu 200 i odpowiednim typem zawartości
+        # Return the JSON response with a 200 status code and proper content type
         return jsonify(response_data), 200, {'Content-Type': 'application/json; charset=utf-8'}
 
-    # Jeśli nie podano prawidłowych danych wejściowych, zwróć odpowiedź JSON z błędem
-    return jsonify({'error': 'Nieprawidłowe dane wejściowe'})
+    # If no valid input is provided, return an error JSON response
+    return jsonify({'error': 'Invalid input'})
 
 
 @app.route('/generate_qr_code', methods=['POST'])
 def generate_qr_code_route():
-    # Wyodrębnij dane z formularza przesłanego w żądaniu
+    # Extract data from the form submitted in the request
     data = {
         "name": request.form['name'],
         "price": request.form['price'],
@@ -1331,208 +1337,180 @@ def generate_qr_code_route():
         "date": request.form['date']
     }
 
-    # Wygeneruj obraz kodu QR na podstawie wyodrębnionych danych i zapisz go w wyznaczonym folderze
+    # Generate a QR code image based on the extracted data and save it to the designated folder
     qr_code_image_filename = generate_qr_code(data, app.config['QR_CODE_FOLDER'])
 
-    # Pobierz URL wygenerowanego obrazu kodu QR w folderze 'static'
+    # Get the URL for the generated QR code image in the 'static' folder
     qr_code_image_url = url_for('static', filename='qrcodes/' + qr_code_image_filename)
 
-    # Wyświetl komunikat o sukcesie do wyświetlenia w aplikacji
-    flash("Kod QR wygenerowany pomyślnie!")
+    # Flash a success message to be displayed in the application
+    flash("QR Code generated successfully!")
 
-    # Przekieruj z powrotem do trasy 'index' po wygenerowaniu kodu QR
+    # Redirect back to the 'index' route after generating the QR code
     return redirect(url_for('index'))
 
 
 @app.route('/decode_qr_code', methods=['POST'])
 def decode_qr_code_route():
-    # Sprawdzenie, czy plik 'qr_code_image' istnieje w żądaniu
+    # Check if the 'qr_code_image' file is present in the request
     if 'qr_code_image' not in request.files:
         flash('No file part', 'error')
         return redirect(request.url)
 
-    # Pobranie pliku z żądania
+    # Get the file from the request
     file = request.files['qr_code_image']
 
-    # Sprawdzenie, czy nie wybrano pliku
+    # Check if no file is selected
     if file.filename == '':
         flash('No selected file', 'error')
         return redirect(request.url)
 
-    # Sprawdzenie, czy wybrany plik ma dozwolone rozszerzenie
+    # Check if the selected file has an allowed file extension
     if file and allowed_file(file.filename):
-         # Bezpieczne zapisanie przesłanego pliku do wyznaczonego folderu
+        # Securely save the uploaded file to the designated folder
         filename = secure_filename(file.filename)
         file_path = os.path.join(app.config['QR_CODE_FOLDER'], filename)
         file.save(file_path)
 
-        # Próba odczytu kodu QR z zapisanego obrazu
+        # Attempt to decode the QR code from the saved image
         decoded_data = decode_qr_code(file_path)
 
         if decoded_data:
-            # Wyświetlenie komunikatu o sukcesie i zwrócenie odczytanych danych
+            # Flash a success message and return the decoded data
             flash("QR Code decoded successfully!", "success")
             return f"Decoded QR Code Data: {decoded_data}"
             # results = {"QR Code decoded successfully!", "success"}
             # return jsonify(results)
         else:
-            # Wyświetlenie komunikatu o błędzie i przekierowanie z powrotem do strony przesyłania pliku
+            # Flash an error message and redirect back to the upload page
             flash("Failed to decode QR Code.", "error")
             return redirect(request.url)
             # results = {"QR Code decoded successfully!", "success"}
             # return jsonify(results)
     else:
-        # Wyświetlenie komunikatu o błędzie dla nieprawidłowego typu pliku i przekierowanie
+        # Flash an error message for invalid file type and redirect
         flash('Invalid file type. Please upload an image file.', 'error')
         return redirect(request.url)
         # results = {'Invalid file type. Please upload an image file.', 'error'}
         # return jsonify(results)
 
 
-# Inicjalizuj zmienną 'camera_thread' jako wartość None.
 camera_thread = None
 
 
 @app.route('/start_food_identification', methods=['POST'])
 def start_food_identification_route():
-    # Tworzenie nowego wątku w celu rozpoczęcia procesu identyfikacji jedzenia równocześnie
+    # Create a new thread to start the food identification process concurrently
     camera_thread = threading.Thread(target=foodIdent)
 
-    # Uruchamianie wątku kamery
+    # Start the camera thread
     camera_thread.start()
 
-    # Przekierowanie z powrotem do trasy 'index' po rozpoczęciu identyfikacji jedzenia
+    # Redirect back to the 'index' route after starting the food identification
     return redirect(url_for('index'))
 
 
-# Trasa dla przesyłania strumienia wideo
+# Route for video streaming
 @app.route('/video_feed')
 def video_feed():
-    # Zwraca obiekt Response z funkcją generatora 'generate_frames'
-    # Ta odpowiedź będzie przesyłać klatki wideo w formacie wieloczęściowym
+    # Return a Response object with the generator function 'generate_frames'
+    # This response will stream video frames in a multipart format
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 @app.route('/receive_data', methods=['POST'])
 def receive_data():
-    # Definiuje trasę '/receive_data', która akceptuje tylko żądania POST.
-
     data = request.json
-    # Wyodrębnia dane JSON z treści żądania i przechowuje je w zmiennej 'data'.
-
     print("Received data:", data)
-    # Wydrukuj otrzymane dane na konsoli w celach debugowania lub rejestracji.
-
-    return jsonify({"status": "Dane odebrane pomyślnie"})
-    # Zwraca odpowiedź JSON informującą o pomyślnym odebraniu danych.
-
+    # Here you can process the data as needed
+    return jsonify({"status": "Data received successfully"})
 
 @app.route('/start_camera_monitoring', methods=['POST'])
 def start_camera_monitoring_route():
-    # Definiuje trasę '/start_camera_monitoring', która akceptuje żądania POST.
-
     global camera_thread
-    # Deklaruje 'camera_thread' jako zmienną globalną.
-
     if camera_thread is None or not camera_thread.is_alive():
-        # Sprawdza, czy 'camera_thread' nie istnieje lub nie jest obecnie uruchomiony.
-
         camera_thread = threading.Thread(target=generate_frames)
-        # Tworzy nowy wątek 'camera_thread', który będzie wykonywał funkcję 'generate_frames'.
-
         camera_thread.start()
-        # Uruchamia nowo utworzony wątek.
-
     data = request.json.get('dane')
-    # Wyodrębnia klucz 'dane' z danych JSON przesłanych w żądaniu.
-
     print(data)
-    # Drukuje wyodrębnione dane na konsoli.
-
-    # Emituje dane do front-endu
+    # Emit data to the frontend
     socketio.emit('update_status', {'data': data})
-    # Używa Socket.IO do emitowania zdarzenia 'update_status' z wyodrębnionymi danymi do front-endu.
+    return {'status': 'Data received'}
 
-    return {'status': 'Dane odebrane'}
-    # Zwraca odpowiedź JSON wskazującą, że dane zostały odebrane.
 
 
 @app.route('/display_video')
 def display_video():
-    # Renderuje szablon, który wyświetli wideo.
+    # Render a template that will display the video
     return render_template('display_video.html')
 
 
 @app.route('/upload_image', methods=['GET', 'POST'])
 def upload_predict():
-    # Sprawdzenie, czy metoda żądania to POST
+    # Check if the request method is POST
 
     # Uzyskanie połączenia z bazą danych
     connection = db_connector.get_connection()
     if not connection:
-        raise ConnectionError("Nie udało się nawiązać połączenia z bazą danych.")
+        raise ConnectionError("Failed to establish a connection with the database.")
 
     cursor = connection.cursor(dictionary=True)
     if not cursor:
-        raise Exception("Nie udało się utworzyć kursora dla bazy danych.")
+        raise Exception("Failed to create a cursor for the database.")
 
     # Sprawdzenie, czy użytkownik jest zalogowany
     user_id, username, response, status_code = DatabaseConnector.get_user_id_by_username(cursor, session)
 
+
     if request.method == 'POST':
-        # Sprawdzenie, czy 'file' znajduje się w przesyłanych plikach żądania
+        # Check if 'file' is in the request files
         if 'file' not in request.files:
-            flash('Brak części pliku', 'error')
+            flash('No file part', 'error')
             return redirect(request.url)
 
-        # Pobranie pliku z żądania
+        # Get the file from the request
         file = request.files['file']
 
-        # Sprawdzenie, czy nie wybrano pliku
+        # Check if no file is selected
         if file.filename == '':
-            flash('Nie wybrano pliku', 'error')
+            flash('No selected file', 'error')
             return redirect(request.url)
 
-        # Sprawdzenie, czy wybrany plik ma dozwolone rozszerzenie
+        # Check if the selected file has an allowed file extension
         if file and allowed_file(file.filename):
-            # Bezpieczne zapisanie przesłanego pliku do wyznaczonego folderu
+            # Securely save the uploaded file to the designated upload folder
             filename = secure_filename(file.filename)
             upload_folder = 'static/uploads/'
             file_path = os.path.join(upload_folder, filename)
             file.save(file_path)
 
-            # Dokonanie predykcji na podstawie przesłanego obrazu
+            # Make a prediction using the uploaded image
             pred_class = pred_and_plot(model, file_path, class_names, username)
 
-            # Wygenerowanie URL dla zapisanego obrazu
+            # Generate the URL for the saved image
             image_url = url_for('static', filename='uploads/' + filename)
 
-            # Renderowanie szablonu wynikowego z predykcją i URL obrazu
-            return jsonify({'prediction': pred_class})
+            # Render the result template with the prediction and image URL
+            requests.post('http://localhost:5000/api/update_food_list')
+            return render_template('result.html', prediction=pred_class, image_file=image_url)
         else:
-            # Wyświetlenie komunikatu o błędzie dla nieprawidłowego typu pliku i przekierowanie
-            Flash('Nieprawidłowy typ pliku. Proszę przesłać plik graficzny.', 'error')
-            return jsonify({'error': 'Nieprawidłowy typ pliku. Proszę przesłać plik graficzny.'}), 400
+            # Flash an error message for an invalid file type and redirect
+            flash('Invalid file type. Please upload an image file.', 'error')
+            return redirect(request.url)
 
-    return jsonify({})
+    # Render the index template for GET requests
+    return render_template('index.html')
 
 
-# Inicjalizacja zmiennej 'camera_status' na "Not Started" (Nie Rozpoczęto).
 camera_status = "Not Started"
-
-
 @app.route('/stream_camera')
 def stream_camera():
-    # Pobranie nazwy użytkownika z sesji (przykład) - dostosuj do własnego kodu
-    username = session.get('username', 'Gość')
-    # Zwraca odpowiedź typu Response z funkcją generatora 'process_video(username)'
-    # Ta odpowiedź będzie przesyłać strumień wideo w formacie wieloczęściowym
+    # Przykładowe pobranie nazwy użytkownika, należy ją dostosować do Twojego kodu
+    username = session.get('username', 'Guest')
     return Response(process_video(username), mimetype='multipart/x-mixed-replace; boundary=frame')
-
 
 @app.route('/camera_control', methods=['GET'])
 def camera_control():
-    # Renderuje szablon 'camera_control.html'
     return render_template('camera_control.html')
 
 
@@ -1550,23 +1528,49 @@ def start_camera_route():
 
     return "Camera started."
 
-
 @app.route('/stop_camera', methods=['POST'])
 def stop_camera_route():
     stop_camera()
-    # Wywołuje funkcję 'stop_camera()' w celu zatrzymania kamery.
-
     requests.post('http://localhost:5000/api/update_food_list')
-    # Wysyła żądanie POST na adres 'http://localhost:5000/api/update_food_list'.
-
-    return "Camera stopped"
-    # Zwraca tekst informujący, że kamera została zatrzymana.
-
+    return "Camera stopped."
 
 @app.route('/check_camera_status')
 def check_camera_status():
-    # Zwraca stan kamery jako odpowiedź JSON
     return jsonify({'status': camera_status})
+
+
+# @app.route('/generate_barcode', methods=['POST'])
+# def generate_barcode_route():
+# if request.method == 'POST':
+# data = {
+# "name": request.form['name'],
+# "price": request.form['price'],
+# "kcal": request.form['kcal'],
+# "fat": request.form['fat'],
+# "carbs": request.form['carbs'],
+# "protein": request.form['protein'],
+# "category": request.form['category'],
+# "amount": request.form['amount']
+# }
+# barcode_image_filename = generate_barcode(data, app.config['BARCODE_FOLDER'])
+# barcode_image_path = os.path.join(app.config['BARCODE_FOLDER'], barcode_image_filename)
+# return send_file(barcode_image_path, mimetype='image/png', as_attachment=True)
+
+# @app.route('/decode_barcode', methods=['POST'])
+# def decode_barcode_route():
+# if 'barcode_image' not in request.files:
+# return "No barcode image uploaded"
+
+# barcode_image = request.files['barcode_image']
+# if barcode_image.filename == '':
+# return "No selected file"
+
+# barcode_image_path = os.path.join(app.config['BARCODE_FOLDER'], barcode_image.filename)
+# barcode_image.save(barcode_image_path)
+
+# decoded_data = decode_barcode(barcode_image_path)
+
+# return f"Decoded Barcode Data: {decoded_data}"
 
 
 # Strona wylogowania
