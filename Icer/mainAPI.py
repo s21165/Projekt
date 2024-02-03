@@ -1508,14 +1508,13 @@ def upload_predict():
             image_url = url_for('static', filename='uploads/' + filename)
 
             # Renderowanie szablonu wynikowego z predykcją i URL obrazu
-            return render_template('result.html', prediction=pred_class, image_file=image_url)
+            return jsonify({'prediction': pred_class})
         else:
             # Wyświetlenie komunikatu o błędzie dla nieprawidłowego typu pliku i przekierowanie
-            flash('Nieprawidłowy typ pliku. Proszę przesłać plik obrazu.', 'error')
-            return redirect(request.url)
+            Flash('Nieprawidłowy typ pliku. Proszę przesłać plik graficzny.', 'error')
+            return jsonify({'error': 'Nieprawidłowy typ pliku. Proszę przesłać plik graficzny.'}), 400
 
-    # Renderowanie szablonu index dla żądań GET
-    return render_template('index.html')
+    return jsonify({})
 
 
 # Inicjalizacja zmiennej 'camera_status' na "Not Started" (Nie Rozpoczęto).
