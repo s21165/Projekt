@@ -1034,6 +1034,23 @@ def get_user_preferences():
         if response:
             return response, status_code
 
+        # Sprawdzenie, czy istnieje wpis w tabeli preferencje_uzytkownikow
+        check_preferences_query = """
+            SELECT UserID FROM preferencje_uzytkownikow WHERE UserID = %s
+        """
+        cursor.execute(check_preferences_query, (user_id,))
+        existing_user = cursor.fetchone()
+
+        # Jeżeli użytkownik nie ma jeszcze wpisu, dodaj nowy wpis do tabeli preferencje_uzytkownikow
+        if not existing_user:
+            # Tworzenie nowego wpisu w tabeli preferencje_uzytkownikow
+            insert_preferences_query = """
+                INSERT INTO preferencje_uzytkownikow (UserID)
+                VALUES (%s)
+            """
+            cursor.execute(insert_preferences_query, [user_id])
+            connection.commit()
+
         # Pobieranie preferencji użytkownika
         get_preferences_query = """
             SELECT wielkosc_lodowki, wielkosc_strony_produktu, widocznosc_informacji_o_produkcie, lokalizacja_zdj, podstawowe_profilowe
