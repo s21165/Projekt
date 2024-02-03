@@ -2,19 +2,22 @@ import axios from "axios";
 import {API_URL} from "../../settings/config";
 import {toast} from "react-toastify";
 
+//funkcja do komunikacji z API odnośnie zakończenia identyfikacji wideo, przyjmuje funkcję
+//odbioru zeskanowanych danych, torbę, ustawienie wideo, ustawienie torby
 export const stopCamera = ({updateFood},productBackpack,setStreamCamera,setProductBackpack) => {
     axios.post(`${API_URL}/stop_camera`)
         .then((response) => {
-            setStreamCamera(null);
-            console.log(response.data);
-            updateFood(setProductBackpack, setStreamCamera)
-            console.log(productBackpack)
-            toast.success('Camera stopped!');
+            setStreamCamera(null); // ustawia wideo na null
+            updateFood(setProductBackpack, setStreamCamera)//wywołanie funkcji do pobrania zeskanowanych produktów
+            //komunkat w razie sukcesu
+            toast.success('kamera została zatrzymana!');
 
         })
         .catch((error) => {
+            // w razie nie powodzenia komunikat oraz error z serwera w konsoli
+            toast.success('nie udało sie poprawnie zatrzymać kamery!');
             console.error(`Error stopping camera: ${error}`);
-            setStreamCamera(null);
+            setStreamCamera(null);// zmiana wideo na null
         });
 
 };

@@ -1,32 +1,49 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import '../add/AddProduct.css'
 
 import {Icon} from "@iconify/react";
 import {useOutsideClick} from "../hooks/useOutsideClick";
 import {useEditProduct} from "../hooks/useEditProduct";
 import {handleImageChange} from "../pictures/handleImageChange";
+import {handleQRCodeScan} from "../hooks/handleQRCodeScan";
+import {handleQRChange} from "../QR/handleQRChange";
 
+//funkcja odpowiedzialna za widok strony edycji produktu. Przyjmuje produkt do edycji, funkcję edycji produktu, ustawienie produktu do edycji
 function ProductEdit({product, handleEdit, setEditingProduct}) {
 
+    //referencja do formularza edycji
     const myDivRef = useRef(null);
+
+    //zmienna, która posiada kod QR
+    const [qrImage, setQrImage] = useState('');
+
+    //podgląd kodu QR
+    const [qrImagePreview, setQrImagePreview] = useState('');
+
+    //pobieram zmienne i funkcje do wykonywania działań na produkcie do edycji
     const {
-        editProduct, image, setEditProduct, setImage, imagePreview, setImagePreview,handleChange
+        editProduct, image, setEditProduct, setImage, imagePreview, setImagePreview, handleChange
     } = useEditProduct(product);
 
-
+    //funkcja, która po naciśnięciu poza referowany kontener zmienia wartość edycji produktu na null
     useOutsideClick(myDivRef, () => setEditingProduct(null));
 
-
+    //funkcja zatwierdzająca wprowadzone dane do formularza
     const handleUpdate = (e) => {
+        //zapobiega odświeżeniu
         e.preventDefault();
+
+        //wywołuje funkcję edycji produktu wraz z informacjami o produkcie oraz zdjęciem
         handleEdit({...editProduct, image});
+        //zmienia wartość edycji produktu na null co skutkuje tym, że wychodzimy z trybu edycji produktu
         setEditingProduct(null);
 
     };
 
     return (
+        /*kontener z formularzem*/
         <div className="productContainerDiv">
-
+            {/*formularz edycji z polami o tych samych klasach co w dodawaniu produktu*/}
             <form onSubmit={handleUpdate} className="addProductForm" ref={myDivRef}>
                 <label>
                     <h5>Nazwa:</h5>
@@ -65,11 +82,15 @@ function ProductEdit({product, handleEdit, setEditingProduct}) {
                     <input type="date" name="data_waznosci" className="dataInput" value={editProduct.data_waznosci}
                            onChange={handleChange}/>
                 </label>
+
+                {/* kontener ze zdjęciem */}
                 <div className="addPhotoDiv">
                     <label><h5> Zdjęcie: </h5></label>
                     <div className="image-options">
                         <label className="addPhotoFromDir">
+                            {/* jeśli nie ma zdjęcia to pokaż ikonę */}
                             {!image && <Icon className="addPhotoFromDirIcon" icon="clarity:directory-line"/>}
+                            {/* jeśli jest podgląd to pokaż go */}
                             {imagePreview && (
                                 <img
                                     src={imagePreview}
@@ -78,11 +99,12 @@ function ProductEdit({product, handleEdit, setEditingProduct}) {
                                 />
                             )}
                             <span> <h5> dodaj z urządzenia </h5> </span>
+                            {/* dodawanie zdjęcia */}
                             <input
                                 type="file"
                                 id="file-input"
                                 style={{display: 'none'}}
-                                onChange={(e) => handleImageChange(e, setImage, setEditProduct,setImagePreview)}
+                                onChange={(e) => handleImageChange(e, setImage, setEditProduct, setImagePreview)}
                             />
                         </label>
                         <label className="addPhotoByCamera">
@@ -97,16 +119,34 @@ function ProductEdit({product, handleEdit, setEditingProduct}) {
                 </div>
                 <div className="scanners">
 
-                    <label className="scannerLabel">
-                        <Icon className="barcodeIcon" icon="material-symbols:barcode"/>
-                        <span> <h5>Skanuj Barcode</h5> </span>
-                    </label>
+                    {/* etytkieta, której naciśnięcie wywoła skanowanie kodu QR */}
+                    <label onClick={() => {
+                        handleQRCodeScan(qrImage,
+                            setEditProduct,
+                            setQrImage,
+                            setQrImagePreview)
+                    }} className="scannerLabel">
 
-                    <label className="scannerLabel">
-                        <Icon className="qrIcon" icon="bx:qr-scan"/>
+                        {/* jeśli nie ma obrazu QR to pokaż ikonę */}
+                        {!qrImage && <Icon className="qrIcon" icon="bx:qr-scan"/>}
+                        {/* jeśli jest podlgąd QR to pokaż go   */}
+                        {qrImagePreview && (
+                            <img
+                                src={qrImagePreview}
+                                alt="Podgląd"
+                                style={{maxWidth: '100px', maxHeight: '100px'}}
+                            />
+                        )}
                         <h5> Skanuj QR </h5>
+                        {/* jeśli nie ma obrazku QR to pokaż pole od jego dodania:  */}
+                        {!qrImage && <input
+                            type="file"
+                            id="file-input"
+                            style={{display: 'none'}}
+                            /* obsługiwanie zmiany kod QR  */
+                            onChange={(e) => handleQRChange(e, setQrImage, setQrImagePreview)}
+                        />}
                     </label>
-
                 </div>
 
 

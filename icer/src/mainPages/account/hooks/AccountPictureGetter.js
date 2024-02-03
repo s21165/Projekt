@@ -1,6 +1,4 @@
-import {useContext, useEffect, useState} from "react";
-import noImage from "../../../data/userProfilePicture/face.jpg";
-import SettingsContext from "../../settings/SettingsContext";
+import {useEffect} from "react";
 
 //hook, który zwraca zdjęcie użytkownika
 //przyjmuje obraz, ustawienie obrazu, lokalizację zdjęcia, infomrację czy jest podstawowe zdjęcie

@@ -1,14 +1,10 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
 import './Account.css';
-import face from "../../data/face.jpg";
 import {AuthContext} from "./auth-context";
 import SettingsContext from "../settings/SettingsContext";
 import {AccountPictureGetter} from "./hooks/AccountPictureGetter";
-import settingsContext from "../settings/SettingsContext";
-import noImage from "../../data/userProfilePicture/face.jpg";
-import axios from "axios";
-import {API_URL} from "../settings/config";
+
 //Funcja przedstawiająca stronę konta użytkownika
 export function Account() {
 

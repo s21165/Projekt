@@ -1,12 +1,6 @@
 // LoginForm.js
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import './LoginForm.css';
-import google from "../../data/google.png";
-import facebook from "../../data/facebook.png";
-import {Icon} from "@iconify/react";
-import {Link} from "react-router-dom";
-import logo from "../../data/logo.svg";
-import {toast} from "react-toastify";
 
 //formularz logowania
 function LoginForm({ onLogin , onSwitchToRegister  }) {

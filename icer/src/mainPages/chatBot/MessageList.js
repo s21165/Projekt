@@ -1,7 +1,6 @@
 // MessageList.js
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import './MessageList.css';
-import axios from "axios";
 
 //funkcja listy wiadomości przyjmująca zmienną z historią konwersacji
 function MessageList({messages}) {

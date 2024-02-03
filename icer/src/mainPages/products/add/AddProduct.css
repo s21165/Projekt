@@ -1,13 +1,15 @@
+/*kontener z formularzem*/
 .productContainerDiv {
     position:relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%; /* Viewport height */
-    width: 100%; /* Viewport width */
+    height: 100%;
+    width: 100%;
     border-radius: 4px;
 
 }
+/*kontener z formularzem*/
 .addProductForm {
 
     display: flex;
@@ -20,17 +22,19 @@
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
 
+/*etykiety formularza*/
 .addProductForm label {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin:0;
 }
+/*tekst formularza w znaczniku h5 w etykietach*/
 .addProductForm label h5 {
     margin:0 ;
 
 }
-
+/*pola wejściowe formularza*/
 .addProductForm input {
 
     padding: 0.5vh 2vw;
@@ -38,9 +42,11 @@
     border-radius: 4px;
     width:80%;
 }
+/*kontener z przyciskiem dodania produktu*/
 .AddProductButtonDiv{
     align-items: center;
 }
+/*przycisk dodania produktu*/
 .addProductButton {
     padding: 0;
     background-color: #4caf50;
@@ -51,23 +57,25 @@
     width:90%;
 
 }
+/*znacznik h4 przycisku dodawania produktu*/
 .addProductButton h4{
     margin:1vh;
 }
 
+/* kontener sekcji dodawania poprzez zdjęcie /filmik */
 .addPhotoDiv{
     text-align: center;
     margin-bottom:1vh;
 }
 
-
+/* wewnętrzny kontener sekcji dodawania poprzez zdjęcie /filmik */
 .image-options{
     display: flex;
     justify-content: space-around;
     align-items: center;
 
 }
-
+/* etykiety kontenera image-options */
 .image-options label {
     display: flex;
     flex-direction: column;
@@ -75,57 +83,58 @@
     cursor: pointer;
 }
 
-/* Stylowanie ikon */
+/* Stylowanie ikon klasy addPhotoDiv i scanners*/
 .addPhotoDiv .iconify, .scanners .iconify {
-    font-size: 48px; /* Dostosuj rozmiar ikon do swoich potrzeb */
+    font-size: 48px;
 
 }
 
 .addPhotoFromDir,.addPhotoByCamera , .scannerLabel{
     width:50%;
 }
-
+{/* kontener dodawania zdjęcia */}
 .addPhotoFromDir{
     position: relative;
     display:flex;
 }
+{/* etykiety w klasie scanners */}
 .scanners label {
     display: flex;
     flex-direction: column;
     align-items: center;
     cursor: pointer;
 }
-
+{/* kontener ze skanerem */}
 .scanners {
     display: flex;
     justify-content: center;
     align-items: center;
 
 }
-
+{/* przycisk dodawania produktu po najechaniu */}
 .addProductButton :hover {
     background-color: #45a049;
 }
-
+/* kontener z torbą */
 .backpackAddProduct {
-    position: relative; /* Ustaw kontener obrazu jako element nadrzędny dla licznika */
+    position: relative;
     display: inline-block; /* Zapewnia, że kontener zachowuje wymiary obrazu */
     height:100%;
     width:100%;
 
 }
-
+/* ilość produktów w torbie */
 .backpackCounter {
     position: absolute; /* Absolutne pozycjonowanie licznika względem obrazu plecaka */
-    top: 10%; /* Dostosuj tę wartość, aby umieścić licznik w odpowiednim miejscu */
-    right: 10%; /* Dostosuj tę wartość, aby umieścić licznik w odpowiednim miejscu */
-    background-color: red; /* Tło licznika, można zmienić */
-    color: white; /* Kolor tekstu licznika, można zmienić */
-     /* Sprawia, że licznik jest okrągły */
-    padding: 1px; /* Dostosuj padding dla licznika */
-    font-size: 1em; /* Dostosuj rozmiar czcionki licznika */
-}
+    top: 10%;
+    right: 10%;
+    background-color: red;
+    color: white;
 
+    padding: 1px;
+    font-size: 1em; /* rozmiar czcionki licznika */
+}
+/* kontener do zmniejszania ilości produktów w torbie i dodawania ich do formularza */
 .backpackAddProductDiv{
 
     max-height:20%;
@@ -135,7 +144,7 @@
     position:relative;
 
 }
-
+{/* absolutny kontener z opcjami po naciśnięciu */}
 .cameraOptions {
     /* ... existing styles ... */
     position: absolute;
@@ -144,6 +153,8 @@
     bottom: 100%;
     z-index: 10; /* Ensure it's above other elements */
 }
+
+{/* kontener z opcjami relatywny*/}
 .cameraOptionsRelative{
     position:relative;
     display:flex;
@@ -151,24 +162,21 @@
     align-items: center;
     gap:4vw;
 }
-.stopCameraButton{
-    z-index: 1000;
-    width:50%;
-    height:20%;
-}
 
 
+{/*  podgląd obrazu identyfikacji */}
 .imageForIdentyficationURLDiv{
     position:fixed;
     height:50vh;
     width:50vw;
     top:25%;
     left:25%;
-    z-index: 100;
+    z-index: 100; /* ma być na wierzchu */
     justify-content: center;
 
 
 }
+{/* wewnętrzny kotener podglądu obrazu identyfikacji */}
 .imageForIdentyficationURLDivRelative{
 
     position: relative;
@@ -180,6 +188,7 @@
     justify-items: center;
     align-items: center; /* Add this line */
 }
+{/* obrazek podglądu identyfikacji */}
 .scannedFoodImage{
     border-radius: 10%;
     position:relative;
@@ -187,6 +196,8 @@
     width:100%;
     height:100%;
 }
+
+{/* przycisk decydujący o tym czy identyfikować zdjęcie */}
 .sendButtonForFoodIdentyfication{
     position: relative;
     display: flex;
@@ -199,19 +210,7 @@
     background-color:green;
     border-radius: 10px;
 }
-.cameraOption {
-    background-color: #f0f0f0; /* Light background for visibility */
-    padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    text-align: center;
-    justify-content: center;
-    cursor: pointer;
-    width: 100px; /* Set a fixed width */
-}
-/* Add styles for the new camera options */
-
+{/* kontener, który posiada opcje identyfikacji po zdjęciu oraz kontener, który identyfikuje po filmie*/}
 .leftCameraOption, .rightCameraOption{
     position:relative;
     display:flex;
@@ -225,48 +224,48 @@
     gap:0.2vh;
     transition: transform 0.2s;
 }
+/* kontener posiadający obraz wideo z api */
 .rightCameraOptionUsed{
     position:relative;
     bottom:1%;
     right:0;
     width:100vw;
     height:100vh;
-    z-index: 100;
+    z-index: 100;/* na wierzchu */
 
 }
+/*obraz wideo z api*/
 .rightCameraOptionView{
     position:relative;
     display:flex;
     height:100%;
     width:100%;
 }
+/*przycisk zatrzymywania identyfikacji żywności*/
 .stopCameraButton{
+    z-index: 1000;/* aby był widoczny */
     position:relative;
     bottom: 15vh;
     left:42.5%;
     height:15vh;
     width:15vw;
 }
+/* ikona przycisku zatrzymywania identyfikacji żywności*/
 .stopCameraButtonIcon{
     position:relative;
     height:100%;
     width:100%;
 }
-.identificationVideo{
-    position:absolute;
 
-    height:500px;
-    width:500px;
-
-}
+/*opcje identyfikacji po najechaniu*/
 .leftCameraOption:hover, .rightCameraOption:hover{
-    transform: scale(1.1);
+    transform: scale(1.1);/*powiększenie się o 10%*/
 }
 
-
+/*dla ekranów o maksymalnej szerokości 1200px*/
 @media only screen and (max-width: 1200px) {
     .addProductForm {
-        /* Pozwala formularzowi zajmować większą część ekranu na tabletach */
+
         font-size: calc(1vw + 1vh);
         min-width: 60%;
 
@@ -278,24 +277,25 @@
 
     }
 }
+/*dla ekranów o maksymalnej szerokości 768px*/
 @media only screen and (max-width: 768px) {
     .addProductForm {
-        /* Pozwala formularzowi zajmować większą część ekranu na tabletach */
-        font-size: calc(1.1vw + 1.1vh); /* Możesz dostosować rozmiar czcionki */
+
+        font-size: calc(1.1vw + 1.1vh);
         min-width: 75%;
     }
 
 }
-
+/*dla ekranów o maksymalnej szerokości 480px*/
 @media only screen and (max-width: 480px) {
     .addProductForm {
-        max-width: 90%;; /* Pozwala formularzowi zajmować całą szerokość ekranu na telefonach */
+        max-width: 90%;;
         font-size: 4vw;
         padding:1vh 0.5vw 1vh 0.5vw;
     }
 
 }
-
+/*dla ekranów z ekranem dotykowym*/
 @media (pointer: coarse){
 
     .barcodeIcon, .qrIcon, .addPhotoFromDirIcon,.addPhotoByCameraIcon {
@@ -304,6 +304,7 @@
     }
 
 }
+/*dla ekranów o maksymalnej wysokości 800px*/
 @media only screen and (max-height: 800px) {
 
     .barcodeIcon, .qrIcon, .addPhotoFromDirIcon,.addPhotoByCameraIcon {

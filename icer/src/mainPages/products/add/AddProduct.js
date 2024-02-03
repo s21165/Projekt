@@ -8,7 +8,7 @@ import {submitProduct} from "../API/submitProduct";
 import {handleImageChange} from "../pictures/handleImageChange";
 import {handleQRChange} from "../QR/handleQRChange";
 import groceryBag from '../../../data/groceryBag.svg'
-import {handleQRCodeScan} from "../API/handleQRCodeScan";
+import {handleQRCodeScan} from "../hooks/handleQRCodeScan";
 import {handleBackpackClick} from "../hooks/handleBackpackClick";
 import {chooseImageForIdentyfiaction} from "../hooks/chooseImageForIdentyfication";
 import {stopCamera} from "../API/stopCamera";
@@ -145,12 +145,13 @@ function AddProduct() {
                             </div>
                         </div>
                     </div>}
-                    {/* kontener posiadający torbę z zakupami, po zeskanowaniu wielu produtków kamerą trafiają tam
-                    w liście, na naciśnięciu na torbę dodają się do formularza po kolei
-                    */}
+
                     <div className="productContainerDiv">
+
                         {/* torba ma być widoczna jak lista posiada choć jeden element */}
                         {productBackpack.length > 0 &&
+                            /* kontener posiadający torbę z zakupami, po zeskanowaniu wielu produtków kamerą trafiają tam
+                             w liście, na naciśnięciu na torbę dodają się do formularza po kolei */
                             <div className="backpackAddProductDiv" onClick={() => {
 
                                 {/* po naciśnięciu dodaje do formularza*/}

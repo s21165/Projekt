@@ -1,5 +1,4 @@
-import {useEffect, useState, useRef} from "react";
-import {useNavigate} from "react-router-dom";
+import {useEffect, useRef, useState} from "react";
 import {API_URL} from "../settings/config";
 import axios from "axios";
 import './Advert.css';

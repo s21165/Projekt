@@ -2,9 +2,8 @@
 import React, {useState} from 'react';
 import MessageList from './MessageList';
 import ChatInput from './ChatInput';
-import Main from "../../Main";
 import Help from "../Help";
-import { Icon } from '@iconify/react';
+import {Icon} from '@iconify/react';
 import axios from "axios";
 import {API_URL} from "../settings/config";
 
