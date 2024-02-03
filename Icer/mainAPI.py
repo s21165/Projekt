@@ -148,7 +148,6 @@ def add_to_product():
 
 @app.route('/api/reset_product_quantity', methods=['POST'])
 def reset_product_quantity():
-    print("dochp?")
 
     # Tworzenie instancji klasy DatabaseConnector
     db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
@@ -284,11 +283,6 @@ def remove_product_for_user():
         db_connector.connect()
 
         # Tworzenie instancji ProductManager
-        product_manager = ProductManager(db_connector)
-
-        # Pobieranie danych z żądania
-        data = request.json
-
         connection = db_connector.get_connection()
         cursor = connection.cursor(dictionary=True)
 
@@ -684,7 +678,6 @@ def get_notifications():
 
 @app.route('/api/productsRedFlag', methods=['POST', 'GET'])
 def get_products_with_red_flag():
-    print("test?")
     # Tworzenie instancji klasy DatabaseConnector
     db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
 
@@ -1149,6 +1142,8 @@ def update_food_list():
         # Utwórz listę słowników na podstawie wyników zapytania
         updated_food_list = []
         for product in products:
+            # Dodaj dodatkowy klucz do każdego produktu
+            product['ilosc'] = 1
             updated_food_list.append({
                 "nazwa": product['nazwa'],
                 "cena": float(product['cena']),
@@ -1156,7 +1151,8 @@ def update_food_list():
                 "tluszcze": float(product['tluszcze']),
                 "weglowodany": float(product['weglowodany']),
                 "bialko": float(product['bialko']),
-                "kategoria": product['kategoria']
+                "kategoria": product['kategoria'],
+                "ilosc": 1  # Zawsze ustaw ilość na 1
             })
 
         # Zapisz zaktualizowane produkty do pliku JSON
@@ -1548,7 +1544,7 @@ def start_camera_route():
 @app.route('/stop_camera', methods=['POST'])
 def stop_camera_route():
     stop_camera()
-    requests.post('http://localhost:5000/api/update_food_list')
+
     return "Camera stopped."
 
 @app.route('/check_camera_status')
