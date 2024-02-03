@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import {handleImageChange} from "../pictures/handleImageChange";
 
+//funkcja służąca za bazę podstawianych informacji o informacje produktu, który chcemy edytować, przyjmuje edytowany produkt
 export const useEditProduct = (initialProduct) => {
     const [editProduct, setEditProduct] = useState({
         nazwa: initialProduct.nazwa,
@@ -18,6 +19,7 @@ export const useEditProduct = (initialProduct) => {
     const [image, setImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
 
+    // ustawia zmiany w polach wejściowych aby były widoczne dla użytkownika
     const handleChange = (e) => {
         console.log(editProduct)
         const { name, value } = e.target;
@@ -27,6 +29,6 @@ export const useEditProduct = (initialProduct) => {
         }));
     };
 
-
+    //zwraca poniższe wartości
     return { editProduct, setEditProduct, image, setImage, imagePreview, setImagePreview, handleChange };
 };

@@ -4,12 +4,14 @@ import {toast} from "react-toastify";
 
 //funkcja odpowiedzialna za pobieranie listy zeskanowanej żywności po zakończeniu identyfikacji wideo.
 //przyjmuje ustawienie torby oraz ustawienie wideo
-export const updateFood = (setProductBackpack, setStreamCamera) => {
-    axios.get(`${API_URL}/api/update_food_list`)
+export const updateFood = (setProductBackpack, setStreamCamera,sessionId) => {
+
+    axios.post(`${API_URL}/api/update_food_list`,{sessionId})
         .then((response) => {
             //w razie powodzenia wyświetl komunikat
             toast.success('nowe produkty w torbie z zakupami!');
             setProductBackpack(response.data);
+            console.log('odpowiedź:' + JSON.stringify(response.data))
         })
         .catch((error) => {
             setStreamCamera(null); // zmiana wideo na null

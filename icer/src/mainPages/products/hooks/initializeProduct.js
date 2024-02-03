@@ -1,3 +1,4 @@
+//inicjalizacja podstawowych danych produktu
 export const  initializeProduct = () => {
     return {
         nazwa: 'Nowy Produkt',

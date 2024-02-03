@@ -2,15 +2,16 @@ import React, {useContext, useEffect, useRef, useState} from 'react';
 import './ProductItem.css';
 
 import {GetBorderStyle} from "./GetBorderStyle";
-
-import image2 from '../../../data/image6.png';
-import {infoProducts,smallProductsCount,mediumProductsCount} from "../../settings/config";
+import {mediumProductsCount, smallProductsCount} from "../../settings/config";
 import {useProductItem} from "../hooks/useProductItem";
 import ProductItemSmall from "./ProductItemSmall";
 import ProductItemMedium from "./ProductItemMedium";
 import ProductItemLarge from "./ProductItemLarge";
 import {PictureGetter} from "../pictures/PictureGetter";
 import SettingsContext from "../../settings/SettingsContext";
+import {getFontSize} from "../hooks/getFontSize";
+
+//funkcja odpowiedzialna za wyświetlanie produktu, przyjmuje wartości od rodzica
 function ProductItem({
                          index,
                          data,
@@ -25,101 +26,110 @@ function ProductItem({
                          setIsSelected,
                          isHidden,
                          onProductClick,
-                         maxDimension,
+                         minDimension,
                          rightButtonDivRef
                      }) {
 
-    const[image, setImage] = useState();
+    //ustawianie obrazka
+    const [image, setImage] = useState();
+    //inicjowanie wartości czy produkt jest animowany
     const [animatingProductId, setAnimatingProductId] = useState(null);
-    const {getFridgeSizeIndex,
-        getProductsSizeIndex,infoProducts} = useContext(SettingsContext)
 
-    const picGetter = PictureGetter(image,setImage,data?.zdjecie_lokalizacja)
-    const mediumProductsCountSetting =getProductsSizeIndex();
-    const smallProductsCountSetting =getFridgeSizeIndex();
-    const styl = GetBorderStyle(data, filter, 2);
+    //pobieranie wartości ustawień z kontekstu
+    const {
+        getFridgeSizeIndex,
+        getProductsSizeIndex, infoProducts
+    } = useContext(SettingsContext)
+
+    // ustawianie zdjęcia względem pobranych informacji
+    const picGetter = PictureGetter(image, setImage, data?.zdjecie_lokalizacja)
+    //przupisanie ustawienia dla strony produktów
+    const mediumProductsCountSetting = getProductsSizeIndex();
+    //przupisanie ustawienia dla strony lodówki
+    const smallProductsCountSetting = getFridgeSizeIndex();
+    //ustawianie wartości do obramówki, przekazujemy filter i dane, ustawiamy szerokość obramówki
+    const styl = GetBorderStyle(data, filter, 3);
+    //przupisanie ustawienia dla strony produktów
     const infoProductsNumeric = infoProducts ? 1 : 0;
+    //w zależności od ustawień pokaż bądź ukryj informacje o produktach
     const [info, setInfo] = useState(infoProductsNumeric);
-
-    const itemWidth = !isSelected ? maxDimension * (smallProductsCount[smallProductsCountSetting]/ 100) : maxDimension*95/100;
-    const itemWidthLarge = maxDimension * (smallProductsCount[2]/ 100);
-    const itemWidthMedium = maxDimension * ((mediumProductsCount[mediumProductsCountSetting])/ 100);
-
-    const useProduct = useProductItem(data, handleDecrease, handleIncrease,handleZero,handleRemove, setIsSelected)
+    //ustalanie wysokości i szerokości elementu listy w lodówce
+    const itemWidth = !isSelected ? minDimension * (smallProductsCount[smallProductsCountSetting] / 100) : minDimension * 95 / 100;
+    //ustalanie wysokości i szerokości elementu listy na stronie produktów
+    const itemWidthMedium = minDimension * ((mediumProductsCount[mediumProductsCountSetting]) / 100);
+    //tworzenie obiektu, który posiada możliwe akcje na produkcie opisane w funkcji
+    const useProduct = useProductItem(data, handleDecrease, handleIncrease, handleZero, handleRemove, setIsSelected)
+    // referencja do elementu do animacji przy przenoszeniu do listy wyczerpanych
     const elementRef = useRef(null);
-    function getFontSize(mediumProductsCountSetting, maxDimension) {
-        switch (mediumProductsCountSetting) {
-            case 0:
-                return maxDimension * 1 / 70; // example ratio
-            case 1:
-                return maxDimension * 1 / 60; // adjust these ratios as needed
-            case 2:
-                return maxDimension * 1 / 50;
-            case 3:
-                return maxDimension * 1 / 40;
-            case 4:
-                return maxDimension * 1 / 30;
-            default:
-                return 16; // default font size if none of the cases match
-        }
-    }
 
 
-    useEffect(()=>{
+    useEffect(() => {
+        //ustawianie wartości przy odświeżaniu aby zmiany pojawiały się od razu
+        setInfo(infoProducts ? 1 : 0);
+    }, [getFridgeSizeIndex,
+        getProductsSizeIndex, infoProducts])//odświeżanie przy zmianie wartości elementów
 
-    },[getFridgeSizeIndex,
-        getProductsSizeIndex,infoProducts])
 
-
-    try {
+    try {//jeśli są dane to
         if (data) {
 
 
-
+            //w zależności od wartości size:
             switch (size) {
                 case 'small':
                     return (
-
+                        //wyświetla na stronie głównej - lodówce
                         <div key={index}
-
+                            //ustawianie klasy względem tego czy produkt jest zaznaczony i czy jest ukryty
                              className={`productItemSmall ${isSelected ? 'selected' : ''} ${isHidden ? 'hidden' : ''}`}
-                             style={{backgroundImage: `url(${data ? picGetter :  image2})`, border: styl,flex: `1 0 ${itemWidth}px`, // Ustawienie szerokości elementu
-                                 height: `${itemWidth}px`}}
+                            //ustawianie zdjęcia jako tło produtku
+                             style={{
+                                 backgroundImage: `url(${picGetter})`, border: styl, flex: `1 0 ${itemWidth}px`, // Ustawienie szerokości elementu
+                                 height: `${itemWidth}px`
+                             }}
                              onClick={() => onProductClick(data.id)}>
 
-
-                                {isSelected ?
-                                    <ProductItemLarge
-                                        data={data}
-                                        useProduct={useProduct}
-                                        handleZero={handleZero}
-                                        handleRemove={handleRemove}
-                                        handleEditClick={handleEditClick}
-                                        filter={filter}
-                                        info={info}
-                                        setIsSelected={setIsSelected}
-                                    />
-                                    :
-                                    <ProductItemSmall/>
-                                }
+                            {/*jeśli jest zaznaczony to wyświetl funkcję ProductItemLarge z przekazanymi wartościami */}
+                            {isSelected ?
+                                <ProductItemLarge
+                                    data={data}
+                                    useProduct={useProduct}
+                                    handleZero={handleZero}
+                                    handleRemove={handleRemove}
+                                    handleEditClick={handleEditClick}
+                                    filter={filter}
+                                    info={info}
+                                    setIsSelected={setIsSelected}
+                                />
+                                :
+                                /*w przeciwnym wypadku wyświetl funkcję ProductItemSmall */
+                                <ProductItemSmall/>
+                            }
 
                         </div>
 
                     );
-
+                // na stronie produktów
                 case 'medium':
                     return (
+
                         <div key={index}
+                            //ustawianie klasy względem tego czy produkt ma posiadać informacje i czy jest animowany
                              className={`productItem ${!info ? '' : 'hidden'} ${animatingProductId === data.id ? 'animating' : ''}`}
                              ref={elementRef}
                              style={{
+                                 //obrazek produktu na tle
                                  backgroundImage: `url(${picGetter})`,
+                                 //ustawienie obramówki
                                  border: styl,
                                  flex: `1 0 ${itemWidthMedium}px`,
                                  height: `${itemWidthMedium}px`,
-                                 fontSize: getFontSize(mediumProductsCountSetting, maxDimension) // updated line
+                                 // ustawienie wielkości czcionki
+                                 fontSize: getFontSize(mediumProductsCountSetting, minDimension)
                              }}
+                            //przy naciśnięciu zmień wartość info na przeciwną
                              onClick={() => setInfo(!info)}>
+                            {/* wyświetl funkcję ProductItemMedium z przekazanymi wartościami */}
                             <ProductItemMedium
                                 data={data}
                                 useProduct={useProduct}
@@ -132,24 +142,20 @@ function ProductItem({
                                 setAnimatingProductId={setAnimatingProductId}
                                 filter={filter}
                                 itemWidthMedium={itemWidthMedium}
-                                mediumProductsCountSetting= {mediumProductsCountSetting}
+                                mediumProductsCountSetting={mediumProductsCountSetting}
                                 rightButtonDivRef={rightButtonDivRef}
                             />
                         </div>
                     );
 
-                case 'big':
-
-                    break;
                 default:
-
             }
-
 
         }
 
 
     } catch (error) {
+        //w razie błędów wyświetl error z serwera w konsoli
         console.error("Error in productItem:", error);
     }
 }

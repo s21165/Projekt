@@ -1,22 +1,21 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useState} from 'react';
 import './Products.css';
-import ProductEdit from "../edit/ProductEdit";
-import ProductItem from "../item/ProductItem";
 import {useProductActions} from '../API/useProductActions';
 import {useProductsData} from "../API/useProductsData";
 import ProductManager from "./ProductManager";
-import {ToastContainer} from "react-toastify";
-import {Icon} from "@iconify/react";
-import {Settings} from "../../settings/Settings";
 
 
+//funkcja odpowiedzialna za produkty
 function Products() {
 
-
+    //ustawianie filtra
     const [filter, setFilter] = useState('current');
 
+    //tworzenie obiektu z danymi z produktami
     const productData = useProductsData(filter);
+    //tworznie zmiennej oznaczającej czy jest produkt, który jest edytowany
     const [editingProduct, setEditingProduct] = useState(null);
+    //tworzenie obiektu z możliwymi akcjami na produkcie
     const productActions = useProductActions(
         productData.refresh,
         productData.data,
@@ -28,16 +27,16 @@ function Products() {
     );
 
     return (<>
-
-        <ProductManager
-            editingProduct={editingProduct}
-            productActions={productActions}
-            productData={productData}
-            filter={filter}
-            setEditingProduct={setEditingProduct}
-            setFilter={setFilter}
-            size={"medium"}
-        />
+            {/*zwróć funkcję ProductManager i przekaż mu wartości*/ }
+            <ProductManager
+                editingProduct={editingProduct}
+                productActions={productActions}
+                productData={productData}
+                filter={filter}
+                setEditingProduct={setEditingProduct}
+                setFilter={setFilter}
+                size={"medium"} //ustawianie wartości dla elementu będącego na stronie produktów
+            />
         </>
     );
 

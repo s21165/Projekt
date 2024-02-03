@@ -8,7 +8,7 @@ import {submitProduct} from "../API/submitProduct";
 import {handleImageChange} from "../pictures/handleImageChange";
 import {handleQRChange} from "../QR/handleQRChange";
 import groceryBag from '../../../data/groceryBag.svg'
-import {handleQRCodeScan} from "../hooks/handleQRCodeScan";
+import {handleQRCodeScan} from "../API/handleQRCodeScan";
 import {handleBackpackClick} from "../hooks/handleBackpackClick";
 import {chooseImageForIdentyfiaction} from "../hooks/chooseImageForIdentyfication";
 import {stopCamera} from "../API/stopCamera";
@@ -122,7 +122,7 @@ function AddProduct() {
 
                     {/* konener, który przy naciśnięciu zatrzymuje kamerę */}
                     <div onClick={() => {
-                        stopCamera({updateFood}, productBackpack, setStreamCamera, setProductBackpack)
+                        stopCamera({updateFood}, productBackpack, setStreamCamera, setProductBackpack, sessionId)
                     }} className="stopCameraButton"><Icon className="stopCameraButtonIcon"
                                                           icon="fluent-emoji-high-contrast:stop-button"
                                                           style={{color: '#f50000'}}/></div>
@@ -162,12 +162,7 @@ function AddProduct() {
                                 {/* ilość produktów w torbie */}
                                 <span className="backpackCounter">{productBackpack.length}</span>
                             </div>}
-                        <div onClick={handleAddToBackpack}>
-                            czesc
-                            {productBackpack.map((product, index) => (
-                                <div key={index}>{product.nazwa} i inne dane...</div>
-                            ))}
-                        </div>
+
                         {/* formularz dodawania produktu, miejsca do podania informacji */}
                         <form onSubmit={handleSubmit} className="addProductForm">
                             <label>

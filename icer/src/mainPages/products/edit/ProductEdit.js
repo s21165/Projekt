@@ -5,7 +5,7 @@ import {Icon} from "@iconify/react";
 import {useOutsideClick} from "../hooks/useOutsideClick";
 import {useEditProduct} from "../hooks/useEditProduct";
 import {handleImageChange} from "../pictures/handleImageChange";
-import {handleQRCodeScan} from "../hooks/handleQRCodeScan";
+import {handleQRCodeScan} from "../API/handleQRCodeScan";
 import {handleQRChange} from "../QR/handleQRChange";
 
 //funkcja odpowiedzialna za widok strony edycji produktu. Przyjmuje produkt do edycji, funkcję edycji produktu, ustawienie produktu do edycji

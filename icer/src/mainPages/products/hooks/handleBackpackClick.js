@@ -1,3 +1,4 @@
+//funkcja do kontroli torby na zakupy - zeskanowanych produktów z kamery
 export const handleBackpackClick = (productBackpack,setProduct,setProductBackpack) => {
     if (productBackpack.length > 0) {
         // Wybierz pierwszy produkt z listy
