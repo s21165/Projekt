@@ -1,12 +1,10 @@
-import axios from "axios";
-import {API_URL} from "../../settings/config";
 import {AuthContext} from "../../account/auth-context";
 import React, {useContext, useState} from "react";
-import groceryBag from "../../../data/groceryBag.svg";
 import {Icon} from "@iconify/react";
 import {handleImageChange} from "../pictures/handleImageChange";
-import {handleQRChange} from "./handleQRChange";
 import "../add/AddProduct.css";
+import {generateQRCode} from "../API/generateQRCode";
+
 export function GenerateQR() {
 
     const [formData, setFormData] = useState({
@@ -20,35 +18,31 @@ export function GenerateQR() {
         amount: 0,
         date: new Date().toISOString().split('T')[0],
     });
-    const [qrCode, setQrCode] = useState('');
-    const { user } = useContext(AuthContext);
+
+    const {user} = useContext(AuthContext);
     const sessionId = user ? user.sessionId : null;
     const [image, setImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setFormData({...formData, [e.target.name]: e.target.value});
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        axios.post(`${API_URL}/generate_qr_code`, formData,{
-            headers: {
-            'Content-Type': 'multipart/form-data',
-        }},)
-            .then((response) => {
-                // Assuming the response contains the URL of the QR code image
-                console.log("dostalem")
-            })
-            .catch((error) => {
-                console.error('Error generating QR code:', error);
-            });
+        try {
+            const qrData = await generateQRCode(formData);
+            console.log("QR Code generated:", qrData);
+            // Tutaj możesz zaktualizować stan komponentu, np. wyświetlić wygenerowany kod QR
+
+        } catch (error) {
+            // Obsługa błędów, np. wyświetlenie komunikatu
+            console.error('Error in generating QR code:', error);
+        }
     };
 
     return (
         <>
-
-
 
 
             <div className="productContainerDiv">

@@ -59,12 +59,6 @@ export function Settings({where}) {
         return sizeMapping[sizeIndex];
 
     };
-    const triggerUpdate = () => {
-        // Logika, która ma być wykonana na żądanie
-        // Może to być zmiana stanu, która spowoduje ponowne wykonanie useEffect
-        setRefresh(!refresh); // Przykładowa zmiana stanu wyzwalająca useEffect
-    };
-
 
 
     return (

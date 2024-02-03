@@ -166,14 +166,14 @@ function Main() {
                                         <Link to="/Pomoc">
                                             <div className="navDiv">
                                                 {isIcon ? <h3>pomoc</h3> :
-                                                    <Icon className="menuIcons" icon="solar:help-linear"/>}
+                                                    <Icon className="menuIcons" icon="bx:bot" />}
                                             </div>
                                         </Link>
                                         {/* link do generowania kodów QR */}
                                         <Link to="/GenerateQR">
                                             <div className="navDiv">
                                                 {isIcon ? <h3>generuj</h3> :
-                                                    <Icon className="menuIcons" icon="solar:help-linear"/>}
+                                                    <Icon className="menuIcons" icon="vaadin:qrcode" />}
                                             </div>
                                         </Link>
                                         {/* przycisk do zmiany menu */}
@@ -208,8 +208,8 @@ function Main() {
                                         <Link to="/ListaZakupow">
                                             <div className="navDiv">
                                                 {isIcon ? <h3>lista zakupów</h3> :
-                                                    <Icon className="menuIcons"
-                                                          icon="material-symbols:history-rounded"/>}
+
+                                                    <Icon className="menuIcons" icon="uiw:shopping-cart" />}
                                             </div>
                                         </Link>
                                         {/* link do strony dodawania produktów */}

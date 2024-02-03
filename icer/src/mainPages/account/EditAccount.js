@@ -1,17 +1,13 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
 
 import './editAccount.css';
-import face from "../../data/face.jpg";
 import {AuthContext} from "./auth-context";
 import axios from "axios";
 import {API_URL} from "../settings/config";
 import {toast} from "react-toastify";
-import {handleImageChange} from "../products/pictures/handleImageChange";
-import {PictureGetter} from "../products/pictures/PictureGetter";
 import {AccountPictureGetter} from "./hooks/AccountPictureGetter";
 import {handleUserImageChange} from "./hooks/handleUserImageChange";
-import settingsContext from "../settings/SettingsContext";
 import SettingsContext from "../settings/SettingsContext";
 
 
@@ -20,11 +16,21 @@ function EditAccount(props) {
     const {user} = useContext(AuthContext);
     //przypisuję sesję aktualnego użytkownika do zmiennej
     const sessionId = user ? user.sessionId : null;
+
+    //pobieramy nazwę zdjęcia, informację czy jest zdjęcie podstawowe oraz zmienną, której zmiana to odświeżenie ustawień,
+    //oraz możliwość zmiany tej wartości
     const {profilePicture,defaultProfile,refresh,setRefresh} = useContext(SettingsContext);
+
+    //obrazek
     const [image,setImage] = useState('');
-    const [product,setProduct] = useState('');
+
+    //zdjęcie do wysłania
     const [pictureToSend,setPictureToSend]= useState('');
+
+    //podgląd zdjęcia do wysłania
     const [imagePreview,setImagePreview]= useState('');
+
+    //umożliwia zmianę podstrony
     const navigate = useNavigate()
 
     //ustawiamy podstawowe informacje formularza
@@ -33,6 +39,8 @@ function EditAccount(props) {
         email: props.email,
         new_password: ''
     });
+
+    // tworzymy instancje AccountPictureGetter, która decyduje jakie zdjęcie zwrócić na podstawie podanych informacji
     const picGetter = AccountPictureGetter(image,setImage, defaultProfile , profilePicture)
 
     //asynchroniczna funkcja wywoływana podczas złożenia formularza - przyjmuje event

@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import './LoginForm.css';
-import {useNavigate} from "react-router-dom";
-import {toast, ToastContainer} from "react-toastify";
 
-function RegisterForm({ onRegister, onSwitchToLogin  }) {
+function RegisterForm({onRegister, onSwitchToLogin}) {
 
     //inicjalizacja zmiennych przetrzymujących nazwę oraz hasło
     const [username, setUsername] = useState('');
@@ -13,35 +11,42 @@ function RegisterForm({ onRegister, onSwitchToLogin  }) {
     const handleSubmit = event => {
         event.preventDefault();
 
-        onRegister({ username, password });
+        onRegister({username, password});
         onSwitchToLogin();
 
     };
 
     //formularz rejestracji
     return (
+        //te same style formularza co w loginForm, kontener posiadający cały formularz
         <form onSubmit={handleSubmit} className="loginFormAll">
+            {/*wewnętrzny kontener formularza*/}
+            <div className="loginFormBox">
 
-    <div className="loginFormBox">
-            <input className="username"
-                   type="text"
-                   value={username}
-                   onChange={e => setUsername(e.target.value)}
-                   placeholder="Username"
-            />
-            <input className="password"
-                   type="password"
-                   value={password}
-                   onChange={e => setPassword(e.target.value)}
-                   placeholder="Password"
-            />
+                {/*pobieramy dane wejściowe od użytkownika odnośnie nazwy*/}
+                <input className="username"
+                       type="text"
+                       value={username}
+                       onChange={e => setUsername(e.target.value)}
+                       placeholder="Username"
+                />
 
+                {/*pobieramy dane wejściowe od użytkownika odnośnie hasła*/}
+                <input className="password"
+                       type="password"
+                       value={password}
+                       onChange={e => setPassword(e.target.value)}
+                       placeholder="Password"
+                />
 
-            <button type="submit" className="registerButton" >Zarejestruj</button>
-            <button type="button" className="loginButton" onClick={onSwitchToLogin}>
-                Wróć do logowania
-            </button>
-    </div>
+                {/*przycisk zatwierdzający informacje, zarejestruj*/}
+                <button type="submit" className="registerButton">Zarejestruj</button>
+
+                {/*przycisk przenoszący do podstrony logowania*/}
+                <button type="button" className="loginButton" onClick={onSwitchToLogin}>
+                    Wróć do logowania
+                </button>
+            </div>
         </form>
     );
 }

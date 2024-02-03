@@ -96,8 +96,10 @@
     cursor: pointer;
 }
 
-.scanners{
-    display:none
+.scanners {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
 }
 
@@ -260,7 +262,6 @@
 .leftCameraOption:hover, .rightCameraOption:hover{
     transform: scale(1.1);
 }
-/* Existing styles... */
 
 
 @media only screen and (max-width: 1200px) {
@@ -282,13 +283,6 @@
         /* Pozwala formularzowi zajmować większą część ekranu na tabletach */
         font-size: calc(1.1vw + 1.1vh); /* Możesz dostosować rozmiar czcionki */
         min-width: 75%;
-
-    }
-    .scanners {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
     }
 
 }
@@ -299,23 +293,10 @@
         font-size: 4vw;
         padding:1vh 0.5vw 1vh 0.5vw;
     }
-    .scanners {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-    }
 
 }
 
 @media (pointer: coarse){
-
-    .scanners {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-    }
 
     .barcodeIcon, .qrIcon, .addPhotoFromDirIcon,.addPhotoByCameraIcon {
         width: 10vw;

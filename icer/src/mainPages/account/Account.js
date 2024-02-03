@@ -14,12 +14,16 @@ export function Account() {
 
     //pobieramy informacje na temat aktualnego użytkownika
     const {user} = useContext(AuthContext);
+    //pobieramy nazwę zdjęcia, informację czy jest zdjęcie podstawowe oraz zmienną, której zmiana to odświeżenie ustawień.
     const {profilePicture,defaultProfile,refresh} = useContext(SettingsContext);
+    //inicjacja obrazka
     const [image,setImage]= useState()
     useEffect(() => {
 
+        //odświeżamy po zmianie jednej z tych wartości
     },[refresh,profilePicture,defaultProfile,defaultProfile,image,setImage]);
 
+    // tworzymy instancje AccountPictureGetter, która decyduje jakie zdjęcie zwrócić na podstawie podanych informacji
     const picGetter = AccountPictureGetter(image,setImage, defaultProfile , profilePicture)
     return (
         <div className="accountContainer"> {/*kontener z informacjami o użytkowniku oraz z przyciskiem edycji konta*/}
