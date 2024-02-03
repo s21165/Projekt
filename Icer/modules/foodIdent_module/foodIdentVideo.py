@@ -206,6 +206,14 @@ def process_video(username):
 # Funkcja start_camera rozpoczyna przechwytywanie wideo z kamery.
 # Przekazuje nazwę użytkownika jako argument do funkcji process_video.
 def start_camera(username):
+    # Sprawdź, czy lista food_list nie jest pusta
+    try:
+        if food_list:
+            # Wyczyść listę, jeśli nie jest pusta
+            food_list.clear()
+    except Exception as e:
+        print(f"Error while clearing existing data: {e}")
+    
     global camera_running, camera_thread, camera_status
 
     # Sprawdzanie, czy kamera nie jest już uruchomiona
