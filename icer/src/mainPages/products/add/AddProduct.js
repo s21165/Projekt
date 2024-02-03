@@ -179,11 +179,24 @@ function AddProduct() {
                 console.error(`Error starting camera: ${error}`);
             });
     };
-
+    const updateFood = () => {
+        axios.get(`${API_URL}/api/update_food_list`)
+            .then((response) => {
+                console.log(response.data);
+                toast.success('update food!');
+                setProductBackpack(response.data);
+            })
+            .catch((error) => {
+                setStreamCamera(null);
+                console.error(`Error starting camera: ${error}`);
+            });
+    };
     const stopCamera = () => {
         axios.post(`${API_URL}/stop_camera`)
             .then((response) => {
                 console.log(response.data);
+                updateFood()
+                console.log(productBackpack)
                 toast.success('Camera stopped!');
                 setStreamCamera(null);
             })

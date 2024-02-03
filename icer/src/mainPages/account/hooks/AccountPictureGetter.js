@@ -8,21 +8,16 @@ export const AccountPictureGetter = (image, setImage, defaultProfile, profilePic
 
 
     useEffect(() => {
-
-        try {
+            console.log(defaultProfile)
             if (defaultProfile===1) {
-                setImage(noImage);
+                setImage(`${process.env.PUBLIC_URL}/data/userProfilePicture/face.jpg`);
 
-            } else
+            } else if (profilePicture) {
+                console.log(profilePicture)
+                setImage(`${process.env.PUBLIC_URL}/data/userProfilePicture/${profilePicture}`);
 
-                setImage(require(`../../../data/userProfilePicture/${profilePicture}`));
+            }
 
-
-        } catch (e) {
-            console.error("Nie udało się załadować obrazu: ", e);
-            // Ustaw domyślny obraz, jeśli nie można załadować obrazu z danej lokalizacji
-            setImage(noImage);
-        }
-    }, [image,defaultProfile, profilePicture]);
+    }, [image,defaultProfile, profilePicture, setImage]);
     return (image)
 }

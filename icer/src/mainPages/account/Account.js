@@ -17,8 +17,8 @@ export function Account() {
     const {profilePicture,defaultProfile,refresh} = useContext(SettingsContext);
     const [image,setImage]= useState()
     useEffect(() => {
-        console.log('zmiana')
-    },[refresh,profilePicture,defaultProfile,defaultProfile]);
+
+    },[refresh,profilePicture,defaultProfile,defaultProfile,image,setImage]);
 
     const picGetter = AccountPictureGetter(image,setImage, defaultProfile , profilePicture)
     return (

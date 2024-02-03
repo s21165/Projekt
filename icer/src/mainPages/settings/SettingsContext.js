@@ -20,22 +20,21 @@ export const SettingsProvider = ({ children }) => {
         if (sessionId) {
             axios.get(`${API_URL}/api/get_user_preferences`, { params: { sessionId } })
                 .then((response) => {
-
+                    console.log(response.data)
                     const { wielkosc_lodowki, wielkosc_strony_produktu, widocznosc_informacji_o_produkcie
-                    ,profile_photo, podstawowe_profilowe} = response.data;
+                    ,lokalizacja_zdj, podstawowe_profilowe} = response.data;
                     updateSetting('fridgeSizeElements', wielkosc_lodowki);
                     updateSetting('productsSizeElements', wielkosc_strony_produktu);
                     updateSetting('infoProducts', widocznosc_informacji_o_produkcie);
-                    updateSetting('photo', profile_photo);
+                    updateSetting('photo', lokalizacja_zdj);
                     updateSetting('defaultPhoto', podstawowe_profilowe);
-                    console.log(profile_photo)
+
                 })
                 .catch((error) => {
                     console.error(`There was an error retrieving the data: ${error}`);
                 });
         }
     }, [sessionId,fridgeSizeElements,productsSizeElements,infoProducts, refresh]);
-
 
     const updateSetting = (key, value) => {
 

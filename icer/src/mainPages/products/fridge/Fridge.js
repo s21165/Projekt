@@ -1,7 +1,7 @@
 
 import './Fridge.css';
 import {Icon} from "@iconify/react";
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Notifications} from "../../notifications/Notifications";
 import {useLocation} from "react-router-dom";
 import '../../notifications/Notifications.css'
@@ -14,6 +14,7 @@ import Products from "../productList/Products";
 import ProductManager from "../productList/ProductManager";
 
 import {useNotificationsData} from "../../notifications/useNotificationsData";
+
 
 
 export function Fridge(){
@@ -39,7 +40,6 @@ export function Fridge(){
 
         const hasNotif = notificationData.data?.some(product => product.powiadomienie === 1 );
         setHasNotification(hasNotif);
-
 
 
     }, [notificationData.data]);
