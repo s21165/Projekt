@@ -1159,12 +1159,14 @@ def update_food_list():
         with open(user_food_list_path, 'w') as file:
             json.dump(updated_food_list, file, indent=4)
 
-        # Zwróć zaktualizowany plik JSON jako odpowiedź
+        # Otwórz zaktualizowany plik JSON do odczytu
         with open(user_food_list_path, 'r') as file:
             updated_food_list_content = json.load(file)
-            # Usuń plik
-            os.remove(user_food_list_path)
 
+        # Usuń plik po odczycie jego zawartości
+        os.remove(user_food_list_path)
+
+        # Zwróć zawartość zaktualizowanego pliku JSON jako odpowiedź
         return jsonify(updated_food_list_content)
 
 

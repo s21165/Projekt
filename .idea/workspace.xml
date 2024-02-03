@@ -91,8 +91,8 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.mainAPI" />
       <item itemvalue="Python.foodIdentVideo" />
+      <item itemvalue="Python.mainAPI" />
       <item itemvalue="Python.save" />
     </list>
     <recent_temporary>
@@ -137,6 +137,15 @@
     <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
@@ -169,7 +178,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>1167</line>
+          <line>1169</line>
           <option name="timeStamp" value="84" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -208,6 +217,6 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Projekt$image_handler.coverage" NAME="image_handler Coverage Results" MODIFIED="1706818591086" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Icer/modules" />
     <SUITE FILE_PATH="coverage/Projekt$save.coverage" NAME="save Coverage Results" MODIFIED="1706913712452" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../../pythonProject4/gierka/Icer/Lib/site-packages/keras/src/saving/legacy" />
-    <SUITE FILE_PATH="coverage/Projekt$mainAPI.coverage" NAME="mainAPI Coverage Results" MODIFIED="1706998342067" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Icer" />
+    <SUITE FILE_PATH="coverage/Projekt$mainAPI.coverage" NAME="mainAPI Coverage Results" MODIFIED="1707002422204" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Icer" />
   </component>
 </project>
