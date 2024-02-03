@@ -48,10 +48,10 @@ def pred_and_plot(model, filename, class_names, username):
     os.makedirs(save_dir, exist_ok=True)  # Utworzenie katalogu, jeśli nie istnieje
 
     # Użycie nazwy użytkownika do nazwania pliku JSON
-    json_file_path = os.path.join(save_dir, f'{username}_prediction_result.json')
+    json_file_path = os.path.join(save_dir, f'{username}_food_list.json')
 
     # Zapis wyników predykcji pod określoną ścieżką do pliku
-    prediction_result = {"predicted_class": pred_class}
+    prediction_result = [pred_class]
     with open(json_file_path, 'w') as json_file:
         json.dump(prediction_result, json_file, indent=4)
 
