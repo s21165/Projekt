@@ -1088,12 +1088,13 @@ def change_user_photo():
         return jsonify({"error": str(error)}), 500
 
 
-@app.route('/api/update_food_list', methods=['GET'])
+@app.route('/api/update_food_list', methods=['GET', 'POST'])
 def update_food_list():
     try:
-        # Wczytaj zawartość pliku JSON
-        with open('D:/repo/Projekt/Icer/modules/foodIdent_module/food_list.json', 'r') as file:
-            food_list = json.load(file)
+        # Pobierz nazwę użytkownika z sesji lub z argumentów
+        username = session.get('username', 'root')  # Domyślnie root, do testow, pozniej bd trzeba to wywalic
+        project_path = os.path.dirname(os.path.abspath(__file__))
+        user_food_list_path = os.path.join(project_path, 'static', 'scanned', f'{username}_food_list.json')
 
         # Tworzenie instancji klasy DatabaseConnector
         db_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
@@ -1103,14 +1104,26 @@ def update_food_list():
         connection = db_connector.get_connection()
         cursor = connection.cursor(dictionary=True)
 
+        # Wczytaj zawartość pliku JSON
+        with open(user_food_list_path, 'r') as file:
+            food_list = json.load(file)
+
         # Pobieranie danych produktów z bazy danych
         select_query = """
                 SELECT nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria
                 FROM Produkty
-                WHERE podstawowe = 1 AND nazwa IN (%s)
+                WHERE podstawowy = 1 AND nazwa IN ({})
             """
+
+        # Tworzenie ciągu znaków '?' do zastąpienia w zapytaniu SQL
+        placeholders = ', '.join(['%s' for _ in range(len(food_list))])
+
+        # Wypełnienie zapytania SQL odpowiednią liczbą znaków '?'
+        formatted_query = select_query.format(placeholders)
+
         # Wykonaj zapytanie z uwzględnieniem listy produktów z pliku JSON
-        cursor.execute(select_query, (','.join(['%s'] * len(food_list)), food_list))
+        cursor.execute(formatted_query, tuple(food_list))
+
         products = cursor.fetchall()
 
         cursor.close()
@@ -1130,13 +1143,18 @@ def update_food_list():
             })
 
         # Zapisz zaktualizowane produkty do pliku JSON
-        with open('D:/repo/Projekt/Icer/modules/foodIdent_module/food_list.json', 'w') as file:
+        with open(user_food_list_path, 'w') as file:
             json.dump(updated_food_list, file, indent=4)
 
-        return jsonify({"message": "Food list updated successfully!"})
+        # Zwróć zaktualizowany plik JSON jako odpowiedź
+        with open(user_food_list_path, 'r') as file:
+            updated_food_list_content = json.load(file)
+
+        return jsonify(updated_food_list_content)
 
     except Exception as error:
         return jsonify({"error": str(error)}), 500
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -1467,12 +1485,13 @@ def upload_predict():
             file.save(file_path)
 
             # Make a prediction using the uploaded image
-            pred_class = pred_and_plot(model, file_path, class_names,username)
+            pred_class = pred_and_plot(model, file_path, class_names, username)
 
             # Generate the URL for the saved image
             image_url = url_for('static', filename='uploads/' + filename)
 
             # Render the result template with the prediction and image URL
+            requests.post('http://localhost:5000/api/update_food_list')
             return render_template('result.html', prediction=pred_class, image_file=image_url)
         else:
             # Flash an error message for an invalid file type and redirect
