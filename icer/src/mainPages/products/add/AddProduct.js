@@ -61,6 +61,8 @@ function AddProduct() {
     //podlgąd wybranego obrazu do identyfikacji poprzez zdjęcie
     const [imageForIdentyficationURL, setImageForIdentyficationURL] = useState(null);
 
+    const [imageIdentyficationInfo,setImageIdentyficationInfo] = useState([]);
+
     //przy zatwierdzaniu formularza:
     const handleSubmit = (e) => {
         //nie odświeżaj
@@ -83,22 +85,6 @@ function AddProduct() {
 
 
     }, [refresh, imageIdentyfication,streamCamera,stopCamera]);//odśwież po zmianie tych wartości
-
-    const handleAddToBackpack = () => {
-        const newProduct = {
-            nazwa: 'siema',
-            cena: 2,
-            kalorie: 3,
-            tluszcze: 3,
-            weglowodany: 1,
-            bialko: 5,
-            kategoria: 'cze',
-            ilosc: 1,
-            data_waznosci: new Date().toISOString().split('T')[0],
-        };
-
-        setProductBackpack(prevBackpack => [...prevBackpack, newProduct]);
-    };
 
 
     //przełącz widoczność opcji identyfikacji
@@ -137,7 +123,7 @@ function AddProduct() {
 
                             {/* przycisk decydujący o tym czy identyfikować zdjęcie */}
                             <div className="sendButtonForFoodIdentyfication" onClick={() => {
-                                sendImageToFlask(imageIdentyfication, setImageForIdentyficationURL)
+                                sendImageToFlask(setProduct,imageIdentyfication, setImageForIdentyficationURL)
                             }}>
                                 <h2>
                                     identyfikuj

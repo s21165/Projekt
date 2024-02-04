@@ -163,9 +163,9 @@ function Main() {
                                             </div>
                                         </Link>
                                         {/* link do pomocy */}
-                                        <Link to="/Pomoc">
+                                        <Link to="/Chatbot">
                                             <div className="navDiv">
-                                                {isIcon ? <h3>pomoc</h3> :
+                                                {isIcon ? <h3>chatbot</h3> :
                                                     <Icon className="menuIcons" icon="bx:bot" />}
                                             </div>
                                         </Link>

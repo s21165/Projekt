@@ -1,17 +1,19 @@
 import {useEffect} from "react";
 import noImage from "../../../data/noImage/1.jpg";
 
+//pobiera i ustawia zdjęcie produktu, przyujmuje jego nazwę jako photo
 export const PictureGetter=(image, setImage, photo)=>{
 
     useEffect(()=>{
-        console.log(photo)
+
         try {
-            if (!photo){  throw 'zdjęcie nie istnieje'
-
+            //jeśli nie ma zdjęcia to ustaw domyślne
+            if (!photo){
+                setImage(noImage);
             }else
-
+            //ustawia zdjęcie produktu na te, do którego zdjęcie jest przypisane
             setImage(require(`../../../data/userPhotos/${photo}`));
-            console.log(photo)
+
         } catch (e) {
             console.error("Nie udało się załadować obrazu: ", e);
             // Ustaw domyślny obraz, jeśli nie można załadować obrazu z danej lokalizacji

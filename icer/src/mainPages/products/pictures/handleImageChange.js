@@ -1,4 +1,5 @@
 
+//zapisuje zdjęcie, tworzy do niego podgląd i konwertuje na format base64 i dodaje do produktu do dodania
 export const handleImageChange = (e, setImage, setProduct, setImagePreview) => {
     const file = e.target.files[0];
     if (file) {

@@ -55,8 +55,9 @@ export const SettingsProvider = ({ children }) => {
                 setDefaultProfile(value);
                 break;
             default:
-            // Handle unknown keys
+
         }
+
         localStorage.setItem(key, value);
     };
     const getFridgeSizeIndex = () => {

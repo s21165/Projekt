@@ -86,7 +86,7 @@ function ProductItemMedium({data, useProduct,elementRef,rightButtonDivRef, anima
                     <div className="productCardInfoRow"><h3>data ważności: {formatDate(data.data_waznosci)}</h3></div>
 
 
-                    {/*  kontener z przuyciskami kontroli ilości produktu  */}
+                    {/*  kontener z przyciskami kontroli ilości produktu  */}
                     <div className="productItemQuantityDiv"
                          >
                         {/*  wewnętrzny kontener z przuyciskami kontroli ilości produktu  */}

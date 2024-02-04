@@ -6,7 +6,7 @@ import {toast} from "react-toastify";
 //zmiennej do wideo
 export const cameraControl = (setStreamCamera) => {
 
-    axios.post(`${API_URL}/start_camera`)
+    axios.post(`${API_URL}/start_camera?timestamp=${Date.now()}`)
         .then((response) => {
             //w razie powodzenia - komunikat
             toast.success('identyfikacja rozpoczęta!');

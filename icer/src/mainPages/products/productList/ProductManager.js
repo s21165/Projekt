@@ -63,7 +63,7 @@ function ProductManager({
             // Czyszczenie przy odmontowywaniu
             return () => resizeObserver.unobserve(observeTarget);
         }
-    }, [dimension,minDimension,editingProduct]);//odśwież kiedy któryś z tych elementów ulegnie zmianie
+    }, [dimension,minDimension,editingProduct, productData]);//odśwież kiedy któryś z tych elementów ulegnie zmianie
 
     //jeśli element zostanie naciśnięty nadaj wartość do selectedProductId jako jego id
     const handleProductClick = (productId) => {

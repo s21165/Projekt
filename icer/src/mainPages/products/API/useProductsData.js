@@ -41,8 +41,7 @@ export const useProductsData = ( filter) => {
                 
             })
             .catch((error) => {
-                //w razie niepowodzenia - komunikat i wyświetlamy error w konsoli
-                toast.error('nie udało się pobrać danych o produktach!');
+
                 console.error(`There was an error retrieving the data: ${error}`);
             });
     }, [data,refresh, filter, sessionId]);//odśwież po zmianie tych wartości

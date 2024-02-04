@@ -4,7 +4,7 @@ import {toast} from "react-toastify";
 
 //funkcja do komunikacji z API w celu identyfikacji obrazu z jedzeniem, przyjmuje plik i ustawienie
 // podglądu zdjęcia
-export const sendImageToFlask = async (file,setImageForIdentyficationURL) => {
+export const sendImageToFlask = async (setProduct,file,setImageForIdentyficationURL) => {
     //tworzy zmienną formData i dodaje do niej plik
     const formData = new FormData();
     formData.append('file', file);
@@ -15,6 +15,20 @@ export const sendImageToFlask = async (file,setImageForIdentyficationURL) => {
                 'Content-Type': 'multipart/form-data' //wskazuje w jakim typie będą dane
             }
         });
+
+        axios.get(`${API_URL}/api/update_food_list`)
+            .then((response) => {
+                //w razie powodzenia wyświetl komunikat
+                toast.success('nowe produkty w torbie z zakupami!');
+                const identified= (response.data[0])
+                // Dodajemy datę ważności do produktu
+                const updatedProduct = {
+                    ...identified,
+                    data_waznosci: new Date().toISOString().split('T')[0] // Dodajemy datę ważności
+
+                };
+                setProduct(updatedProduct)
+            })
         setImageForIdentyficationURL(null) // wyłącza podgląd
 
 

@@ -17,6 +17,7 @@ export const stopCamera = ({updateFood},productBackpack,setStreamCamera,setProdu
             // w razie nie powodzenia komunikat oraz error z serwera w konsoli
             toast.success('nie udało sie poprawnie zatrzymać kamery!');
             console.error(`Error stopping camera: ${error}`);
+            setProductBackpack(''); // zmiana torby z zakupami na pusty ciąg znaków
             setStreamCamera(null);// zmiana wideo na null
         });
 

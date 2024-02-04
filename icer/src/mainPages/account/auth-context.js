@@ -6,14 +6,14 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     //tworzenie zmiennej przechowującj informacje na temat aktualnego użytkownika
     const [user, setUser] = useState(null);
-
+    const [refreshe,setRefreshe] = useState(false);
     //efekt aktualizujący informacje w zmiennej "user"
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
             setUser(JSON.parse(storedUser));
         }
-    }, []);
+    }, [refreshe]);
 
     //logowanie
     const login = (userData) => {
@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
     //zwraca informacje zawarte w AuthContext swoim dzieciom
     return (
 
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ user, login, logout,refreshe,setRefreshe}}>
             {children}
         </AuthContext.Provider>
     );

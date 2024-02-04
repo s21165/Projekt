@@ -25,6 +25,7 @@ function ChatContainer() {
 
             });
             //zapisywanie odpowiedzi
+            console.log(response.data)
             const botResponse = response.data.response;
             //dodawanie odpowiedzi do zmiennej posiadającej całą konwersację
             setMessages(prevMessages => [...prevMessages, { text: botResponse, id: Date.now(), sender: 'bot' }]);
