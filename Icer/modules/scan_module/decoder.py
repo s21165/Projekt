@@ -16,7 +16,7 @@ import os
     # else:
         # return "No barcode found"
 
-# Function to decode a QR code from an image
+# Dekodowanie QR z obrazu
 def decode_qr_code(image_path):
     qr_image = Image.open(image_path)
     decoded_objects = decode(qr_image)
@@ -24,16 +24,16 @@ def decode_qr_code(image_path):
     if decoded_objects:
         decoded_data = decoded_objects[0].data.decode('utf-8')
         
-        # Get the directory of the current script
+        # Znajdź lokalizację skryptu
         current_dir = os.path.dirname(__file__)
 
-        # Specify the path to write the JSON file in the current directory
+        # Podaj PATH do zapisania JSON
         json_file_path = os.path.join(current_dir, 'decoded_data.json')
 
-        # Create a dictionary to store the decoded data
+        # Dictionary do przechowywania danych
         data_dict = {"decoded_data": decoded_data}
         
-        # Write the dictionary to a JSON file in the current directory
+        # Zapisz JSON w obecnym folderze
         with open(json_file_path, 'w') as json_file:
             json.dump(data_dict, json_file, indent=4)
         
