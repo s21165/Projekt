@@ -91,11 +91,11 @@ def generate_frames():
                 beep = 0
 
             # Sprawdzenie, czy plik wideo został zakończony
-            if video_ended:
-                camera_status = 'finished'
-                socketio.emit('update_status', {'new_value': camera_status})
-                print_and_send(camera_status)
-                break  # Wyjście z pętli po wysłaniu sygnału zakończenia
+        if video_ended:
+            camera_status = 'finished'
+            socketio.emit('update_status', {'new_value': camera_status})
+            print_and_send(camera_status)
+            break  # Wyjście z pętli po wysłaniu sygnału zakończenia
 
         # Konwersja obrazu na format JPEG
         ret, buffer = cv2.imencode('.jpg', frame)
