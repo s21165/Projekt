@@ -89,20 +89,20 @@ def extract_relevant_sentences(text, query):
     return relevant_sentences
 
 # Konfiguracja API OpenAI GPT-3
-import openai
-openai.api_key = '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'
+# import openai
+# openai.api_key = 'HERE_LATER'
 
-# Pobieranie odpowiedzi od modelu GPT-3
-def get_gpt3_response(prompt_text):
-    response = openai.Completion.create(
-        engine="gpt-3.5-turbo-instruct",  # Możesz wybrać inną wersję modelu, jeśli jest potrzeba
-        prompt=prompt_text,
-        max_tokens=100,
-        n=1,
-        stop=None,
-        temperature=0.7
-    )
-    return response.choices[0].text.strip()
+#Pobieranie odpowiedzi od modelu GPT-3
+# def get_gpt3_response(prompt_text):
+    # response = openai.Completion.create(
+        # engine="gpt-3.5-turbo-instruct",  # Możesz wybrać inną wersję modelu, jeśli jest potrzeba
+        # prompt=prompt_text,
+        # max_tokens=100,
+        # n=1,
+        # stop=None,
+        # temperature=0.7
+    # )
+    # return response.choices[0].text.strip()
 
 # Pobieranie odpowiedzi od bota
 def get_bot_response(user_input):
@@ -126,9 +126,11 @@ def get_bot_response(user_input):
         pass  # Obsłuż błąd lub po prostu przejdź dalej
     except Exception as e:
         print(f"Wystąpił błąd: {e}")
+        
+    return "Przepraszam, nie wiem co powiedzieć!"
 
     # Użyj GPT-3 jako ostatecznej opcji
-    return get_gpt3_response(user_input)
+    #return get_gpt3_response(user_input)
 
 
 
