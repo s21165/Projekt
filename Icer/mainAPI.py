@@ -784,6 +784,11 @@ def get_icer():
             Produkty.tluszcze, Produkty.weglowodany, Produkty.bialko,
             Produkty.kategoria
             FROM Icer
+            INNER JOIN (
+                SELECT MAX(id) AS id
+                FROM Icer
+                GROUP BY icer.id
+            ) AS MaxIds ON Icer.id = MaxIds.id
             INNER JOIN Produkty ON Icer.produktID = Produkty.id
             LEFT JOIN Photos ON Icer.produktID = Photos.produktID
             LEFT JOIN UserPhotos ON Icer.produktID = UserPhotos.produktID AND UserPhotos.userID = %s

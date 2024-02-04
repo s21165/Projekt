@@ -29,8 +29,8 @@ class DatabaseConnector:
             cursor.execute(check_default_query, (product_id,))
             is_default = cursor.fetchone()
 
-            if is_default and is_default.get('podstawowe') == 1:
-                # Utwórz kopię produktu z is_podstawowe=0
+            if is_default and is_default.get('podstawowy') == 1:
+                # Utwórz kopię produktu z is_podstawowe=1
                 copy_product_query = """INSERT INTO Produkty (nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria, podstawowy)
                                         SELECT nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria, 0
                                         FROM Produkty
@@ -44,19 +44,32 @@ class DatabaseConnector:
                 new_product_id = cursor.fetchone()['LAST_INSERT_ID()']
 
                 # Zaktualizuj oryginalny produkt
-                update_produkt_query = """UPDATE Produkty SET 
-                                           nazwa=%s, 
-                                           cena=%s,
-                                           kalorie=%s,
-                                           tluszcze=%s, 
-                                           weglowodany=%s, 
-                                           bialko=%s, 
-                                           kategoria=%s
-                                        WHERE id=%s"""
+                update_product_query = """
+                       UPDATE Produkty 
+                       SET 
+                           nazwa=%s, 
+                           cena=%s,
+                           kalorie=%s,
+                           tluszcze=%s, 
+                           weglowodany=%s, 
+                           bialko=%s, 
+                           kategoria=%s
+                       WHERE id=%s
+                   """
+                cursor.execute(update_product_query, (
+                    data['nazwa'], data['cena'], data['kalorie'], data['tluszcze'],
+                    data['weglowodany'], data['bialko'], data['kategoria'], new_product_id
+                ))
 
-                cursor.execute(update_produkt_query, (data['nazwa'], data['cena'], data['kalorie'], data['tluszcze'],
-                                                      data['weglowodany'], data['bialko'], data['kategoria'],
-                                                      product_id))
+                # Zaktualizuj przypisanie w tabeli Icer tylko dla konkretnego użytkownika
+                update_icer_query = """
+                    UPDATE Icer
+                    SET produktID = %s
+                    WHERE produktID = %s
+                    AND UserID = %s
+                """
+                cursor.execute(update_icer_query, (new_product_id, product_id, user_id))
+
             else:
                 # Zaktualizuj Produkt bez tworzenia kopii
                 update_produkt_query = """UPDATE Produkty SET 
