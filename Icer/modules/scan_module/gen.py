@@ -1,18 +1,15 @@
 import os
 import qrcode
-# import barcode
 import json
-# from barcode import Code128, EAN13
-# from barcode.writer import ImageWriter
 from PIL import Image
 
 
-# Generate QR code based on data and save it to the output folder
+# Wygeneruj kod QR na podstawie danych i zapisz go w folderze wyjściowym.
 def generate_qr_code(data, output_folder):
-    # Construct the data string for the QR code
+    # Zbuduj ciąg danych dla kodu QR
     qr_data = f"Nazwa:{data['name']}, Cena:{data['price']}, Kalorie:{data['kcal']}, Tłuszcze:{data['fat']}, Węglowodany:{data['carbs']}, Białko:{data['protein']}, Kategoria:{data['category']}, Ilość:{data['amount']}, Data:{data['date']}"
     
-    # Create a QR code object
+    Utwórz obiekt kodu QR
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -20,48 +17,19 @@ def generate_qr_code(data, output_folder):
         border=4,
     )
     
-    # Add the data to the QR code
+    # Dodaj dane do kodu QR
     qr.add_data(qr_data)
     qr.make(fit=True)
     
-    # Generate the QR code image
+    # Wygeneruj kod QR
     qr_image = qr.make_image(fill_color="black", back_color="white")
     
-    # Construct the image filename and path
+    # Zbuduj nazwę pliku i ścieżkę obrazu.
     image_filename = f"{data['name']}_{data['category']}_qr.png"
     image_path = os.path.join(output_folder, image_filename)
     
-    # Save the QR code image
+    # Zapisz QR
     qr_image.save(image_path)
     
     return image_filename
 
-
-# Generate barcode based on data and save it to the output folder
-# def generate_barcode(data, output_folder):
-    # Create a dictionary with the data
-    # barcode_data = {
-        # "name": data["name"],
-        # "price": data["price"],
-        # "kcal": data["kcal"],
-        # "fat": data["fat"],
-        # "carbs": data["carbs"],
-        # "protein": data["protein"],
-        # "category": data["category"],
-        # "amount": data["amount"]
-    # }
-
-    # Convert the dictionary to a JSON string
-    # barcode_json = json.dumps(barcode_data)
-
-    # Generate the barcode using the JSON data
-    # barcode = Code128(barcode_json, writer=ImageWriter())
-    
-    # Construct the image filename and path
-    # image_filename = f"{data['name']}_{data['category']}.png"
-    # image_path = os.path.join(output_folder, image_filename)
-    
-    # Save the barcode image with the JSON data as part of the filename
-    # barcode.save(image_path)
-
-    # return image_filename
