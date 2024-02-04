@@ -11,7 +11,7 @@ from flask import jsonify
 from flask import jsonify
 
 
-def handle_image_upload(db_connector, image_data_base64, user_id, product_id, replace_existing=False):
+def handle_image_upload(db_connector, image_data_base64, user_id, product_id, replace_existing=True):
     try:
         # Odkodowanie danych obrazu z Base64
         image_data = base64.b64decode(image_data_base64.split(",")[1])

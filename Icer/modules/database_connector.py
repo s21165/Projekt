@@ -23,19 +23,23 @@ class DatabaseConnector:
 
     def update_product(self, product_id, data, user_id):
         try:
+            cursor = self.connection.cursor(dictionary=True)
+
             # Sprawdź wartość is_podstawowe
             check_default_query = "SELECT podstawowy FROM Produkty WHERE id=%s"
-            cursor = self.connection.cursor(dictionary=True)
             cursor.execute(check_default_query, (product_id,))
             is_default = cursor.fetchone()
 
+            new_product_id = None  # Domyślnie ustawiamy na None
+
             if is_default and is_default.get('podstawowy') == 1:
                 # Utwórz kopię produktu z is_podstawowe=1
-                copy_product_query = """INSERT INTO Produkty (nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria, podstawowy)
-                                        SELECT nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria, 0
-                                        FROM Produkty
-                                        WHERE id=%s"""
-
+                copy_product_query = """
+                    INSERT INTO Produkty (nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria, podstawowy)
+                    SELECT nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria, 0
+                    FROM Produkty
+                    WHERE id=%s
+                """
                 cursor.execute(copy_product_query, (product_id,))
                 self.connection.commit()
 
@@ -45,17 +49,17 @@ class DatabaseConnector:
 
                 # Zaktualizuj oryginalny produkt
                 update_product_query = """
-                       UPDATE Produkty 
-                       SET 
-                           nazwa=%s, 
-                           cena=%s,
-                           kalorie=%s,
-                           tluszcze=%s, 
-                           weglowodany=%s, 
-                           bialko=%s, 
-                           kategoria=%s
-                       WHERE id=%s
-                   """
+                    UPDATE Produkty 
+                    SET 
+                        nazwa=%s, 
+                        cena=%s,
+                        kalorie=%s,
+                        tluszcze=%s, 
+                        weglowodany=%s, 
+                        bialko=%s, 
+                        kategoria=%s
+                    WHERE id=%s
+                """
                 cursor.execute(update_product_query, (
                     data['nazwa'], data['cena'], data['kalorie'], data['tluszcze'],
                     data['weglowodany'], data['bialko'], data['kategoria'], new_product_id
@@ -69,6 +73,15 @@ class DatabaseConnector:
                     AND UserID = %s
                 """
                 cursor.execute(update_icer_query, (new_product_id, product_id, user_id))
+
+                # Zaktualizuj wpisy w tabeli UserPhotos
+                update_userphotos_query = """
+                    UPDATE UserPhotos
+                    SET produktID = %s
+                    WHERE produktID = %s
+                    AND userID = %s
+                """
+                cursor.execute(update_userphotos_query, (new_product_id, product_id, user_id))
 
             else:
                 # Zaktualizuj Produkt bez tworzenia kopii
@@ -97,6 +110,8 @@ class DatabaseConnector:
             self.connection.commit()
 
             cursor.close()
+
+            return new_product_id  # Zwracamy nowe ID produktu, nawet jeśli jest to None
 
         except Exception as error:
             raise error
