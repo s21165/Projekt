@@ -79,7 +79,6 @@ def generate_frames():
 
             # Wykrywanie twarzy i oczu
             detected_faces, detected_eyes = detect_faces_and_eyes(img)
-            # ... Logika rysowania prostokątów (opcjonalna przy przesyłaniu strumieniowym) ...
 
             if len(detected_eyes) == 0 and len(detected_faces) == 0:
                 if beep == 5:
