@@ -5,11 +5,8 @@ Ze względów bezpieczeństwa należy użyć swojego własnego klucza openai api
 Instrukcja:
     
     Otwórz Właściwości systemu i wybierz Zaawansowane ustawienia systemu.
-
     Wybierz Zmienne środowiskowe...
-
     Wybierz Nowy... z sekcji Zmienne użytkownika (u góry). Dodaj parę nazwa/klucz wartości, zamieniając <yourkey> na swój klucz API.
-
     Nazwa zmiennej: OPENAI_API_KEY
     Wartość zmiennej: <yourkey> 
 
