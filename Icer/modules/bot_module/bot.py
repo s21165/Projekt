@@ -24,7 +24,7 @@ lemmatizer = WordNetLemmatizer()
 
 # Wczytywanie intencji z pliku JSON
 intents_file_path = os.path.join(os.path.dirname(__file__), 'intents.json')
-with open(intents_file_path, 'r') as file:
+with open(intents_file_path, 'r', encoding='utf-8') as file:
     intents = json.load(file)
 
 # Konfiguracja API Wikipedii
