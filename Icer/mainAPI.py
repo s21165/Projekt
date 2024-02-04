@@ -422,11 +422,17 @@ def edit_product(product_id):
             return response, status_code
 
         # Aktualizacja produktu w bazie danych
-        db_connector.update_product(product_id, data, user_id)
+        new_product_id = db_connector.update_product(product_id, data, user_id)
+
+        # Jeśli new_product_id nie jest None, oznacza to, że został utworzony nowy produkt
+        if new_product_id is not None:
+            product_id_to_use = new_product_id
+        else:
+            product_id_to_use = product_id
 
         # Wywołanie funkcji do obsługi przesyłania zdjęcia tylko jeśli dostępne są dane zdjęcia
-        if image_data:
-            handle_image_upload(db_connector, image_data, user_id, product_id)
+        if image_data:  # Dodatkowa warunek sprawdzający, czy jest nowe id produktu
+            handle_image_upload(db_connector, image_data, user_id, product_id_to_use)
 
         cursor.close()
         connection.close()
@@ -777,18 +783,14 @@ def get_icer():
 
         # Modyfikacja zapytania SQL, aby pokazywać wszystkie informacje o produkcie
         query = """
-            SELECT Icer.id, Icer.UserID, Icer.produktID, Icer.ilosc, 
-            Icer.data_waznosci, Icer.trzecia_wartosc, Icer.default_photo,
-            IF(Icer.default_photo = 1, Photos.lokalizacja, UserPhotos.lokalizacja) AS zdjecie_lokalizacja,
-            Produkty.nazwa, Produkty.cena, Produkty.kalorie,
-            Produkty.tluszcze, Produkty.weglowodany, Produkty.bialko,
-            Produkty.kategoria
+            SELECT DISTINCT Icer.id, Icer.UserID, Icer.produktID, Icer.ilosc, 
+                   Icer.data_waznosci, Icer.trzecia_wartosc, Icer.default_photo,
+                   IF(Icer.default_photo = 1, Photos.lokalizacja, UserPhotos.lokalizacja) AS zdjecie_lokalizacja,
+                   Produkty.nazwa, Produkty.cena, Produkty.kalorie,
+                   Produkty.tluszcze, Produkty.weglowodany, Produkty.bialko,
+                   Produkty.kategoria,
+                   Icer.data_dodania
             FROM Icer
-            INNER JOIN (
-                SELECT MAX(id) AS id
-                FROM Icer
-                GROUP BY icer.id
-            ) AS MaxIds ON Icer.id = MaxIds.id
             INNER JOIN Produkty ON Icer.produktID = Produkty.id
             LEFT JOIN Photos ON Icer.produktID = Photos.produktID
             LEFT JOIN UserPhotos ON Icer.produktID = UserPhotos.produktID AND UserPhotos.userID = %s
