@@ -109,5 +109,6 @@ def generate_frames():
 
     if cap1.isOpened():
         cap1.release()
+    cap2.release()
    
 
