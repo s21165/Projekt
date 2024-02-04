@@ -1,4 +1,4 @@
-By uruchomić kod należy zainstalować niezbędne biblioteki z pliku requierments.txt.
+By uruchomić poprawnie kod należy zainstalować niezbędne biblioteki z pliku requierments.txt.
 
 Ze względów bezpieczeństwa należy użyć swojego własnego klucza openai api key w zmiennej środowiskowej. 
 
