@@ -10,8 +10,8 @@ Instrukcja:
 
     Wybierz Nowy... z sekcji Zmienne użytkownika (u góry). Dodaj parę nazwa/klucz wartości, zamieniając <yourkey> na swój klucz API.
 
-Nazwa zmiennej: OPENAI_API_KEY
-Wartość zmiennej: <yourkey> 
+    Nazwa zmiennej: OPENAI_API_KEY
+    Wartość zmiennej: <yourkey> 
 
 W przypadku pracy ze środowiskiem wirtualnym, po jego uruchomieniu w CMD:
 
