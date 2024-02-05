@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1ea189cc-219c-4978-a52b-9b08d868a2c4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Icer/mainAPI.py" beforeDir="false" afterPath="$PROJECT_DIR$/Icer/mainAPI.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,7 +118,7 @@
       <workItem from="1706988751598" duration="133000" />
       <workItem from="1706988897350" duration="4665000" />
       <workItem from="1707059789452" duration="2757000" />
-      <workItem from="1707062963092" duration="16741000" />
+      <workItem from="1707062963092" duration="18007000" />
     </task>
     <task id="LOCAL-00001" summary="insert default values to preferencje_uzytkownika if could not receive values from get">
       <created>1706989631726</created>
@@ -150,7 +148,14 @@
       <option name="project" value="LOCAL" />
       <updated>1707075645827</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="change on daily procedure">
+      <created>1707095795192</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1707095795192</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -172,7 +177,8 @@
     <MESSAGE value="insert default values to preferencje_uzytkownika if could not receive values from get" />
     <MESSAGE value="value 1 on scanned food" />
     <MESSAGE value="change to not edit the default product." />
-    <option name="LAST_COMMIT_MESSAGE" value="change to not edit the default product." />
+    <MESSAGE value="change on daily procedure" />
+    <option name="LAST_COMMIT_MESSAGE" value="change on daily procedure" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -194,42 +200,42 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>1107</line>
+          <line>1105</line>
           <option name="timeStamp" value="83" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>1175</line>
+          <line>1173</line>
           <option name="timeStamp" value="84" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>1149</line>
+          <line>1147</line>
           <option name="timeStamp" value="85" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>1142</line>
+          <line>1140</line>
           <option name="timeStamp" value="88" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>1127</line>
+          <line>1125</line>
           <option name="timeStamp" value="89" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>1164</line>
+          <line>1162</line>
           <option name="timeStamp" value="93" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>331</line>
+          <line>329</line>
           <option name="timeStamp" value="118" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>442</line>
+          <line>440</line>
           <option name="timeStamp" value="129" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -239,12 +245,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>435</line>
+          <line>433</line>
           <option name="timeStamp" value="132" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>399</line>
+          <line>397</line>
           <option name="timeStamp" value="136" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -259,7 +265,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Icer/mainAPI.py</url>
-          <line>434</line>
+          <line>432</line>
           <option name="timeStamp" value="140" />
         </line-breakpoint>
       </breakpoints>
@@ -268,6 +274,6 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Projekt$image_handler.coverage" NAME="image_handler Coverage Results" MODIFIED="1706818591086" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Icer/modules" />
     <SUITE FILE_PATH="coverage/Projekt$save.coverage" NAME="save Coverage Results" MODIFIED="1706913712452" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../../pythonProject4/gierka/Icer/Lib/site-packages/keras/src/saving/legacy" />
-    <SUITE FILE_PATH="coverage/Projekt$mainAPI.coverage" NAME="mainAPI Coverage Results" MODIFIED="1707083247425" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Icer" />
+    <SUITE FILE_PATH="coverage/Projekt$mainAPI.coverage" NAME="mainAPI Coverage Results" MODIFIED="1707097042747" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Icer" />
   </component>
 </project>
