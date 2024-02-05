@@ -6,6 +6,8 @@ import Help from "../Help";
 import {Icon} from '@iconify/react';
 import axios from "axios";
 import {API_URL} from "../settings/config";
+import {Fridge} from "../products/fridge/Fridge";
+import Main from "../../Main";
 
 
 //funkcja chatu z botem
@@ -49,10 +51,10 @@ function ChatContainer() {
             <div className="chat-container">
                 <div className="chat-icon-container">
 
-                    <span role="img" aria-label="Chat Icon" onClick={() => setIsMinimized(false)}><Icon className="chatOpenIcon" icon="bi:chat-dots" hFlip={true} /></span>
+                    <span role="img" aria-label="Chat Icon" className="ChatIcona" onClick={() => setIsMinimized(false)}><Icon className="chatOpenIcon" icon="bi:chat-dots" hFlip={true} /></span>
 
                 </div>
-                <Help isMinimized={isMinimized}/>
+                <Main />
             </div>
         );
     }

@@ -23,6 +23,8 @@ import {handleClickToggleMenu} from "./mainPages/hooks/handleClickToggleMenu";
 function Main() {
     //zmienna określająca czy widoczne jest pierwsze czy drugie menu
     const [secoundMenu, setSecoundMenu] = useState(false);
+
+    const [isMinimized,setIsMinimized] = useState(false);
     //zmienna określająca czy menu jest rozwinięte
     const [isOpen, setIsOpen] = useState(true);
     //zmienna określająca czy ikony są widoczne
@@ -94,6 +96,7 @@ function Main() {
 
 
                         </Routes>
+
                     </nav>
 
                     {/* kontener nadający lekki margines z prawej strony posiada kontenery z menu bocznym */}
@@ -255,6 +258,7 @@ function Main() {
 
                     </div>
                 </div>
+
             </div>
         </>
     )

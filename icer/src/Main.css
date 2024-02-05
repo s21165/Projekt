@@ -6,6 +6,26 @@
     font-size: calc((1.5vw + 1.5vh) / 2);
 
 }
+
+.minimizeIcon{
+    position:absolute;
+    right:5%;
+    top:90vh;
+}
+.ChatIcona{
+    position:absolute;
+    right:5%;
+    top:90vh;
+}
+.helpChatButton{
+    width:200%;
+    height:200%;
+
+}
+.minimize-button{
+
+    z-index: 1000;
+}
 /* ustawienia dla przycisków - usuwamy przypisane wartości do znacznika */
 button {
     background: none; /* brak tła */

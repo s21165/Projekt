@@ -26,9 +26,7 @@ function Help({isMinimized}){
             <h2>Kontakt z nami</h2>
             <p>Jeżeli potrzebujesz dodatkowej pomocy, skontaktuj się z nami przez e-mail: pomoc@example.com</p>
         </div>
-        {!isMinimized && <button className="openChatButton"> <Link to="/Chatbot">
-            <Icon className="helpChatButton" icon="fluent:chat-help-24-regular" />
-        </Link> </button>}
+
 
     </>
 );

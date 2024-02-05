@@ -9,6 +9,7 @@ import {useProductActions} from "../API/useProductActions";
 import ProductManager from "../productList/ProductManager";
 
 import {useNotificationsData} from "../../notifications/useNotificationsData";
+import {Link} from "react-router-dom";
 
 
 //funkcja odpowiedzialna za wyświetlanie komponentu lodówki - pierwszego po zalogowaniu
@@ -16,6 +17,7 @@ export function Fridge() {
 
     //zmienna określająca czy żarówka ma się świecić
     const [bulbIsOn, setbulbIsOn] = useState(true);
+
 
     //szerokość okna
     const [lowWidth, setLowWidth] = useState(window.innerWidth);

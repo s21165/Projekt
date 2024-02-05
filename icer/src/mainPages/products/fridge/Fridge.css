@@ -76,6 +76,7 @@
 
 }
 
+
 {/* włączone światło */}
 .light-bulb.on .light {
     opacity: 0.8; /*przeźroczystość 20%*/
