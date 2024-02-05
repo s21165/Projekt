@@ -20,7 +20,7 @@ def handle_image_upload(db_connector, image_data_base64, user_id, product_id):
         image_name = f"{int(time.time())}.jpg"
 
         # Nowa lokalizacja folderu, gdzie mają być zapisane obrazy
-        images_folder = 'D:\\repo_na_test\\Projekt-PWAAdi\\icer\\src\\data\\userPhotos'
+        images_folder = os.path.join("src/data/userPhotos")
 
         # Tworzenie ścieżki do zapisu obrazu
         image_path = os.path.join(images_folder, image_name)
@@ -67,7 +67,7 @@ def change_user_profile(db_connector, user_id, image_data_base64):
         image_name = f"{int(time.time())}.jpg"
 
         # Nowa lokalizacja folderu, gdzie mają być zapisane obrazy
-        images_folder = 'D:\\repo_na_test\\Projekt-PWAAdi\\icer\\src\\data\\userPhotos'
+        images_folder = os.path.join("public/data/userProfilePicture")
 
         # Tworzenie ścieżki do zapisu obrazu
         image_path = os.path.join(images_folder, image_name)
@@ -98,23 +98,3 @@ def change_user_profile(db_connector, user_id, image_data_base64):
 
             elif profile_result[0] == 1:
                 # Update lokalizacji zdjęcia użytkownika
-                update_query = "UPDATE preferencje_uzytkownikow SET lokalizacja_zdj = %s, podstawowe_profilowe=%s WHERE UserID = %s"
-                cursor.execute(update_query, (image_name, 0, user_id))
-        else:
-            # Brak wpisu dla tego użytkownika, wstaw nowy wpis
-            insert_query = """
-                INSERT INTO preferencje_uzytkownikow 
-                (UserID, podstawowe_profilowe, lokalizacja_zdj)
-                VALUES (%s, %s, %s)
-            """
-            cursor.execute(insert_query, (user_id, 0, image_name))
-
-        connection.commit()
-        cursor.close()
-
-        return jsonify({"message": "User profile image changed successfully"})
-
-    except ValueError as ve:
-        return jsonify({"error": f"Error: {str(ve)}"}), 400
-    except Exception as error:
-        return jsonify({"error": f"Unexpected error: {str(error)}"}), 500
