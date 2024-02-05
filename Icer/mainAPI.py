@@ -917,11 +917,19 @@ def delete_all_notification():
         user_id = user_result['id']
 
         notification_value = data.get('notificationValue')
-
+        
         # Usunięcie wszystkich powiadomień danego użytkownika
-        if notification_value in [0, 1, None]:
-            delete_all_notifications_query = "UPDATE Icer SET powiadomienie = %s WHERE UserID = %s"
-            cursor.execute(delete_all_notifications_query, (notification_value, user_id))
+        if notification_value == 0:
+            # Aktualizacja tylko tych powiadomień, które mają wartość 1
+            update_notifications_query = "UPDATE Icer SET powiadomienie = %s WHERE powiadomienie = 1 AND UserID = %s"
+            cursor.execute(update_notifications_query, (notification_value, user_id))
+            connection.commit()
+            return jsonify({"message": "All user notifications updated successfully"})
+
+        elif notification_value in [0, 1, None]:
+            # Aktualizacja wszystkich powiadomień danego użytkownika
+            update_all_notifications_query = "UPDATE Icer SET powiadomienie = %s WHERE UserID = %s"
+            cursor.execute(update_all_notifications_query, (notification_value, user_id))
             connection.commit()
             return jsonify({"message": "All user notifications updated successfully"})
 
@@ -1064,7 +1072,7 @@ def get_user_preferences():
         if preferences:
             # Zwracanie preferencji wraz ze ścieżką do zdjęcia profilowego
             if preferences['podstawowe_profilowe'] == 1:
-                profile_photo_path = os.path.join("D:/repo_na_test/Projekt-PWAAdi/icer/src/data", "face.jpg")
+                profile_photo_path = os.path.join("public/data/userProfilePicture", "face.jpg")
             else:
                 profile_photo_path = preferences['lokalizacja_zdj']
 
