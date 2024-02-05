@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
         if (storedUser) {
             setUser(JSON.parse(storedUser));
         }
-    }, [refreshTrigger]);
+    }, []);
 
     //logowanie
     const login = (userData) => {
