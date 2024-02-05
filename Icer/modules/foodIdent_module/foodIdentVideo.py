@@ -7,10 +7,10 @@ import time
 import threading
 import numpy as np
 
-# Definicja globalnego zamka
+# Definicjazamka
 file_lock = threading.Lock()
 
-# Globalna zmienna przechowująca rozpoznane produkty spożywcze
+# Globalna zmienna przechowująca rozpoznane produkty 
 food_list = []
 
 # Ścieżka do pliku JSON zawierającego nazwy klas
@@ -31,12 +31,12 @@ def load_models(model_paths):
     
     return models
 
-# Ścieżki do modeli, które zostaną załadowane
+# Ścieżki do modeli, które będą załadowane
 model_paths = ["model_1.h5", "model_2.h5"]
 models = load_models(model_paths) 
 
 
-# Zmienne globalne do kontrolowania wątku kamery
+# Zmienne globalne do kontrolowania camera_thread
 camera_thread = None
 camera_running = False
 
@@ -46,7 +46,7 @@ def predict_with_model(model, img_tensor):
     return pred, pred_class_index
     
 def model_predict(model, img_tensor):
-    # Przewiduj i zwracaj zarówno predykcję, jak i indeks klasy
+    # Przewiduj i zwracaj zarówno predykcję i indeks klasy
     pred = model.predict(img_tensor)
     pred_class_index = tf.argmax(pred, axis=1).numpy()[0]
     return pred, pred_class_index
@@ -56,10 +56,10 @@ def load_and_prep_image(filename, img_shape=224):
     # Odczytaj plik obrazu
     img = tf.io.read_file(filename)
 
-    # Dekoduj obraz do tensora z 3 kanałami (RGB)
+    # Dekoduj obraz
     img = tf.image.decode_image(img, channels=3)
 
-    # Zmień rozmiar obrazu do określonego img_shape
+    # Zmień rozmiar obrazu do zgodnego z modelem
     img = tf.image.resize(img, size=[img_shape, img_shape])
 
     # Znormalizuj wartości pikseli obrazu do zakresu [0, 1]
@@ -84,7 +84,7 @@ def pred_and_plot(models, img, class_names, food_list, username):
     probabilities = []
     detailed_predictions = []
 
-    # Uruchom wiele modeli równocześnie za pomocą wielu wątków
+    # Uruchom wiele modeli równocześnie by szybciej przewidywać
     with ThreadPoolExecutor(max_workers=len(models)) as executor:
         futures = {executor.submit(model_predict, model, img_tensor): model for model in models}
 
@@ -98,7 +98,6 @@ def pred_and_plot(models, img, class_names, food_list, username):
             except Exception as e:
                 print(f"Błąd w przewidywaniu modelu: {e}")
 
-    # Logika określenia przewidzianej klasy pozostaje taka sama...
     # Określenie klasy z największą liczbą głosów
     max_votes = max(votes.values())
     winners = [class_name for class_name, vote in votes.items() if vote == max_votes]
@@ -109,7 +108,7 @@ def pred_and_plot(models, img, class_names, food_list, username):
         for pred, _, pred_class_name in detailed_predictions:
             avg_probabilities[pred_class_name] += np.max(pred)
         for class_name in avg_probabilities:
-            avg_probabilities[class_name] /= list(votes.values()).count(max_votes)  # Dostosuj ten wiersz, jeśli to konieczne
+            avg_probabilities[class_name] /= list(votes.values()).count(max_votes)
         pred_class = max(avg_probabilities, key=avg_probabilities.get)
     else:
         pred_class = winners[0]
@@ -117,20 +116,20 @@ def pred_and_plot(models, img, class_names, food_list, username):
     # Określenie maksymalnej wartości prawdopodobieństwa
     max_pred_value = max(probabilities)
 
-    # Jeśli prawdopodobieństwo jest większe niż 0,70 i pred_class nie znajduje się na liście food_list, dodaj go
+    # Jeśli prawdopodobieństwo jest większe niż wymagane i przewidziana klasa nie jest dodana, to dodaj
     if max_pred_value >= 0.70 and pred_class not in food_list:
         food_list.append(pred_class)
 
-    # Ustalenie ścieżki do zapisu pliku JSON
+    # Ustalenie ścieżki do zapisu pliku
     current_dir = os.path.dirname(__file__)
     project_root = os.path.abspath(os.path.join(current_dir, '..', '..'))
     save_dir = os.path.join(project_root, 'static', 'scanned')
     os.makedirs(save_dir, exist_ok=True)
 
-    # Użyj nazwy użytkownika do nazwania pliku JSON
+    # Użyj nazwy użytkownika przy zapisywaniu nazwy
     json_file_path = os.path.join(save_dir, f'{username}_food_list.json')
 
-    # Zapisz food_list pod określoną ścieżką do pliku
+    # Zapisz food_list
     with file_lock:
         with open(json_file_path, 'w') as json_file:
             json.dump(food_list, json_file, indent=4)
@@ -143,7 +142,7 @@ def process_video(username):
     global camera_running
 
     # Funkcja pomocnicza do znalezienia pierwszej dostępnej kamery
-    def find_first_available_camera(max_checks=10):
+    def find_first_available_camera(max_checks=5):
         for i in range(max_checks):
             cap = cv2.VideoCapture(i)
             if cap.isOpened():
@@ -153,10 +152,11 @@ def process_video(username):
 
     # Znalezienie dostępnej kamery
     camera_id = find_first_available_camera()
+    #Jeśli nie znaleziono kamery
     if camera_id == -1:
         return "Nie znaleziono dostępnych kamer"
 
-    # Otwarcie kamery o znalezionym identyfikatorze
+    # Otwarcie znalezionej spoko
     cap = cv2.VideoCapture(camera_id)
     if not cap.isOpened():
         return f"Nie można otworzyć kamery o identyfikatorze {camera_id}"
@@ -165,7 +165,7 @@ def process_video(username):
     cap.set(cv2.CAP_PROP_CONVERT_RGB, 1.0)
     cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
 
-    # Częstotliwość klatek i interwał klatek
+    # Redukcja ilośći klatek, by nie przeciążać serwera i nie wykonywać zbyt wielu predykcji na sekundę
     target_frame_rate = 4
     frame_interval = int(1000 / target_frame_rate)
 
@@ -175,26 +175,26 @@ def process_video(username):
         current_time = time.time()
         elapsed_time = current_time - last_processed_time
 
-        # Przetwarzanie klatki, jeśli upłynął wystarczający interwał czasu
+        # Przetwarzanie klatki po upływie czasu
         if elapsed_time * 1000 >= frame_interval:
             ret, frame = cap.read()
 
             if not ret:
                 break
 
-            # Zapisanie przechwyconej klatki jako pliku tymczasowego do użycia z load_and_prep_image
+            # Zapisanie przechwyconej klatki jako pliku tymczasowego
             temp_filename = 'temp_frame.jpg'
             cv2.imwrite(temp_filename, frame)
 
-            # Przygotowanie obrazu i przewidywanie jedzenia z wykorzystaniem pred_and_plot
+            # Przygotowanie obrazu i przewidywanie jedzenia z funkcji pred_and_plot
             preprocessed_frame = load_and_prep_image(temp_filename)
             predicted_food_list = pred_and_plot(models, preprocessed_frame, class_names, food_list, username)
 
-            # Wyświetlenie wyniku na klatce
+            # Wyświetlenie wyniku w oknie wideo
             display_text = f'Jedzenie: {predicted_food_list[-1]}' if predicted_food_list else 'Jedzenie: Niepewne'
             cv2.putText(frame, display_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
-            # Konwersja klatki do formatu JPEG
+            # Konwersja formatu JPEG
             ret, buffer = cv2.imencode('.jpg', frame)
             frame = buffer.tobytes()
 
@@ -209,7 +209,7 @@ def start_camera(username):
     # Sprawdź, czy lista food_list nie jest pusta
     try:
         if food_list:
-            # Wyczyść listę, jeśli nie jest pusta
+            # czyszcenie, jeśli lista nie jest pusta
             food_list.clear()
     except Exception as e:
         print(f"Error while clearing existing data: {e}")
@@ -224,7 +224,7 @@ def start_camera(username):
         camera_thread.start()  # Uruchom wątek kamery
 
 
-# Funkcja stop_camera zatrzymuje przechwytywanie wideo z kamery.
+# Funkcja stop_camera zatrzymuje przechwytywanie wideo z kamery, kończąc rozpoznawanie
 def stop_camera():
     global camera_running, camera_thread, camera_status
 

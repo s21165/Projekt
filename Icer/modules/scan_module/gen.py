@@ -4,9 +4,9 @@ import json
 from PIL import Image
 
 
-# Wygeneruj kod QR na podstawie danych i zapisz go w folderze wyjściowym.
+# Wygeneruj kod QR na podstawie danych i zapisz go
 def generate_qr_code(data, output_folder):
-    # Zbuduj ciąg danych dla kodu QR
+    # Dane dla kodu QR
     qr_data = f"Nazwa:{data['name']}, Cena:{data['price']}, Kalorie:{data['kcal']}, Tłuszcze:{data['fat']}, Węglowodany:{data['carbs']}, Białko:{data['protein']}, Kategoria:{data['category']}, Ilość:{data['amount']}, Data:{data['date']}"
     
     Utwórz obiekt kodu QR
@@ -24,7 +24,7 @@ def generate_qr_code(data, output_folder):
     # Wygeneruj kod QR
     qr_image = qr.make_image(fill_color="black", back_color="white")
     
-    # Zbuduj nazwę pliku i ścieżkę obrazu.
+    # Plik i ścieżka
     image_filename = f"{data['name']}_{data['category']}_qr.png"
     image_path = os.path.join(output_folder, image_filename)
     

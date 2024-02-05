@@ -5,9 +5,9 @@ CHATBOT - training
 '''
 Instalacje
 '''
-#!pip install wikipedia
-#!pip install wikipedia-api
-#!pip install translate
+!pip install wikipedia
+!pip install wikipedia-api
+!pip install translate
 
 '''
 Importy

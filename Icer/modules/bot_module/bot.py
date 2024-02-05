@@ -13,7 +13,7 @@ from keras.models import load_model
 
 
 
-# Pobieranie danych dla tokenizatora punktowego
+# Pobieranie danych dla tokenizatora
 nltk.download('averaged_perceptron_tagger')
 nltk.download('wordnet')
 nltk.download('punkt')
@@ -22,20 +22,20 @@ nltk.download('omw-1.4')
 # Tworzenie instancji WordNetLemmatizer
 lemmatizer = WordNetLemmatizer()
 
-# Wczytywanie intencji z pliku JSON
+# Wczytywanie intencji z przygotowanego pliku JSON
 intents_file_path = os.path.join(os.path.dirname(__file__), 'intents.json')
 with open(intents_file_path, 'r', encoding='utf-8') as file:
     intents = json.load(file)
 
 # Konfiguracja API Wikipedii
-# Wymagany jest agent użytkownika
+# Wymagany jest user_agent
 user_agent = "icerbot/1.0 (s18861@pjwstk.edu.pl)"
 wiki_wiki = wikipediaapi.Wikipedia(language='pl', extract_format=wikipediaapi.ExtractFormat.WIKI, user_agent=user_agent)
 
-# Konfiguracja wektoryzatora dla podobieństwa kosinusowego
+# Konfiguracja wektoryzatora dla cosine_similarity
 vectorizer = TfidfVectorizer()
 
-# Wczytywanie danych z plików pickle
+# Wczytywanie danych z wygenerowanych plików pickle
 words = pickle.load(open('modules/bot_module/words.pkl', 'rb'))
 classes = pickle.load(open('modules/bot_module/classes.pkl', 'rb'))
 model = load_model('modules/bot_module/chatbot_model.h5')
@@ -47,7 +47,7 @@ def clean_up_sentence(sentence):
     
     return sentence_words
 
-# Konwertowanie zdania na torbę słów (bag of words)
+# Konwertowanie zdania na bag of words
 def bow(sentence, words, show_details=True):
     sentence_words = clean_up_sentence(sentence)
     bag = [0]*len(words)
@@ -93,7 +93,7 @@ openai.api_key = os.environ.get('OPEN_API_KEY')
 #Pobieranie odpowiedzi od modelu GPT-3
 def get_gpt3_response(prompt_text):
     response = openai.Completion.create(
-        engine="gpt-3.5-turbo-instruct",  # Możesz wybrać inną wersję modelu, jeśli jest potrzeba
+        engine="gpt-3.5-turbo-instruct", 
         prompt=prompt_text,
         max_tokens=100,
         n=1,
@@ -107,7 +107,8 @@ def get_bot_response(user_input):
     model_response = get_response(user_input)
     if model_response:
         return model_response
-
+#Odpowiedź alternatywna przy braku odpowiedzi z intents, przy użyciu podobieństwa kosinusowego
+#Przy przeszukiwaniu wikipedii
     try:
         wiki_page = wiki_wiki.page(user_input)
         if wiki_page.exists():
@@ -121,11 +122,11 @@ def get_bot_response(user_input):
                 bot_response += "\n".join(relevant_sentences)
                 return bot_response
     except KeyError:
-        pass  # Obsłuż błąd lub po prostu przejdź dalej
+        pass  
     except Exception as e:
         print(f"Wystąpił błąd: {e}")
 
-    # Użyj GPT-3 jako ostatecznej opcji
+    # Użyj GPT-3 jako ostatecznej opcji, przy braku gotowych odpowiedzi lub zbyt niskiemu podobieństwu cosinusowemu.
     return get_gpt3_response(user_input)
 
 
