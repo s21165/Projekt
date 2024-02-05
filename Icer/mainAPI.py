@@ -1316,26 +1316,21 @@ def edit_user():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    bot_response = ""
     # Pusty ciąg znaków dla odpowiedzi chatbota
-
+    bot_response = ""
+    
     if request.method == 'POST':
-        # Sprawdź, czy metoda żądania to POST
-        
-        user_input = request.form['user_input']
         # Pobierz dane wejściowe użytkownika z formularza
-
-        bot_response = get_bot_response(user_input)
+        user_input = request.form['user_input']
         # Wywołaj funkcję (get_bot_response) by wygenerować odpowiedź.
-
-    response = make_response(render_template('index.html', bot_response=bot_response, ))
+        bot_response = get_bot_response(user_input)
     # Wygeneruj odpowiedź,renderując'index.html' i przekazując odpowiedź bota.
-
+    response = make_response(render_template('index.html', bot_response=bot_response, ))
+    # Ustaw nagłówek Content-Type, aby się upewnić, że odpowiedź jest w formacie HTML i odpowiednim kodowaniu.
     response.headers['Content-Type'] = 'text/html; charset=utf-8'
-    # Ustaw nagłówek Content-Type, aby się upewnić, że odpowiedź jest w formacie HTML.
-
-    return response
     # Zwróć wygenerowaną odpowiedź.
+    return response
+
 
 
 @app.route('/get_response', methods=['POST'])
@@ -1351,7 +1346,7 @@ def get_response():
         # Utwórz JSON z odpowiedzią bota
         response_data = {'response': response}
 
-        # Zwróć odpowiedź JSON
+        # Zwróć odpowiedź
         return jsonify(response_data), 200, {'Content-Type': 'application/json; charset=utf-8'}
 
     # Jeśli dane wejściowe nie są poprawne zwróć błąd.
@@ -1379,10 +1374,10 @@ def generate_qr_code_route():
     # Pobierz URL wygenerowanego obrazu kodu QR w folderze 'static'
     qr_code_image_url = url_for('static', filename='qrcodes/' + qr_code_image_filename)
 
-    # Wyświetl komunikat o sukcesie do
+    # Wyświetl komunikat o sukcesie
     flash("Kod QR wygenerowany pomyślnie!")
 
-    # Przekieruj z powrotem do 'index'
+    # Redirect
     return redirect(url_for('index'))
 
 
@@ -1427,7 +1422,7 @@ def decode_qr_code_route():
         return redirect(request.url)
 
 
-# Inicjalizuj zmienną jako None.
+# Inicjalizuj zmienną camera_thread jako None.
 camera_thread = None
 
 
@@ -1437,7 +1432,6 @@ def start_food_identification_route():
     camera_thread = threading.Thread(target=foodIdent)
 
     camera_thread.start()
-
     # Przekierowanie z powrotem do'index' po rozpoczęciu identyfikacji jedzenia
     return redirect(url_for('index'))
 
@@ -1571,8 +1565,6 @@ def start_camera_route():
 def stop_camera_route():
     # Wywołuje funkcję 'stop_camera()' w celu zatrzymania kamery.
     stop_camera()
-
-    # Wysyła żądanie POST na adres 'http://localhost:5000/api/update_food_list'.
     requests.post('http://localhost:5000/api/update_food_list')
     # Zwraca tekst informujący, że kamera została zatrzymana.
     return "Camera stopped"
@@ -1583,8 +1575,6 @@ def stop_camera_route():
 def check_camera_status():
     # Zwraca stan kamery jako odpowiedź JSON
     return jsonify({'status': camera_status})
-
-
 
 
 
