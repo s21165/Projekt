@@ -90,7 +90,8 @@ export const useShoppingCartActions = ()=>{
             //wysyłane wartości
             {sessionId:sessionId,
                 productID: id,
-                inCart:1
+                inCart:1,
+                ilosc:1
             } )
             .then((response) => {
                 //w razie powodzenia wyświetl komunikat

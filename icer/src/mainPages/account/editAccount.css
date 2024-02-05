@@ -20,11 +20,32 @@
     align-items: center; /* wyśrodkowanie przedmiotów */
 }
 
+.accountPhoto{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
 /* kiedy wprowadzamy zmiany do znacznika wejściowego */
 input:focus {
     outline: none; /* usuwa linię zewnętrzną znacznika */
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); /* nadanie cienia */
     border-color: #7fb0d5; /* zmiana koloru krawędzi */
+}
+.file-input-label {
+    margin-top:1vh;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.file-input-label:hover {
+    background-color: #0056b3;
 }
 
 

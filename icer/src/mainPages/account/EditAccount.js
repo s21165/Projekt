@@ -116,10 +116,13 @@ function EditAccount(props) {
                         />
                     ):<img src={picGetter} alt="Your Image" className="accountPhotoImage"/>  }{/*zdjęcie użytkownika*/}
 
+                    <label htmlFor="file-input2" className="file-input-label">
+                        <i className="fa fa-upload"></i> Wybierz zdjęcie
+                    </label>
                     <input
                         type="file"
                         id="file-input2"
-
+                        style={{display: 'none'}}
                         onChange={(e) => handleUserImageChange(e, setImage, setPictureToSend, setImagePreview)}
                     />
 

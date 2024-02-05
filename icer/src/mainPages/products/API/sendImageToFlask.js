@@ -2,8 +2,7 @@ import axios from "axios";
 import {API_URL} from "../../settings/config";
 import {toast} from "react-toastify";
 
-//funkcja do komunikacji z API w celu identyfikacji obrazu z jedzeniem, przyjmuje plik i ustawienie
-// podglądu zdjęcia
+//funkcja do komunikacji z API w celu identyfikacji obrazu z jedzeniem, przyjmuje plik i ustawienie podglądu zdjęcia
 export const sendImageToFlask = async (setProduct,file,setImageForIdentyficationURL) => {
     //tworzy zmienną formData i dodaje do niej plik
     const formData = new FormData();
