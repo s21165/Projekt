@@ -9,7 +9,7 @@ def generate_qr_code(data, output_folder):
     # Dane dla kodu QR
     qr_data = f"Nazwa:{data['name']}, Cena:{data['price']}, Kalorie:{data['kcal']}, Tłuszcze:{data['fat']}, Węglowodany:{data['carbs']}, Białko:{data['protein']}, Kategoria:{data['category']}, Ilość:{data['amount']}, Data:{data['date']}"
     
-    Utwórz obiekt kodu QR
+    #Utwórz obiekt kodu QR
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
