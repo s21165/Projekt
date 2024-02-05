@@ -36,19 +36,19 @@ export const handleQRCodeScan = async (
                 }, {});
                 //wskazuje na jakim znaku rozpoczyna się nazwa, do przecinka
                 const endIndex = response.data.indexOf(',', 28);
-
+                console.log(response.data)
                 //ustawiam produkt
                 setProduct(() => ({
 
-                    nazwa: response.data.substring(28, endIndex),
-                    cena: parsedData.Price,
-                    kalorie: parsedData.Kcal,
-                    tluszcze: parsedData.Fat,
-                    weglowodany: parsedData.Carbs,
-                    bialko: parsedData.Protein,
-                    kategoria: parsedData.Category,
-                    ilosc: parsedData.Amount,
-                    data_waznosci: new Date().toISOString().split('T')[0],
+                    nazwa: response.data.substring(29, endIndex),
+                    cena: parsedData.Cena,
+                    kalorie: parsedData.Kalorie,
+                    tluszcze: parsedData.Tłuszcze,
+                    weglowodany: parsedData.Węglowodany,
+                    bialko: parsedData.Białko,
+                    kategoria: parsedData.Kategoria,
+                    ilosc: parsedData.Ilość,
+                    data_waznosci: parsedData.Data,
                 }));
 
                 //ustawia obrazek i podgląd na pusty ciąg znaków
