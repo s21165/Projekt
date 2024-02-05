@@ -7,7 +7,7 @@ import time
 import threading
 import numpy as np
 
-# Definicjazamka
+# Definicja zamka
 file_lock = threading.Lock()
 
 # Globalna zmienna przechowująca rozpoznane produkty 
