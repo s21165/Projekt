@@ -839,9 +839,11 @@ def delete_notification():
         if not received_session_id:
             raise ValueError("Session ID not provided")
 
+        # sprawdzenie czy użytkownik jest zalogowany
         if 'username' not in session:
             raise PermissionError("User not logged in")
 
+        #pobieranie wartości nazwy użytkownika oraz sprawdzenie czy użytkownik istnieje
         username = session['username']
         connection = db_connector.get_connection()
         cursor = connection.cursor(dictionary=True)
@@ -853,7 +855,7 @@ def delete_notification():
             raise LookupError("User not found")
 
         user_id = user_result['id']
-
+        #sprawdza wartosc przeslana przez front notification i zaleznie od tego zmienia wartosci notification
         notification_id = data.get('notificationId')
         notification_value = data.get('notificationValue')
 

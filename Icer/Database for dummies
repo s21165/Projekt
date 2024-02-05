@@ -1,5 +1,4 @@
 
-
 DELIMITER //
 
 -- Tworzenie procedury CreateAllTablesAndProcedures
@@ -15,11 +14,11 @@ BEGIN
         password VARCHAR(255) NOT NULL
     );
 
-    -- Wstawianie rekordu do tabeli Users
+     -- Wstawianie rekordu do tabeli Users
     INSERT IGNORE INTO Users (username, password)
     VALUES ('root', '$2b$12$8JnOBy0M5Edogzihz79MsOUzPQVLlWtYBnf3X9KQSaQx825MqFbsu');
 
-    -- Tworzenie tabeli Produkty
+  -- Tworzenie tabeli Produkty
     CREATE TABLE IF NOT EXISTS Produkty (
         id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
         nazwa VARCHAR(100) NULL,
@@ -31,6 +30,25 @@ BEGIN
         kategoria VARCHAR(50) NULL,
         podstawowy TINYINT(1) NULL DEFAULT 0
     );
+
+    -- Dodanie produktów
+    INSERT INTO Produkty (nazwa, cena, kalorie, tluszcze, weglowodany, bialko, kategoria, podstawowy)
+    VALUES
+        ('ciasto_czekoladowe', 10.99, 500, 25.0, 60.0, 5.0, 'deser', 1),
+        ('donut', 3.99, 350, 20.0, 40.0, 4.0, 'deser', 1),
+        ('frytki', 6.99, 450, 20.0, 60.0, 3.0, 'fast food', 1),
+        ('hamburger', 8.99, 600, 30.0, 50.0, 20.0, 'fast food', 1),
+        ('lasagne', 12.99, 700, 40.0, 70.0, 25.0, 'danie główne', 1),
+        ('makaroniki', 9.99, 550, 15.0, 70.0, 10.0, 'danie główne', 1),
+        ('nalesniki', 7.99, 400, 10.0, 50.0, 15.0, 'deser', 1),
+        ('pizza', 11.99, 800, 35.0, 80.0, 30.0, 'danie główne', 1),
+        ('salatka_cezar', 8.99, 300, 15.0, 20.0, 10.0, 'sałatka', 1),
+        ('skrzydelka_z_kurczaka', 9.99, 600, 30.0, 10.0, 40.0, 'danie główne', 1),
+        ('sushi', 15.99, 400, 5.0, 50.0, 20.0, 'danie główne', 1),
+        ('szarlotka', 7.99, 450, 20.0, 60.0, 5.0, 'deser', 1),
+        ('tiramisu', 8.99, 550, 25.0, 40.0, 10.0, 'deser', 1),
+        ('zeberka', 14.99, 700, 40.0, 30.0, 50.0, 'danie główne', 1);
+
 
     -- Tworzenie tabeli Icer
     CREATE TABLE IF NOT EXISTS Icer (
@@ -189,5 +207,3 @@ DELIMITER ;
 
 
 CALL CreateAllTables();
-
-
