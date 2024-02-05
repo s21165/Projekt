@@ -1,0 +1,71 @@
+/*kontener z informacjami o użytkowniku oraz z przyciskiem edycji konta*/
+.accountContainer {
+    display: grid;  /* sposób wyświetlania: w siatce */
+    place-items: center; /* Wyśrodkowanie w obu osiach */
+    height: 100vh; /* wysokość na całe widoczne pole */
+}
+/*kontener ze zdjęciem oraz informacjami o użytkowniku*/
+.accountInfo {
+    display: grid; /* sposób wyświetlania: w siatce */
+    align-items: center; /* Wyśrodkowanie elemtnów */
+    padding: 20px;
+    background-color: #f5f5f5;/* ustawianie koloru tła */
+    border-radius: 5px; /* zaokrąglenie krawędzi */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* cień */
+    width: 50%;
+    height: 80%;
+    margin: auto; /* margines automatyczny - ustawia po wszystkich stornach po równo względem osi */
+}
+/*kontener ze zdjęciem użytkownika*/
+.accountPhotoImage {
+    width: 10vw; /* szerkość elementu*/
+    height: 10vw; /* wysokość elementu*/
+    border-radius: 50%; /* zaokrąglenie krawędzi */
+    border: 2px solid #7fb0d5; /* ustawienie krawędzi: jego szerokość, styl i kolor */
+    transition: border-color 0.3s; /* płynna zmiana koloru krawędzi w czasie 0.3s */
+}
+/*kontener ze zdjęciem użytkownika po najechaniu na niego*/
+.accountPhotoImage:hover {
+    border-color: #0056b3; /* zmiana koloru krawędzi */
+}
+
+/*dla ekranów o maxymalnej szerokości 1800px*/
+@media only screen and (max-width: 1800px) {
+    /*zmiana ustawień dla zdjęcia względem szerokości ekranu*/
+    .accountPhotoImage {
+        width: 12vw;
+        height: 12vw;
+    }
+}
+/*dla ekranów o maxymalnej szerokości 1500px*/
+@media only screen and (max-width: 1500px) {
+    /*zmiana ustawień dla zdjęcia względem szerokości ekranu*/
+    .accountPhotoImage {
+        width: 14vw;
+        height: 14vw;
+    }
+}
+/*dla ekranów o maxymalnej szerokości 1200px*/
+@media only screen and (max-width: 1200px) {
+    /*zmiana ustawień dla zdjęcia względem szerokości ekranu*/
+    .accountPhotoImage {
+        width: 16vw;
+        height: 16vw;
+    }
+}
+/*dla ekranów o maxymalnej szerokości 1000px*/
+@media only screen and (max-width: 1000px) {
+    /*zmiana ustawień dla zdjęcia względem szerokości ekranu*/
+    .accountPhotoImage {
+        width: 20vw;
+        height: 20vw;
+    }
+}
+/*dla ekranów o maxymalnej szerokości 600px*/
+@media only screen and (max-width: 600px) {
+    /*zmiana ustawień dla zdjęcia względem szerokości ekranu*/
+    .accountPhotoImage {
+        width: 24vw;
+        height: 24vw;
+    }
+}

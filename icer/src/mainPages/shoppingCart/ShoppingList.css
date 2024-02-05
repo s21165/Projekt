@@ -1,0 +1,204 @@
+/* kontener z przyciskiem ręcznego dodawania do listy zakupów */
+.handleAddToCartButtonDiv{
+
+    height:10vh;
+    display: flex;
+    margin: 0.5vh 1vw 0.5vh 1vh;
+    align-items: center;
+
+}
+/*przycisk dodawania do listy zakupów*/
+.handleAddAllCartButton{
+    position: relative;
+
+    background-color: #deeffc;
+    width:100%;
+    height:100%;
+    border-radius: 10px;
+}
+
+/* Kontener z nagłówkami */
+.topInfoShoppingCart{
+    position:relative;
+    display:flex;
+    justify-content: space-between; /* ustawia równe odległości między elementami */
+    align-items: center;
+
+    height:5vh;
+    border-radius: 10px;
+    background-color: #d7d7d7;
+
+    margin: 0.5vh 1vw 0.5vh 1vh;
+}
+
+/* kontener z listą zakupów */
+.shoppingListConainer{
+    margin: 0 1vw 0.5vh 1vh;
+    display: flex;
+    height:72.5vh; /* kontener z listą zakupów */
+    flex-direction: column; /* ustawia elementy w kolumnie */
+    justify-content: space-between; /* ustawia równe odległości między elementami */
+    overflow-y: auto; /* dodaje możliwość scrollowania jeśli elementy nie mieszczą się w kontenerze */
+}
+/* kontener z elementem listy */
+.shoppingList{
+    position:relative;
+    display:flex;
+    justify-content: space-between; /* ustawia równe odległości między elementami */
+    align-items: center;
+    width:100%;
+    height:10vh;
+    border-radius: 10px;
+    background-color: #d7d7d7;
+    margin-bottom: 1px;
+
+
+}
+
+/* miejsca do pobierania danych od użytkownika w kontenerze z elementem listy */
+.shoppingList Input {
+    font-family: inherit; /* Użyj tej samej czcionki co inne elementy */
+    font-size: inherit; /* Użyj tego samego rozmiaru czcionki */
+    color: inherit; /* Użyj tego samego koloru tekstu */
+    background-color: #f0f0f0; /* Dostosuj kolor tła */
+    border: none; /* Usuń ramkę */
+    padding: 1vh;
+    justify-content: space-around; /* ustawia równe odległości w okół elementów */
+    border-radius:20px;
+}
+
+/* miejsca do pobierania danych od użytkownika w kontenerze z elementem listy przy naciśnięciu na nie */
+.shoppingList Input:focus {
+    outline: none; /* usuwa ramkę */
+
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* lekki cień podczas fokusowania */
+}
+
+/* ostatni element listy shoppingList */
+.shoppingList:last-child{
+    padding-bottom: 0;  /* bez odstępu wewnętrznego u dołu. */
+}
+
+/* nazwa produktu w liście zakupów */
+.shoppingListName{
+    min-width:30%;
+    margin:0;
+
+}
+/* nagłówek z nazwą */
+.topInfoShoppingListName{
+    width:30%;
+}
+/*  pole wejściowe nazwy w liście zakupów */
+.shoppingListNameInput{
+    width:100%;
+}
+/* kontener pola wejściowego nazwy w liście zakupów */
+.shoppingListNameInputDiv{
+    width: 30%;
+    margin-left: 1vw;
+}
+
+/* cena produktu w liście zakupów */
+.shoppingListPrice{
+    width: 10%;
+
+}
+
+/* nagłówek z ceną */
+.topInfoShoppingListPrice{
+
+    width:15%;
+
+}
+/* nagłówek z ilością */
+.topInfoShoppingListQuantity{
+    width:15%;
+}
+/*  pole wejściowe  ilości w liście zakupów */
+.shoppingListQuantityInput{
+    width: 80%;
+
+}
+/* kontener z polem wejściowym ilości w liście zakupów */
+.shoppingListQuantityInputDiv{
+    width: 10%;
+    margin-left: 2vw;
+}
+/*  pole wejściowe z ceną w liście zakupów */
+.shoppingListPriceInput{
+   width:100%;
+}
+
+/* nazwy przy polach wejściowych w kontenerach z polami wejściowymi */
+.shoppingListNameInputDivPrice, .shoppingListNameInputDivQuantity, .shoppingListNameInputDivName{
+    margin-top:0;
+    margin-bottom:0.5vh;
+}
+
+/* kontener z polem wejściowym ceny w liście zakupów */
+.shoppingListPriceInputDiv{
+    width: 12%;
+}
+
+/* informacja na temat ilości produktu listy */
+.shoppingListQuantity{
+    width: 10%;
+
+}
+
+/* pseudoklasa tworząca efekt przekreślenie produktu po jego naciśnięciu */
+.shoppingList.crossed::after {
+    content: ''; /* pusta wartość */
+    position: absolute; /* pozycja absolutna względem rodzica */
+    left: 0;
+    top: 50%; /* w połowie elementu */
+    width: 90%; /* nie ma zakrywać przycisku usuwania z listy */
+    height: 2px; /* Grubość linii przekreślającej */
+    background: black; /* Kolor linii przekreślającej */
+    transform: translateY(-50%); /*linia w poziomie*/
+}
+
+/*przycisk z ikoną do usuwania oraz element nagłówka z informacją "dodaj/usuń" */
+.shoppingListDeleteIconButton{
+    position:relative;
+    display:flex;
+    align-items: center;
+    justify-content: flex-end; /* wyrównaj do końca elementu */
+    width:20%;
+    padding-right: 5%;
+    height:100%;
+
+}
+/* klasa do ustawienia ikony dodawania i usuwania z listy zakupów */
+.shoppingListDeleteIcon{
+
+    font-size:3vw;
+    height: 100%;
+
+}
+
+/* kontener z przyciskiem do usuwania wszystkich elementów listy zakupów */
+.deleteAllButtonDiv{
+    position: sticky; /*element ma być w stałym miejscu na ekranie*/
+    bottom: 0;
+    display: flex;
+    height:10vh;
+    margin: 0 1vw 0.5vh 1vh;
+    align-items: center;
+
+}
+/* przycisk do usuwania wszystkich elementów listy zakupów */
+.handleDeleteAllCartButton{
+    position: relative;
+
+    background-color: #deeffc;
+    width:100%;
+    height:100%;
+    border-radius: 10px;
+}
+/* przycisk do usuwania wszystkich elementów listy zakupów - po najechaniu na niego*/
+.handleDeleteAllCartButton:hover{
+
+    background-color: #38729d;
+}

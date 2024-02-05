@@ -1,0 +1,359 @@
+
+.productItem {
+
+    position: relative;
+    margin: 0.4vh 0.2vw;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: calc(1vw + 1vh);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+
+    background-size: 100% 100%;
+    background-position: center; /* Ustala, że obraz ma być wyśrodkowany */
+    backdrop-filter: blur();
+}
+.productItemToListIconDiv{
+    position:absolute;
+    top:0;
+    right:0;
+    height:10%;
+    width:10%;
+    z-index: 101;
+}
+.productItemLargeToListIconDiv{
+    position:absolute;
+    top:10%;
+    right:0;
+    height:10%;
+    width:10%;
+    z-index: 101;
+}
+.productItemToListIcon{
+    width:100%;
+    height:100%;
+    color: rgba(255, 255, 0);
+
+}
+.LargeProductItemContainer {
+    position: relative;
+    display:flex;
+    height:100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.productItemSmall.hidden {
+    display: none; /* Ukryj produkt */
+}
+
+
+
+.productItemSmall {
+
+    position: relative;
+    margin: 0.4vh 0.2vw;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    background-size: 100% 100%;
+    background-position: center; /* Ustala, że obraz ma być wyśrodkowany */
+    backdrop-filter: blur();
+}
+
+.productItemSmall.selected {
+    display: flex;
+    flex: 1 0 80%; /* Zajmuj całą szerokość dla powiększonego produktu */
+    height:80%;
+    /* Pozostałe style dla powiększonego produktu */
+    position: relative;
+    justify-content: flex-end;
+
+    transition: all 0.3s ease; /* Płynna animacja */
+
+}
+.productItemSmall.selected:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: 20px;
+    backdrop-filter: blur(10px); /* Dostosuj wartość blura według potrzeb */
+    z-index: -1; /* Umieść pod elementem .productItem */
+}
+
+.productItem.hidden:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: 20px;
+    backdrop-filter: blur(5px); /* Dostosuj wartość blura według potrzeb */
+    z-index: -1; /* Umieść pod elementem .productItem */
+}
+
+
+
+.moveToBinConfirmationDiv {
+    position: relative;
+    display: flex;
+
+    flex-direction: column;
+    height: 100%;
+
+
+}
+
+.moveToBinConfirmationInfoHeader {
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 85%;
+    width: 100%;
+
+}
+
+.moveToBinConfirmationButtons {
+    position: relative;
+    display: flex;
+    justify-content: space-evenly;
+    height: 15%;
+    width: 100%;
+}
+
+.moveToBinConfirmationButton, .moveToBinDeclineButton {
+    width: 50%;
+    height: 100%;
+}
+
+.moveToBinConfirmationButton {
+    background-color: red;
+    text-align: center;
+    border-radius: 4px;
+
+    margin-right: 1vw;
+}
+
+.moveToBinDeclineButton {
+    background-color: #4caf50;
+    text-align: center;
+    border-radius: 4px;
+
+}
+
+.moveToBinConfirmationButton:hover {
+    background-color: #D9214CFF;
+
+}
+
+.moveToBinDeclineButton:hover {
+    background-color: #45a049;
+
+}
+.card{
+    position:relative;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height:100%;
+    width:100%;
+}
+
+.productItem.animating {
+    transition: transform 0.4s ease-in-out, opacity 0.3s ease-in-out;
+
+}
+
+
+.productCardInfoRow{
+    position:relative;
+    display:flex;
+    justify-content: center;
+    text-align: center;
+    flex:1;
+    height:5%;
+    align-items: center;
+}
+
+.card.hidden {
+    visibility: hidden;
+}
+
+
+/*.productItem h2 {*/
+/*    font-size: calc(1vw + 1vh);*/
+/*    margin-bottom: 0.7vh;*/
+/*}*/
+
+/*.productItem h3 {*/
+/*    font-size: calc(0.7vw + 0.7vh);*/
+/*    margin-bottom: 1vh;*/
+/*}*/
+
+/*.productItem div {*/
+/*    margin: 0.7vh 0;*/
+/*}*/
+
+.decreaseProduct {
+    position:relative;
+    display:flex;
+    background-color: red;
+    text-align: center;
+    border-radius: 4px;
+    padding: calc(0.2vw + 0.2vh) calc(0.4vw + 0.4vh);
+    transition: transform 0.3s ease;
+
+}
+
+.increaseProduct {
+    position:relative;
+    display:flex;
+    background-color: #4caf50;
+    text-align: center;
+    border-radius: 4px;
+    padding: calc(0.2vw + 0.2vh) calc(0.4vw + 0.4vh);
+    transition: transform 0.3s ease;
+}
+
+.productItemQuantityDiv {
+    position:relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height:20%;
+
+}
+
+.quantityControl {
+    display: flex;
+    align-items: center;
+    margin-left: 0.5vw;
+    justify-content: space-evenly;
+
+}
+
+.quantityControlLarge {
+    position:relative;
+    display: flex;
+
+    align-items: center;
+    margin-left: 0.5vw;
+    margin-bottom: 1vh;
+    height:20%;
+
+}
+
+.quantityControl span, .quantityControlLarge span {
+    margin: 0 2.5vw;
+}
+
+
+.productItem button h2 {
+    font-size: calc(0.7vw + 0.7vh);
+    margin: 0;
+}
+
+.decreaseProduct:hover, .decreaseProductLarge {
+    background-color: #D9214CFF;
+    transform: scale(1.1);
+}
+
+.increaseProduct:hover , .increaseProductLarge{
+    background-color: #45a049;
+    transform: scale(1.1);
+}
+
+.decreaseProduct .iconifyIcon, .increaseProduct .iconifyIcon, .decreaseProductLarge .iconifyIcon
+, .increaseProductLarge .iconifyIcon{
+    /* Dodaj przejście dla płynnego efektu */
+    transition: transform 0.3s ease;
+}
+
+.decreaseProduct:hover .iconifyIcon, .increaseProduct:hover .iconifyIcon ,.decreaseProductLarge .iconifyIcon
+, .increaseProductLarge .iconifyIcon{
+    /* Zastosuj transformację skalowania podczas najechania */
+    transform: scale(1.4); /* Przykład: powiększa ikonę do 120% jej pierwotnego rozmiaru */
+}
+
+.iconContainer {
+    display: flex;
+
+    gap: 0.5vw;
+}
+
+.removeButton, .editButton {
+    display: flex; /* zmieniaj przyciski w kontenery flexa, aby ikony mogły się rozciągnąć */
+    justify-content: center; /* wyśrodkuj ikony w poziomie */
+    align-items: center; /* wyśrodkuj ikony w pionie */
+    width: 100%; /* zapewnij, że przyciski zajmują całą dostępną szerokość */
+    height: 100%; /* zapewnij, że przyciski zajmują całą dostępną wysokość */
+    padding: calc(0.2vw + 0.2vh) calc(0.4vw + 0.4vh);
+    border-radius: 4px;
+}
+
+.removeButton {
+    background-color: red;
+
+}
+
+/* Dla przycisków edycji */
+.editButton {
+    background-color: #4caf50;
+
+}
+
+/* Dla ikon wewnątrz przycisków */
+.iconifyIcon {
+    font-size: calc(1vw + 1vh); /* Ustawić rozmiar fontu ikon na podobny rozmiar co przyciski + i - */
+    color: white; /* Ustawić kolor ikon na biały, tak jak tekst w przyciskach + i - */
+    width: 100%; /* Ustawić szerokość ikony na 100% */
+    height: 100%; /* Ustawić wysokość ikony na 100% */
+}
+
+.removeButton:hover {
+    background-color: #D9214CFF;
+
+}
+
+.editButton:hover {
+    background-color: #45a049; /* Kolor tła podczas najechania */
+}
+
+.removeButton:hover .iconifyIcon, .editButton:hover .iconifyIcon {
+    filter: brightness(0.8); /* Lekkie przyciemnienie ikony podczas najechania */
+}
+
+.iconifyIcon {
+    vertical-align: middle; /* wyśrodkowuje ikony w przyciskach */
+}
+
+
+@media only screen and (max-width: 600px) {
+
+    .removeButton, .editButton, .decreaseProduct, .increaseProduct{
+
+        padding: 0;
+
+    }
+    /*.productItem h2 {*/
+    /*    font-size: calc(1.2vw + 1.2vh);*/
+    /*    margin-bottom: 1vh;*/
+    /*}*/
+
+    /*.productItem div {*/
+    /*    margin: 0.8vh 0;*/
+    /*}*/
+
+    /*.productItem button {*/
+    /*    padding: 1vh 2vh;*/
+    /*}*/
+}
+

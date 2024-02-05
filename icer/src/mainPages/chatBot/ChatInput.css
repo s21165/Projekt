@@ -1,0 +1,60 @@
+.chat-input-container {
+    position: absolute;   /*stałe pozycjonowanie względem rodzica*/
+    bottom: 0;            /* Ustawia położenie na samym dole rodzica */
+    left: 50%;            /* Ustawia na środku rodzica względem osi X */
+    transform: translateX(-50%); /* zmienia położenie aby było dokładnie wyśrodkowane względem osi X */
+    background-color: #fff;      /* biały kolor tła, można dostosować */
+    padding: 1rem;               /* trochę przestrzeni wokół treści */
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); /* dodaje cień */
+    width:100%;
+    justify-content: space-between; /*równa odległość między elementami*/
+}
+
+.chatInput {
+    width:80%;
+    padding: 0.5rem;
+
+      /* Trochę przestrzeni między inputem a przyciskiem */
+}
+
+.chatInputButton{
+    padding: 0.5rem 1rem; /* Przestrzeń wokół tekstu przycisku */
+    display: inline; /* wyświetlaj w lini */
+    width:15%;
+}
+
+.minimize-button {
+    position: fixed; /* stała pozycja na stronie */
+    top: 1%;
+    left: 1%;
+    padding: 0.5% 1%;
+    z-index: 10;  /* Upewnij się, że przycisk jest zawsze widoczny */
+}
+
+.chat-icon-container {
+    position: absolute; /*stałe pozycjonowanie względem rodzica*/
+    top: 1%;
+    left: 1%;
+    padding: 0.5% 1%;
+    cursor: pointer;
+    z-index: 10;       /* ma być na wierzchu */
+}
+.minimizeIcon{
+    width:150%;
+    height:150%;
+}
+.chatOpenIcon{
+    width:150%;
+    height:150%;
+}
+/*dla ekranów o maxymalnej szerokości 1000px*/
+@media (max-width: 1000px) {
+    .minimizeIcon{
+        width:200%;
+        height:200%;
+    }
+    .chatOpenIcon{
+        width:200%;
+        height:200%;
+    }
+}

@@ -1,0 +1,92 @@
+/* wiadomości od użytkownika */
+.userMessageDiv {
+    background-color: #f1f1f1; /* jasnoszary kolor tła */
+    border-radius: 8px;        /* zaokrąglone rogi */
+    padding: 10px 15px;        /* padding wewnątrz chmurki */
+    margin: 10px 0;            /* margines między wiadomościami */
+    display: block;     /* aby chmurka dopasowywała się do szerokości tekstu */
+    max-width: 80%;            /* maksymalna szerokość chmurki */
+    word-wrap: break-word;     /* przełamuje długie słowa, aby pasowały do chmurki */
+    position: relative;        /* pozycja potrzebna do tworzenia "ogonka" chmurki */
+}
+/* wiadomości od użytkownika - pseudoklasa*/
+.userMessageDiv::after {
+    content: '';               /* pusty content, aby pseudo-element był widoczny */
+    position: absolute;        /* absolutne pozycjonowanie względem .messageDiv */
+    left: -8px;                /* przesunięcie na lewo od głównej chmurki */
+    top: 5px;                 /* przesunięcie od góry chmurki */
+    width: 0;                  /* szerokość "ogonka" */
+    height: 0;                 /* wysokość "ogonka" */
+    border-top: 10px solid transparent;     /* górna część trójkąta */
+    border-bottom: 10px solid transparent;  /* dolna część trójkąta */
+    border-right: 10px solid #f1f1f1;       /* prawa część trójkąta, która tworzy "ogonek" */
+}
+/* kontener z wiadomościami */
+.messagesContainer{
+
+
+    width: 90%;
+    margin: auto auto 10vh; /* margines od krawędzi dolnej kontenera, reszta automatycznie dostosowana */
+
+}
+
+/* wiadomości od bota */
+.botMessageDiv {
+    background-color: #e6e6e6;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin: 10px 0 0 30px;
+    display: block;
+    max-width: 80%;
+    word-wrap: break-word;
+    position: relative;
+}
+/* wiadomości od użytkownika -pseudoklasa */
+.botMessageDiv::after {
+    content: '';
+    position: absolute;      /* pozycja stała względem swojego rodzica */
+    right: -8px;             /* przesunięcie na prawo od głównej chmurki */
+    top: 5px;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid #e6e6e6; /* lewa część trójkąta, która tworzy "ogonek" */
+}
+
+
+
+
+/*dla ekranów o maxymalnej szerokości 1200px*/
+@media (max-width: 1200px) {
+    .userMessageDiv, .botMessagesDiv {
+        margin: 1.5% 2% 0 1%;
+    }
+    .messagesContainer{
+        margin-bottom:  15vh;
+
+    }
+}
+
+/*dla ekranów o maxymalnej szerokości 1000px*/
+@media (max-width: 1000px) {
+    .userMessageDiv, .botMessagesDiv {
+        margin: 1.5% 2% 0 3%;
+    }
+    .messagesContainer{
+        margin-bottom:  17vh;
+
+    }
+}
+/*dla ekranów o maxymalnej szerokości 600px*/
+@media (max-width: 600px) {
+    .userMessageDiv, .botMessagesDiv {
+        margin: 1.5% 2% 0 5%;
+    }
+    .messagesContainer{
+        margin-bottom:  20vh;
+
+    }
+}
+
+

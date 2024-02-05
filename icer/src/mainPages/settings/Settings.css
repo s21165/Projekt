@@ -1,0 +1,126 @@
+.settings-container{
+    position:relative;
+    display:flex;
+    height:100%;
+    width:100%;
+    justify-content: center;
+
+}
+.settings-container label,.settings-container h5{
+
+    margin:0;
+    padding:0;
+
+}
+.settingsDiv{
+    position:relative;
+    display:flex;
+    flex-direction: column;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+
+    width:50%;
+    margin:auto;
+    padding:2vh 2vw 2vh 2vw;
+}
+.settingsDiv--products{
+
+    background-color: rgba(128, 128, 128, 0.8); /* Szary z 50% przezroczystością */
+    position:relative;
+    display:flex;
+    flex-direction: column;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: width 0.5s, height 0.5s;
+    border-radius: 10px;
+    width:100%;
+    margin:auto;
+    padding:2vh 2vw 2vh 2vw;
+
+}
+
+.settingsHeader{
+    position:relative;
+    display:flex;
+    justify-content: center;
+}
+.settings-sectionHeader{
+    position:relative;
+    display:flex;
+    justify-content: center;
+
+}
+
+.settings-sectionHeader--fridge {
+    font-size: 15px; /* Example size for 'fridge' */
+}
+.settings-sectionHeader--products {
+    font-size: calc((1vh + 1vw/2))
+}
+
+.settings-section{
+    border-top: 2px solid #eee;
+    position:relative;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    width:100%;
+    margin-bottom: 1vh;
+
+}
+.settings-section :last-child{
+    margin-bottom: 0;
+
+}
+.custom-radio-container {
+    position:relative;
+    display:flex;
+    flex-direction: row;
+    width:100%;
+    flex-wrap:wrap;
+    justify-content: center;
+    gap: 10px; /* Adjust the gap between options */
+}
+
+.custom-radio-button {
+    position:relative;
+    display: flex;
+    width:20%;
+    justify-content: center;
+    align-items: center;
+    padding:calc((1vh + 1vw)/2);
+    border: 2px solid grey; /* Default border */
+    cursor: pointer;
+    user-select: none; /* Prevents text selection */
+}
+.custom-radio-button--products{
+    position:relative;
+    background-color: rgb(129, 165, 211);
+    display: flex;
+    width:10%;
+    font-size: 70%;
+    justify-content: center;
+    align-items: center;
+    padding:calc((1vh + 1vw)/2);
+    border: 2px solid grey; /* Default border */
+    cursor: pointer;
+    user-select: none; /* Prevents text selection */
+}
+.custom-radio-button.selected, .custom-radio-button--products.selected{
+    border-color: blue; /* Color of the border when selected */
+    box-shadow: 0 0 5px blue; /* Optional: Adds a shadow for a selected button */
+}
+.saveDivSettings{
+    display:flex;
+    position:relative;
+    width:100%;
+}
+
+.saveButtonSettings{
+    width:100%;
+    height:50%;
+    border: 2px solid grey;
+}
+.saveButtonSettings:active{
+
+    border-color: blue;
+    box-shadow: 0 0 5px blue;
+}

@@ -1,0 +1,18 @@
+body {
+  margin: 0; /*ustawia margines na 0 */
+
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif; /* Określa stos czcionek dla tekstu w elemencie body dla róznych systemów */
+
+  -webkit-font-smoothing: antialiased; /*  Poprawia wygląd czcionki na ekranach o wysokiej rozdzielczości
+   w przeglądarkach opartych na WebKit */
+
+  -moz-osx-font-smoothing: grayscale; /* poprawia wygląd tekstu przez zmniejszenie ostrości pikseli */
+
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

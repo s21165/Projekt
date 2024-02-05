@@ -1,0 +1,307 @@
+::-webkit-scrollbar { width: 0; } /* ustawia pasek przewijania na szerokość = 0px czyli jest niewidoczny*/
+
+/* kontener, w którym mieści się aplikacja */
+.full{
+    /* ustawiamy wielkość czcionki */
+    font-size: calc((1.5vw + 1.5vh) / 2);
+
+}
+
+.minimizeIcon{
+    position:absolute;
+    right:5%;
+    top:90vh;
+}
+.ChatIcona{
+    position:absolute;
+    right:5%;
+    top:90vh;
+}
+.helpChatButton{
+    width:200%;
+    height:200%;
+
+}
+.minimize-button{
+
+    z-index: 1000;
+}
+/* ustawienia dla przycisków - usuwamy przypisane wartości do znacznika */
+button {
+    background: none; /* brak tła */
+    border: none; /* brak obramówki*/
+    color: inherit; /* dziedziczy kolor */
+    font: inherit; /* dziedziczy czcionkę */
+    padding: 0; /* bez odstępu wewnętrznego */
+    margin: 0; /* bez marginesu */
+    outline: inherit; /* dziedziczy linię obwodu */
+}
+
+/* przycisk do rozwijania menu*/
+.navExpandButton{
+    position:absolute; /* w stałym miejscu na stronie */
+
+
+}
+/* kontener z logo */
+.logoContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 5px;
+    background: #F8F8F8;
+    margin-bottom: 2px;
+
+}
+/* obrazek logo */
+.logo{
+
+
+    width:50%;
+    height: 50%;
+    transition: width 0.5s ease-out, height 0.5s ease-out; /*płynna zmiana wysokości i szerokości*/
+
+}
+/* małe logo */
+.smallLogo{
+    width: 65%;
+    height: 65%;
+    transition: width 0.5s linear, height 0.5s linear; /*płynna zmiana wysokości i szerokości*/
+}
+/* ciało aplikacji */
+.body {
+    margin:auto;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    display: grid;
+
+    transition: grid 0.5s ease-out 0.1s; /*płynna zmiana siatki */
+    grid:
+    "all menu" 1fr  /* dla zwykłego menu podziel główny kontener i menu w takich proporcjach */
+    / 79.5% 20%;
+}
+/*ciało aplikacji z wąskim menu*/
+.body-slimMenu {
+    margin:auto;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    display: grid; /*wyświetlaj w siatce*/
+
+    grid:
+    "all slimMenu" 1fr /* dla wąskiego menu podziel główny kontener i menu w takich proporcjach */
+    /  91.5% 8%;
+    transition: grid 0.5s ease-out 0.10s; /*płynna zmiana siatki*/
+}
+/*kontener posiadający elementy nawigazycjne - drogi do linków*/
+.wholeContainer{
+    position: relative;
+    text-align: center;
+    background-color: white;
+    width:100%;
+    height:100%;
+}
+/* wąskie menu */
+.slimMenu{
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* ustawiamy cień */
+    position: fixed; /* pozycja stała względem strony */
+    top:0;
+    right:0;
+    height: 100vh;
+    width:8vw;
+    transition: width 0.5s ease-out 0.10s;
+
+    grid-area: slimMenu; /* nazwa grid-area*/
+    background: #F8F8F8;
+    overflow-y: auto; /* jeśli elementy się nie mieszczą to można przewijać */
+}
+/* menu */
+.menu {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* ustawiamy cień */
+    position: fixed;/* pozycja stała względem strony */
+    top: 0;
+    right: 0;
+    height: 100vh;
+
+    width: 20vw;
+    transition: width 0.5s ease-out 0.10s;
+    grid-area: menu; /* nazwa grid-area*/
+    background: #F8F8F8;
+    overflow-y: auto; /* jeśli elementy się nie mieszczą to można przewijać */
+}
+/* kontener z linkami do podstron */
+.menuNav{
+
+    position:relative;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+
+    background: #F8F8F8;
+
+}
+/* kontener z nazwą i ikoną linku */
+.navDiv{
+    position:relative;
+    padding:1vh ;
+    height: 10vh;
+    text-align: center;
+    display:grid;
+    align-items: center;
+
+    overflow-wrap: break-word;
+    justify-content: center;
+    border-bottom: #F2F2F5 1px solid;
+
+}
+
+/* kontener z ikoną w menu */
+.menuIcons{
+
+    width:4vw;
+    height: 4vh;
+    transition-property: width, height;
+    transition-duration: 0.5s;
+    transition-timing-function: ease-in-out;
+
+}
+/* style dla linków */
+a{
+    text-decoration: none; /* bez dekoracji - przypisanych wartości do linku */
+
+}
+/* dla odwiedzonych linków */
+a:visited{
+    color:black; /* ustawiamy kolor ponieważ samoczynnie zmienia się kolor takiego linku*/
+
+}
+/* style dla linków */
+a:link{
+    color:black; /* zmieniamy również podstawowy kolor linku aby nie różnił się po wizycie*/
+
+}
+/* przycisk do zmiany menu */
+.menuNavButton{
+
+    width:100%;
+    height:100%;
+    justify-content: center;
+    align-items: center;
+    margin:auto;
+
+    border:none;
+    background-color: #F8F8F8;
+}
+
+/*dodajemy te klasę kiedy nie chcemy aby element był widoczny i nie zabierał miejsca - w tym wypadku
+mowa o menu pierwszym bądź drugim, zależnie od tego, które ma być widoczne*/
+.invisible{
+    display:none;
+}
+.navDiv h3{
+    font-size: 120%;
+}
+.space{
+    margin-right:1vw;
+
+}
+
+/* zmienione ustawienia dla ekranów powyżej 1200px */
+@media only screen and (min-width: 1200px) {
+
+    .body {
+
+        grid:
+    "all menu" 1fr
+    / 83.5% 16%;
+    }
+    .menu{
+
+        width: 16vw;
+
+    }
+    .body-slimMenu{
+        grid:
+    "all slimMenu" 1fr
+    /  94.5% 5%;
+
+    }
+    .slimMenu{
+        width:5.4vw;
+    }
+    .navDiv{
+
+        padding:calc(0.5vw + 0.5vh / 2) ;
+
+    }
+
+
+
+}
+
+/* zmienione ustawienia dla ekranów poniżej bądź równej 800px */
+@media only screen and (max-width: 800px) {
+
+    .body {
+
+        grid:
+    "all menu" 1fr
+    / 75.5% 24%;
+    }
+    .menu{
+
+        width: 24vw;
+
+    }
+    .smallLogo{
+        width:70%;
+        height: 70%;
+    }
+    .logo {
+
+
+        width: 55%;
+        height: 55%;
+    }
+    .menuIcons{
+        width: 4.3vw;
+        height:4.3vh;
+
+
+    }
+
+
+}
+/* zmienione ustawienia dla ekranów poniżej bądź równej 500px */
+@media only screen and (max-width: 500px) {
+
+    .body-slimMenu{
+        grid:
+    "all slimMenu" 1fr
+    /  87.5% 12%;
+
+    }
+    .slimMenu{
+        width:12vw;
+    }
+
+    .smallLogo{
+        width:75%;
+        height: 75%;
+    }
+    .logo {
+
+
+        width: 60%;
+        height: 60%;
+    }
+    .menuIcons{
+        width: 5vw;
+        height:5vh;
+
+
+    }
+}
+
