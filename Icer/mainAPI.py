@@ -65,8 +65,7 @@ def allowed_file(filename):
 def run_daily_procedure():
     local_connector = DatabaseConnector("localhost", "root", "root", "Sklep")
     local_connector.connect()
-    cursor = local_connector.get_connection().cursor()
-
+    cursor = local_connector.connection.cursor(dictionary=True)
     try:
         # Wywołanie PROCEDURE UpdateTrzeciaWartosc
         cursor.callproc('UpdateTrzeciaWartosc')
@@ -764,7 +763,6 @@ def get_icer():
     db_connector.connect()
 
     try:
-
         # Uzyskanie połączenia z bazą danych
         connection = db_connector.get_connection()
         if not connection:
@@ -773,8 +771,6 @@ def get_icer():
         cursor = connection.cursor(dictionary=True)
         if not cursor:
             raise Exception("Failed to create a cursor for the database.")
-
-
         # Sprawdzenie, czy użytkownik jest zalogowany
         user_id, username, response, status_code = DatabaseConnector.get_user_id_by_username(cursor, session)
 
@@ -811,6 +807,7 @@ def get_icer():
 
         return jsonify(results)
 
+        # Obsługa błędów
     except ValueError as ve:
         return jsonify({"error": str(ve)}), 400
     except PermissionError as pe:
@@ -1194,7 +1191,6 @@ def login():
             session['username'] = username
             session_id = str(uuid.uuid4())  # Generowanie unikalnego ID sesji
             session['session_id'] = session_id  # Przechowywanie ID sesji
-            print("sesja" + session['session_id'] + "sessionid: " + session_id)
             return jsonify({"message": "Login successful", "session_id": session_id})
         else:
             return jsonify({"message": "Invalid credentials"}), 401
