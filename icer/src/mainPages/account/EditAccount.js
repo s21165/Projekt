@@ -13,13 +13,13 @@ import SettingsContext from "../settings/SettingsContext";
 
 function EditAccount(props) {
     //pobieramy informacje na temat aktualnego użytkownika
-    const {user,setRefreshe} = useContext(AuthContext);
+    const {user,setRefreshTrigger} = useContext(AuthContext);
     //przypisuję sesję aktualnego użytkownika do zmiennej
     const sessionId = user ? user.sessionId : null;
 
     //pobieramy nazwę zdjęcia, informację czy jest zdjęcie podstawowe oraz zmienną, której zmiana to odświeżenie ustawień,
     //oraz możliwość zmiany tej wartości
-    const {profilePicture,defaultProfile,refresh,setRefresh} = useContext(SettingsContext);
+    const {profilePicture,defaultProfile,setRefresh} = useContext(SettingsContext);
 
     //obrazek
     const [image,setImage] = useState('');
@@ -61,15 +61,17 @@ function EditAccount(props) {
                 //powiadomienie
                 changeUserPhoto();
                 toast.success('dane zostały zaktualizowane');
-                setRefresh(!refresh);
+                setRefresh(prev => !prev);
             if (storedUser && formData.username.length>0) { // Użyłem storedUser.username zamiast storedUser.nazwa
                 // Aktualizacja nazwy użytkownika w obiekcie
                 storedUser.username = formData.username;
 
                 // Zapisanie zmodyfikowanego obiektu użytkownika z powrotem do localStorage
-                localStorage.setItem('user', JSON.stringify(storedUser)); // Przekształcenie obiektu na ciąg JSON i zapisanie
+                localStorage.setItem('user', JSON.stringify(storedUser),
+                setRefreshTrigger(prev => !prev)
+                ); // Przekształcenie obiektu na ciąg JSON i zapisanie
 
-            }setRefresh(prev => !prev);
+            }
             localStorage.getItem('user');
             // jeśli dostaje error
         } catch (error) {
@@ -77,9 +79,9 @@ function EditAccount(props) {
             toast.success(`Wystąpił błąd podczas aktualizacji konta: ${error}`);
 
         }
-        setRefreshe(prev => !prev)
+
         localStorage.getItem('user');
-        setRefresh(!refresh)
+        setRefresh(prev => !prev)
         navigate('/Konto')
 
     };
@@ -92,7 +94,7 @@ function EditAccount(props) {
             } )
             .then((response) => {
 
-                setRefresh(!refresh);
+                setRefresh(prev => !prev);
             })
             .catch((error) => {
                 console.error(`There was an error retrieving the data: ${error}`);

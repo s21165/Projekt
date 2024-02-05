@@ -3,8 +3,10 @@ import axios from "axios";
 import {API_URL} from "./config";
 import {AuthContext} from "../account/auth-context";
 
+//tworzenie kontekstu
 const SettingsContext = createContext();
 
+//funkcja odpowiedzialna za dostarczanie ustawień na przestrzeni całej aplikacji
 export const SettingsProvider = ({ children }) => {
     const [fridgeSizeElements, setFridgeSizeElements] = useState(localStorage.getItem('fridgeSizeElements') || '');
     const [productsSizeElements, setProductsSizeElements] = useState(localStorage.getItem('productsSizeElements') || '');
@@ -20,7 +22,7 @@ export const SettingsProvider = ({ children }) => {
         if (sessionId) {
             axios.get(`${API_URL}/api/get_user_preferences`, { params: { sessionId } })
                 .then((response) => {
-                    console.log(response.data)
+
                     const { wielkosc_lodowki, wielkosc_strony_produktu, widocznosc_informacji_o_produkcie
                     ,lokalizacja_zdj, podstawowe_profilowe} = response.data;
                     updateSetting('fridgeSizeElements', wielkosc_lodowki);

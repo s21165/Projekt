@@ -6,17 +6,21 @@ export const AccountPictureGetter = (image, setImage, defaultProfile, profilePic
 
 
     useEffect(() => {
+
         //jeśli jest podstawowe profilowe to ustaw je jako image.
         if (defaultProfile===1) {
             setImage(`${process.env.PUBLIC_URL}/data/userProfilePicture/face.jpg`);
         //w przeciwnym wypadku i jeśli jest profilePicture to ustaw je na image.
         } else if (profilePicture) {
-            console.log(profilePicture)
+
+
             setImage(`${process.env.PUBLIC_URL}/data/userProfilePicture/${profilePicture}`);
 
+        }else{
+            setImage(`${process.env.PUBLIC_URL}/data/userProfilePicture/face.jpg`);
         }
 
-    }, [image,defaultProfile, profilePicture, setImage]);// odśwież po zmianie jakiejś z tych wartości
+    }, [image,defaultProfile, profilePicture]);// odśwież po zmianie jakiejś z tych wartości
     //zwróć obrazek
     return (image)
 }

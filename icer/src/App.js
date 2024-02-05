@@ -21,7 +21,7 @@ function App() {
         if (user) {
             setAdIsOn(true); // Reset adIsOn to true when user logs in
         }
-    }, [user]);
+    }, []);
 
     return (
         <SettingsProvider>
