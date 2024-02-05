@@ -33,7 +33,7 @@ def pred_and_plot(model, filename, class_names, username):
 
     pred_class = None
     if pred is not None and len(pred) > 0:
-        max_pred_value = np.max(pred)  # Pobranie maksymalnej prawdopodobieństwa z predykcji
+        max_pred_value = np.max(pred)  # Pobranie maksymalnego prawdopodobieństwa z predykcji
         if max_pred_value >= 0.60:  # Sprawdzenie, czy maksymalne prawdopodobieństwo jest powyżej akceptowanego progu
             pred_class_index = tf.argmax(pred, axis=1).numpy()[0]  # Pobranie indeksu przewidzianej klasy
             pred_class = class_names[pred_class_index]  # Pobranie odpowiadającej nazwy klasy z bazy klas
@@ -49,7 +49,7 @@ def pred_and_plot(model, filename, class_names, username):
     # wygenerowanie pliku z użyciem nazwy użytkownika
     json_file_path = os.path.join(save_dir, f'{username}_food_list.json')
 
-    # Zapis wyników predykcji u
+    # Zapis wyników predykcji
     prediction_result = [pred_class]
     with open(json_file_path, 'w') as json_file:
         json.dump(prediction_result, json_file, indent=4)
