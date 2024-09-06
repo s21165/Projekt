@@ -349,13 +349,22 @@ def add_product():
         product_manager = ProductManager(db_connector)
         # Pobieranie danych z żądania
         data = request.json
+
+        # Sprawdzenie, czy wszystkie wymagane dane są dostępne
+        required_fields = ['nazwa', 'cena', 'kalorie', 'tluszcze', 'weglowodany', 'bialko', 'kategoria', 'ilosc', 'data_waznosci']
+        missing_fields = [field for field in required_fields if field not in data]
+        if missing_fields:
+            return jsonify({"error": f"Brakuje wymaganych danych: {', '.join(missing_fields)}"}), 400
+
         image_data = data.get('imageData')
         connection = db_connector.get_connection()
         cursor = connection.cursor(dictionary=True)
+
         # Sprawdzenie, czy użytkownik jest zalogowany
         user_id, username, response, status_code = DatabaseConnector.get_user_id_by_username(cursor, session)
         if response:
             return response, status_code
+
         # Sprawdzenie, czy istnieje produkt z takimi samymi wartościami i który jest podstawowy
         check_product_query = """
             SELECT id 
@@ -394,21 +403,28 @@ def add_product():
                 data['kategoria']
             )
             if product_id is None:
-                return jsonify({"error": "Failed to add product to Produkty table."})
+                return jsonify({"error": "Nie udało się dodać produktu do tabeli Produkty."}), 500
+
         # Dodanie daty dodania do tabeli 'Icer'
         add_icer_query = """
             INSERT INTO Icer (UserID, produktID, ilosc, data_waznosci, data_dodania)
             VALUES (%s, %s, %s, %s, NOW())
         """
         cursor.execute(add_icer_query, (user_id, product_id, data['ilosc'], data['data_waznosci']))
+
         # Wywołanie procedury UpdateSwiezosc dla nowo dodanego produktu
         cursor.callproc('UpdateSwiezosc', (cursor.lastrowid,))
+
         # Wywołanie funkcji do obsługi przesyłania zdjęcia tylko jeśli dostępne są dane zdjęcia
         if image_data:
             handle_image_upload(db_connector, image_data, user_id, product_id)
+
         connection.commit()
         cursor.close()
         return jsonify({"message": "Produkt dodany poprawnie!"})
+    except KeyError as ke:
+        # Obsługa brakujących kluczy w danych wejściowych
+        return jsonify({"error": f"Brakuje wymaganego pola: {str(ke)}"}), 400
     except Exception as error:
         return jsonify({"error": str(error)}), 500
 
