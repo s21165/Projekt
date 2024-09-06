@@ -98,9 +98,7 @@ environment = os.getenv('ENVIRONMENT')
 # Konfiguracja logowania
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    filename=full_log_file_path,
-    filemode='a'
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 
 @app.route('/api/add_to_product', methods=['POST'])
@@ -1725,7 +1723,7 @@ def get_frame():
 
         except Exception as e:
             responses.append({'error': str(e)})
-
+    logging.info(f'odpowiedz: {responses}  ')
     return jsonify(responses), 200
 
 

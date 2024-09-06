@@ -7,11 +7,12 @@ import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import nltk
+from dotenv import load_dotenv
 from nltk.tokenize import sent_tokenize
 from nltk.stem import WordNetLemmatizer
 from keras.models import load_model
 
-
+load_dotenv()
 
 # Pobieranie danych dla tokenizatora
 nltk.download('averaged_perceptron_tagger')
@@ -93,7 +94,7 @@ def extract_relevant_sentences(text, query):
 
 #Konfiguracja API OpenAI GPT-3
 import openai
-openai.api_key = os.environ.get('OPEN_API_KEY')
+openai.api_key = os.getenv('OPEN_API_KEY')
 
 #Pobieranie odpowiedzi od modelu GPT-3
 def get_gpt3_response(prompt_text):
